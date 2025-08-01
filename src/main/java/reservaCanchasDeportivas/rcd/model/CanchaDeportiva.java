@@ -27,6 +27,9 @@ public class CanchaDeportiva {
     private String descripcion;
 
     @Column(nullable = false)
+    private String estado;
+
+    @Column(nullable = false)
     private String iluminacion;
 
     // Constructor
@@ -96,6 +99,14 @@ public class CanchaDeportiva {
 
     public void setIluminacion(String iluminacion) {
         this.iluminacion = iluminacion;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
     
 }
