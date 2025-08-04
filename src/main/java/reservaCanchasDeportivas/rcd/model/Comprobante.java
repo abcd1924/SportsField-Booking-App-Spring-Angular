@@ -12,13 +12,20 @@ public class Comprobante {
     private Long id;
 
     @Column(nullable = false)
-    private LocalDateTime fecha_emision = LocalDateTime.now();
+    private LocalDateTime fecha_emision;
 
     @Column(nullable = false)
     private double subtotal;
 
     @Column(nullable = false)
     private double total;
+
+    @Column(nullable = false)
+    private double igv;
+
+    @OneToOne
+    @JoinColumn(name = "reserva_id", nullable = false)
+    private Reserva reserva;
 
     //Constructor
     public Comprobante() {
@@ -55,5 +62,23 @@ public class Comprobante {
 
     public void setTotal(double total) {
         this.total = total;
+    }
+
+    public Reserva getReserva() {
+        return reserva;
+    }
+
+    public void setReserva(Reserva reserva) {
+        this.reserva = reserva;
+    }
+
+    public double getIgv() {
+        return igv;
+    }
+
+    public void setIgv(double igv) {
+        this.igv = igv;
     }    
+
+    
 }

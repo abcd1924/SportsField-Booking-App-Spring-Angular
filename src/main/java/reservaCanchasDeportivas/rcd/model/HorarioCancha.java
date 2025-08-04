@@ -72,5 +72,11 @@ public class HorarioCancha {
         this.disponible = disponible;
     }
 
-    
+    public CanchaDeportiva getCanchaDeportiva() {
+        return canchaDeportiva;
+    }
+
+    public void setCanchaDeportiva(CanchaDeportiva canchaDeportiva) {
+        this.canchaDeportiva = canchaDeportiva;
+    }
 }

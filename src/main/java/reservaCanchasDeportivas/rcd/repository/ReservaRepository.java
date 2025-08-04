@@ -19,6 +19,7 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long>{
     Optional<Reserva> findByCod_unico(String cod_unico);
     List<Reserva> findByUsuarioId(Long usuario);
     List<Reserva> findByEstado(String estado);
+    boolean existsByCod_unico(String cod_unico);
 
     //Buscar reservas activas para una cancha en una fecha determinada (evita solapamientos)
     @Query("SELECT r FROM Reserva r WHERE r.canchaDeportiva.id = :canchaId AND r.fecha_creacion_reserva =:fechaHora and r.estado = 'CANCELADA'")
