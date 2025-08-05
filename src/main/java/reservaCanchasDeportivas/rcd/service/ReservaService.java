@@ -15,7 +15,7 @@ public class ReservaService {
     private ReservaRepository reservaRepository;
 
     public Reserva crearReserva(Reserva reserva) {
-        if (reservaRepository.existsByCod_unico(reserva.getCod_unico())) {
+        if (reservaRepository.existsByCodUnico(reserva.getCodUnico())) {
             throw new IllegalArgumentException("El código único ya está en uso");
         }
 
@@ -23,15 +23,15 @@ public class ReservaService {
         return reservaRepository.save(reserva);
     }
 
-    List<Reserva> obtenerReservasPorUsuario(Long usuarioId) {
+    public List<Reserva> obtenerReservasPorUsuario(Long usuarioId) {
         return reservaRepository.findByUsuarioId(usuarioId);
     }
 
     public Optional<Reserva> obtenerReservaPorCodigoUnico(String cod_unico) {
-        return reservaRepository.findByCod_unico(cod_unico);
+        return reservaRepository.findByCodUnico(cod_unico);
     }
 
-    Optional<Reserva> obtenerReservasPorId(Long id) {
+    public Optional<Reserva> obtenerReservasPorId(Long id) {
         return reservaRepository.findById(id);
     }
 
@@ -42,7 +42,7 @@ public class ReservaService {
         reservaRepository.save(reserva);
     }
 
-    List<Reserva> buscarReservasFuturasConfirmadas(){
+    public List<Reserva> buscarReservasFuturasConfirmadas() {
         return reservaRepository.findFutureConfirmedReservations();
     }
 }

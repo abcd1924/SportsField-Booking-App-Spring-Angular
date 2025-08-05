@@ -22,15 +22,15 @@ public class Usuario {
 
     @NotBlank(message = "Seleccione un tipo de documento")
     @Column(nullable = false)
-    private String tipo_documento;
+    private String tipoDocumento;
 
     @NotBlank(message = "El número de documento no puede estar vacío")
     @Column(nullable = false, unique = true)
-    private String num_documento;
+    private String numDocumento;
 
     @NotBlank(message = "Ingrese su fecha de nacimiento")
     @Column(nullable = false)
-    private LocalDate fecha_nacimiento;
+    private LocalDate fechaNacimiento;
 
     @NotBlank(message = "El telefono no puede estar vacío")
     @Column(nullable = false)
@@ -82,30 +82,6 @@ public class Usuario {
         this.apellido = apellido;
     }
 
-    public String getTipo_documento() {
-        return tipo_documento;
-    }
-
-    public void setTipo_documento(String tipo_documento) {
-        this.tipo_documento = tipo_documento;
-    }
-
-    public String getNum_documento() {
-        return num_documento;
-    }
-
-    public void setNum_documento(String num_documento) {
-        this.num_documento = num_documento;
-    }
-
-    public LocalDate getFecha_nacimiento() {
-        return fecha_nacimiento;
-    }
-
-    public void setFecha_nacimiento(LocalDate fecha_nacimiento) {
-        this.fecha_nacimiento = fecha_nacimiento;
-    }
-
     public String getTelefono() {
         return telefono;
     }
@@ -144,5 +120,29 @@ public class Usuario {
 
     public void setRol(String rol) {
         this.rol = rol;
+    }
+
+    public String getTipoDocumento() {
+        return tipoDocumento;
+    }
+
+    public void setTipoDocumento(String tipoDocumento) {
+        this.tipoDocumento = tipoDocumento;
+    }
+
+    public String getNumDocumento() {
+        return numDocumento;
+    }
+
+    public void setNumDocumento(String numDocumento) {
+        this.numDocumento = numDocumento;
+    }
+
+    public LocalDate getFechaNacimiento() {
+        return fechaNacimiento;
+    }
+
+    public void setFechaNacimiento(LocalDate fechaNacimiento) {
+        this.fechaNacimiento = fechaNacimiento;
     }
 }

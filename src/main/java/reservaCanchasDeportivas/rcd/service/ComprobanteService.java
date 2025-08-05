@@ -19,23 +19,23 @@ public class ComprobanteService {
     public Comprobante crearComprobante(Reserva reserva){
         Comprobante c = new Comprobante();
         c.setReserva(reserva);
-        c.setFecha_emision(LocalDateTime.now());
+        c.setFechaEmision(LocalDateTime.now());
         //Calcular total
-        c.setSubtotal(reserva.getHoras_totales() * reserva.getCanchaDeportiva().getPrecio_por_hora());
+        c.setSubtotal(reserva.getHorasTotales() * reserva.getCanchaDeportiva().getPrecioPorHora());
         c.setIgv(0.18 * c.getSubtotal());
         c.setTotal(c.getSubtotal() + c.getIgv());
         return comprobanteRepository.save(c);
     }
 
-    Optional<Comprobante> obtenerPorReservaId(Long reservaId){
+    public Optional<Comprobante> obtenerPorReservaId(Long reservaId){
         return comprobanteRepository.findByReservaId(reservaId);
     }
 
-    List<Comprobante> obtenerComprobantesPorFechaEmisionEntre(LocalDateTime inicio, LocalDateTime fin){
+    public List<Comprobante> obtenerComprobantesPorFechaEmisionEntre(LocalDateTime inicio, LocalDateTime fin){
         return comprobanteRepository.findByFechaEmisionBetween(inicio, fin);
     }
 
-    List<Comprobante> listarComprobantes(){
+    public List<Comprobante> listarComprobantes(){
         return comprobanteRepository.findAll();
     }
 }

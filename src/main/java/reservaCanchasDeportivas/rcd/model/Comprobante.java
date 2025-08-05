@@ -12,7 +12,7 @@ public class Comprobante {
     private Long id;
 
     @Column(nullable = false)
-    private LocalDateTime fecha_emision;
+    private LocalDateTime fechaEmision;
 
     @Column(nullable = false)
     private double subtotal;
@@ -38,14 +38,6 @@ public class Comprobante {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public LocalDateTime getFecha_emision() {
-        return fecha_emision;
-    }
-
-    public void setFecha_emision(LocalDateTime fecha_emision) {
-        this.fecha_emision = fecha_emision;
     }
 
     public double getSubtotal() {
@@ -78,7 +70,13 @@ public class Comprobante {
 
     public void setIgv(double igv) {
         this.igv = igv;
-    }    
+    }
 
-    
+    public LocalDateTime getFechaEmision() {
+        return fechaEmision;
+    }
+
+    public void setFechaEmision(LocalDateTime fechaEmision) {
+        this.fechaEmision = fechaEmision;
+    }    
 }

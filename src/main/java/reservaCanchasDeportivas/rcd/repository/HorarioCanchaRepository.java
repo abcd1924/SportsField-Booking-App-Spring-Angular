@@ -14,9 +14,9 @@ import reservaCanchasDeportivas.rcd.model.HorarioCancha;
 public interface HorarioCanchaRepository extends JpaRepository<HorarioCancha, Long>{
 
     List<HorarioCancha> findByDisponibleTrue();
-    List<HorarioCancha> findByCanchaIdAndDia_semana(Long canchaId, String diaSemana);
+    List<HorarioCancha> findByCanchaDeportivaIdAndDiaSemana(Long canchaId, String diaSemana);
 
     //Buscar un horario específico para validar si existe
-    @Query("SELECT h FROM HorarioCancha h WHERE h.canchaDeportiva.id AND h.dia_semana =:dia AND h.hora_inicio =:hora AND h.hora_fin =:hora")
-    Optional<HorarioCancha> validarDisponibilidadHorario(@Param("canchaId") Long canchaId, @Param("dia") String dia, @Param("hora") LocalTime hora);
+    @Query("SELECT h FROM HorarioCancha h WHERE h.canchaDeportiva.id =: canchaDeportivaId AND h.diaSemana =:dia AND h.horaInicio =:hora AND h.horaFin =:hora")
+    Optional<HorarioCancha> validarDisponibilidadHorario(@Param("canchaDeportivaId") Long canchaDeportivaId, @Param("dia") String dia, @Param("hora") LocalTime hora);
 }

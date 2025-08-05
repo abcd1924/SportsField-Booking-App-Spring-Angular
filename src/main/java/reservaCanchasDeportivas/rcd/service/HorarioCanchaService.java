@@ -31,24 +31,24 @@ public class HorarioCanchaService {
         HorarioCancha horarioExistente = horarioCanchaRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Horario con id " + id + " no encontrado"));
 
-        horarioExistente.setDia_semana(horarioAct.getDia_semana());
-        horarioExistente.setHora_inicio(horarioAct.getHora_inicio());
-        horarioExistente.setHora_fin(horarioAct.getHora_fin());
+        horarioExistente.setDiaSemana(horarioAct.getDiaSemana());
+        horarioExistente.setHoraInicio(horarioAct.getHoraInicio());
+        horarioExistente.setHoraFin(horarioAct.getHoraFin());
         horarioExistente.setDisponible(horarioAct.isDisponible());
         horarioExistente.setCanchaDeportiva(canchaDeportivaRepository.findById(horarioAct.getCanchaDeportiva().getId())
                 .orElseThrow(() -> new IllegalArgumentException("Cancha no encontrada con id " + horarioAct.getCanchaDeportiva().getId())));
         return horarioCanchaRepository.save(horarioExistente);
     }
 
-    List<HorarioCancha> listarHorarioCanchas() {
+    public List<HorarioCancha> listarHorarioCanchas() {
         return horarioCanchaRepository.findAll();
     }
 
-    List<HorarioCancha> obtenerPorCanchaYDia(Long canchaId, String diaSemana) {
-        return horarioCanchaRepository.findByCanchaIdAndDia_semana(canchaId, diaSemana);
+    public List<HorarioCancha> obtenerPorCanchaYDia(Long canchaId, String diaSemana) {
+        return horarioCanchaRepository.findByCanchaDeportivaIdAndDiaSemana(canchaId, diaSemana);
     }
 
-    Optional<HorarioCancha> validarDisponibilidadHorario(Long canchaId, String dia, LocalTime hora) {
+    public Optional<HorarioCancha> validarDisponibilidadHorario(Long canchaId, String dia, LocalTime hora) {
         return horarioCanchaRepository.validarDisponibilidadHorario(canchaId, dia, hora);
     }
 }

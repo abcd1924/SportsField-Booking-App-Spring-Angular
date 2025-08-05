@@ -1,5 +1,6 @@
 package reservaCanchasDeportivas.rcd.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,10 @@ public class UsuarioService {
         return usuarioRepository.findByEmail(email);
     }
 
+    public List<Usuario> listarUsuarios(){
+        return usuarioRepository.findAll();
+    }
+
     public boolean existePorNumDocumento(String numDocumento){
         return usuarioRepository.existsByNumDocumento(numDocumento);
     }
@@ -49,10 +54,10 @@ public class UsuarioService {
 
         usuarioExistente.setNombre(usuarioAct.getNombre());
         usuarioExistente.setApellido(usuarioAct.getApellido());
-        usuarioExistente.setTipo_documento(usuarioAct.getTipo_documento());
-        usuarioExistente.setNum_documento(usuarioAct.getNum_documento());
+        usuarioExistente.setTipoDocumento(usuarioAct.getTipoDocumento());
+        usuarioExistente.setNumDocumento(usuarioAct.getNumDocumento());
         usuarioExistente.setEmail(usuarioAct.getEmail());
-        usuarioExistente.setFecha_nacimiento(usuarioAct.getFecha_nacimiento());
+        usuarioExistente.setFechaNacimiento(usuarioAct.getFechaNacimiento());
         usuarioExistente.setTelefono(usuarioAct.getTelefono());
         usuarioExistente.setGenero(usuarioAct.getGenero());
 

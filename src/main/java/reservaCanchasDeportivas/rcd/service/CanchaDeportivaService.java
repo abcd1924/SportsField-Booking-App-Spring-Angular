@@ -14,23 +14,23 @@ public class CanchaDeportivaService {
     @Autowired
     private CanchaDeportivaRepository canchaDeportivaRepository;
 
-    public CanchaDeportiva crearCanchaDeportiva(CanchaDeportiva cancha){
-        if(canchaDeportivaRepository.existsById(cancha.getId())){
-            throw new IllegalArgumentException("La cancha ya existe con este ID");
+    public CanchaDeportiva crearCanchaDeportiva(CanchaDeportiva cancha) {
+        if (canchaDeportivaRepository.existsByNumeroCancha(cancha.getNumeroCancha())) {
+            throw new IllegalArgumentException("La cancha ya existe con este numero");
         }
 
         return canchaDeportivaRepository.save(cancha);
     }
 
-    public CanchaDeportiva actualizarCanchaDeportiva(Long id, CanchaDeportiva canchaAct){
+    public CanchaDeportiva actualizarCanchaDeportiva(Long id, CanchaDeportiva canchaAct) {
         CanchaDeportiva canchaExistente = canchaDeportivaRepository.findById(id)
-        .orElseThrow(() -> new IllegalArgumentException("Cancha con id " + id + " no encontrada"));
+                .orElseThrow(() -> new IllegalArgumentException("Cancha con id " + id + " no encontrada"));
 
-        canchaExistente.setTipo_cancha(canchaAct.getTipo_cancha());
-        canchaExistente.setNumero_cancha(canchaAct.getNumero_cancha());
-        canchaExistente.setPrecio_por_hora(canchaAct.getPrecio_por_hora());
-        canchaExistente.setCapacidad_jugadores(canchaAct.getCapacidad_jugadores());
-        canchaExistente.setTipo_grass(canchaAct.getTipo_grass());
+        canchaExistente.setTipoCancha(canchaAct.getTipoCancha());
+        canchaExistente.setNumeroCancha(canchaAct.getNumeroCancha());
+        canchaExistente.setPrecioPorHora(canchaAct.getPrecioPorHora());
+        canchaExistente.setCapacidadJugadores(canchaAct.getCapacidadJugadores());
+        canchaExistente.setTipoGrass(canchaAct.getTipoGrass());
         canchaExistente.setDescripcion(canchaAct.getDescripcion());
         canchaExistente.setEstado(canchaAct.getEstado());
         canchaExistente.setIluminacion(canchaAct.getIluminacion());
@@ -38,23 +38,23 @@ public class CanchaDeportivaService {
         return canchaDeportivaRepository.save(canchaExistente);
     }
 
-    List<CanchaDeportiva> listarCanchasDeportivas(){
+    public List<CanchaDeportiva> listarCanchasDeportivas() {
         return canchaDeportivaRepository.findAll();
     }
 
-    List<CanchaDeportiva> buscarPorTipoCancha(String tipoCancha){
-        return canchaDeportivaRepository.findByTipoCancha(tipoCancha);
+    public List<CanchaDeportiva> buscarPorTipo_Cancha(String tipo_Cancha) {
+        return canchaDeportivaRepository.findByTipoCancha(tipo_Cancha);
     }
 
-    List<CanchaDeportiva> buscarPorNumeroCancha(String numCancha){
-        return canchaDeportivaRepository.findByNumeroCancha(numCancha);
+    public List<CanchaDeportiva> buscarPorNumero_Cancha(String numeroCancha) {
+        return canchaDeportivaRepository.findByNumeroCancha(numeroCancha);
     }
 
-    List<CanchaDeportiva> listarCanchasDisponibles(){
+    public List<CanchaDeportiva> listarCanchasDisponibles() {
         return canchaDeportivaRepository.findByEstado("ACTIVA");
     }
 
-    Optional<CanchaDeportiva> obtenerCanchaPorId(Long id){
+    public Optional<CanchaDeportiva> obtenerCanchaPorId(Long id) {
         return canchaDeportivaRepository.findById(id);
     }
 }

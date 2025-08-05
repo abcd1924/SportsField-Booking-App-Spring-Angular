@@ -12,19 +12,19 @@ public class HorarioCancha {
     private Long id;
 
     @Column(nullable = false)
-    private String dia_semana;
+    private String diaSemana;
 
     @Column(nullable = false)
-    private LocalTime hora_inicio;
+    private LocalTime horaInicio;
 
     @Column(nullable = false)
-    private LocalTime hora_fin;
+    private LocalTime horaFin;
 
     @Column(nullable = false)
     private boolean disponible;
 
     @ManyToOne
-    @JoinColumn(name = "cancha_deportiva_id", nullable = false)
+    @JoinColumn(name = "canchaDeportivaId", nullable = false)
     private CanchaDeportiva canchaDeportiva;
 
     // Constructor
@@ -38,30 +38,6 @@ public class HorarioCancha {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getDia_semana() {
-        return dia_semana;
-    }
-
-    public void setDia_semana(String dia_semana) {
-        this.dia_semana = dia_semana;
-    }
-
-    public LocalTime getHora_inicio() {
-        return hora_inicio;
-    }
-
-    public void setHora_inicio(LocalTime hora_inicio) {
-        this.hora_inicio = hora_inicio;
-    }
-
-    public LocalTime getHora_fin() {
-        return hora_fin;
-    }
-
-    public void setHora_fin(LocalTime hora_fin) {
-        this.hora_fin = hora_fin;
     }
 
     public boolean isDisponible() {
@@ -78,5 +54,29 @@ public class HorarioCancha {
 
     public void setCanchaDeportiva(CanchaDeportiva canchaDeportiva) {
         this.canchaDeportiva = canchaDeportiva;
+    }
+
+    public String getDiaSemana() {
+        return diaSemana;
+    }
+
+    public void setDiaSemana(String diaSemana) {
+        this.diaSemana = diaSemana;
+    }
+
+    public LocalTime getHoraInicio() {
+        return horaInicio;
+    }
+
+    public void setHoraInicio(LocalTime horaInicio) {
+        this.horaInicio = horaInicio;
+    }
+
+    public LocalTime getHoraFin() {
+        return horaFin;
+    }
+
+    public void setHoraFin(LocalTime horaFin) {
+        this.horaFin = horaFin;
     }
 }

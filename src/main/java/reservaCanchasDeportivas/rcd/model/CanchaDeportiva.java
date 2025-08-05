@@ -10,19 +10,19 @@ public class CanchaDeportiva {
     private Long id;
 
     @Column(nullable = false)
-    private String tipo_cancha;
+    private String tipoCancha;
 
     @Column(nullable = false, unique = true)
-    private String numero_cancha;
+    private String numeroCancha;
 
     @Column(nullable = false)
-    private double precio_por_hora;
+    private double precioPorHora;
 
     @Column(nullable = false)
-    private int capacidad_jugadores;
+    private int capacidadJugadores;
 
     @Column(nullable = false)
-    private String tipo_grass;
+    private String tipoGrass;
 
     private String descripcion;
 
@@ -45,44 +45,44 @@ public class CanchaDeportiva {
         this.id = id;
     }
 
-    public String getTipo_cancha() {
-        return tipo_cancha;
+    public String getTipoCancha() {
+        return tipoCancha;
     }
 
-    public void setTipo_cancha(String tipo_cancha) {
-        this.tipo_cancha = tipo_cancha;
+    public void setTipoCancha(String tipoCancha) {
+        this.tipoCancha = tipoCancha;
     }
 
-    public String getNumero_cancha() {
-        return numero_cancha;
+    public String getNumeroCancha() {
+        return numeroCancha;
     }
 
-    public void setNumero_cancha(String numero_cancha) {
-        this.numero_cancha = numero_cancha;
+    public void setNumeroCancha(String numeroCancha) {
+        this.numeroCancha = numeroCancha;
     }
 
-    public double getPrecio_por_hora() {
-        return precio_por_hora;
+    public double getPrecioPorHora() {
+        return precioPorHora;
     }
 
-    public void setPrecio_por_hora(double precio_por_hora) {
-        this.precio_por_hora = precio_por_hora;
+    public void setPrecioPorHora(double precioPorHora) {
+        this.precioPorHora = precioPorHora;
     }
 
-    public int getCapacidad_jugadores() {
-        return capacidad_jugadores;
+    public int getCapacidadJugadores() {
+        return capacidadJugadores;
     }
 
-    public void setCapacidad_jugadores(int capacidad_jugadores) {
-        this.capacidad_jugadores = capacidad_jugadores;
+    public void setCapacidadJugadores(int capacidadJugadores) {
+        this.capacidadJugadores = capacidadJugadores;
     }
 
-    public String getTipo_grass() {
-        return tipo_grass;
+    public String getTipoGrass() {
+        return tipoGrass;
     }
 
-    public void setTipo_grass(String tipo_grass) {
-        this.tipo_grass = tipo_grass;
+    public void setTipoGrass(String tipoGrass) {
+        this.tipoGrass = tipoGrass;
     }
 
     public String getDescripcion() {

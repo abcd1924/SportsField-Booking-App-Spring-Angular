@@ -16,16 +16,16 @@ import java.util.List;
 @Repository
 public interface ReservaRepository extends JpaRepository<Reserva, Long>{
 
-    Optional<Reserva> findByCod_unico(String cod_unico);
+    Optional<Reserva> findByCodUnico(String codUnico);
     List<Reserva> findByUsuarioId(Long usuario);
     List<Reserva> findByEstado(String estado);
-    boolean existsByCod_unico(String cod_unico);
+    boolean existsByCodUnico(String cod_unico);
 
     //Buscar reservas activas para una cancha en una fecha determinada (evita solapamientos)
-    @Query("SELECT r FROM Reserva r WHERE r.canchaDeportiva.id = :canchaId AND r.fecha_creacion_reserva =:fechaHora and r.estado = 'CANCELADA'")
+    @Query("SELECT r FROM Reserva r WHERE r.canchaDeportiva.id = :canchaId AND r.fechaCreacionReserva =:fechaHora and r.estado = 'CANCELADA'")
     List<Reserva> findByCanchaIdAndFechaHoraAndEstado(@Param("canchaId") Long canchaId, @Param("fechaHora") LocalDateTime fechaHora);
 
     //Buscar reservas futuras confirmadas (para reportes o frontend)
-    @Query("SELECT r FROM Reserva r WHERE r.fecha_creacion_reserva > CURRENT_TIMESTAMP AND r.estado = 'CONFIRMADA'")
+    @Query("SELECT r FROM Reserva r WHERE r.fechaCreacionReserva > CURRENT_TIMESTAMP AND r.estado = 'CONFIRMADA'")
     List<Reserva> findFutureConfirmedReservations();
 }

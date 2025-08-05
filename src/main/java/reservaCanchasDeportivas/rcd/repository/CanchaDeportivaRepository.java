@@ -13,8 +13,9 @@ public interface CanchaDeportivaRepository extends JpaRepository<CanchaDeportiva
     //Métodos personalizados
     List<CanchaDeportiva> findByNumeroCancha(String numeroCancha);
 
-    List<CanchaDeportiva> findByTipoCancha(String numeroCancha);
+    List<CanchaDeportiva> findByTipoCancha(String tipo_cancha);
 
     List<CanchaDeportiva> findByEstado(String estado);
 
+    boolean existsByNumeroCancha(String numeroCancha);
 }
