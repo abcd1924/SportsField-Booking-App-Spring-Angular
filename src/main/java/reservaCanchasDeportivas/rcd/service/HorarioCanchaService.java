@@ -20,8 +20,14 @@ public class HorarioCanchaService {
     private CanchaDeportivaRepository canchaDeportivaRepository;
 
     public HorarioCancha crearHorarioCancha(HorarioCancha horarioCancha) {
-        if (horarioCanchaRepository.existsById(horarioCancha.getId())) {
-            throw new IllegalArgumentException("EL horario ya existe con este ID");
+        Long canchaId = horarioCancha.getCanchaDeportiva().getId();
+        String dia = horarioCancha.getDiaSemana();
+        LocalTime horaInicio = horarioCancha.getHoraInicio();
+
+        Optional<HorarioCancha> horarioExt = horarioCanchaRepository.validarHorarioExacto(canchaId, dia, horaInicio);
+
+        if(horarioExt.isPresent()){
+            throw new IllegalArgumentException("Ya existe un horario para la cancha con id " + canchaId + " en el día " + dia + " a la hora " + horaInicio);
         }
 
         return horarioCanchaRepository.save(horarioCancha);
