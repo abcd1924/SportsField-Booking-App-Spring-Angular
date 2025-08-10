@@ -24,6 +24,10 @@ public class UsuarioService {
             throw new IllegalArgumentException("El email ya está registrado");
         }
 
+        if(usuarioRepository.existsByNumDocumento(usuario.getNumDocumento())){
+            throw new IllegalArgumentException("El número de documento ya está registrado");
+        }
+
         //Encriptar contraseña (falta implementar)
 
         //Asignar rol por defecto
@@ -60,6 +64,8 @@ public class UsuarioService {
         usuarioExistente.setFechaNacimiento(usuarioAct.getFechaNacimiento());
         usuarioExistente.setTelefono(usuarioAct.getTelefono());
         usuarioExistente.setGenero(usuarioAct.getGenero());
+        usuarioExistente.setPassword(usuarioAct.getPassword());
+        usuarioExistente.setRol(usuarioAct.getRol());
 
         return usuarioRepository.save(usuarioExistente);
     }

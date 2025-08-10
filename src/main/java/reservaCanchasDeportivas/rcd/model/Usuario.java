@@ -28,7 +28,7 @@ public class Usuario {
     @Column(nullable = false, unique = true)
     private String numDocumento;
 
-    @NotBlank(message = "Ingrese su fecha de nacimiento")
+    @NotNull(message = "Ingrese su fecha de nacimiento")
     @Column(nullable = false)
     private LocalDate fechaNacimiento;
 

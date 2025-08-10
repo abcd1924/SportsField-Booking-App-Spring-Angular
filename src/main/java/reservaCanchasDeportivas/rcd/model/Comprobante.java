@@ -12,6 +12,9 @@ public class Comprobante {
     private Long id;
 
     @Column(nullable = false)
+    private String codigoComprobante;
+
+    @Column(nullable = false)
     private LocalDateTime fechaEmision;
 
     @Column(nullable = false)
@@ -78,5 +81,13 @@ public class Comprobante {
 
     public void setFechaEmision(LocalDateTime fechaEmision) {
         this.fechaEmision = fechaEmision;
+    }
+
+    public String getCodigoComprobante() {
+        return codigoComprobante;
+    }
+
+    public void setCodigoComprobante(String codigoComprobante) {
+        this.codigoComprobante = codigoComprobante;
     }    
 }

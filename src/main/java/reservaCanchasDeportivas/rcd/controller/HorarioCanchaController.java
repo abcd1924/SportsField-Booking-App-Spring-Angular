@@ -1,5 +1,6 @@
 package reservaCanchasDeportivas.rcd.controller;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
@@ -25,7 +26,7 @@ public class HorarioCanchaController {
     @Autowired
     private HorarioCanchaService horarioCanchaService;
 
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<List<HorarioCancha>> listarHorarios() {
         List<HorarioCancha> horarios = horarioCanchaService.listarHorarioCanchas();
         return ResponseEntity.ok(horarios);
@@ -37,7 +38,7 @@ public class HorarioCanchaController {
         return ResponseEntity.status(HttpStatus.CREATED).body("Horaio creado exitosamente");
     }
 
-    @PutMapping("editar/{id}")
+    @PutMapping("/editar/{id}")
     public ResponseEntity<HorarioCancha> actualizarHorario(@PathVariable Long id, @RequestBody HorarioCancha horario){
         HorarioCancha actualizado = horarioCanchaService.actualizarHorarioCancha(id, horario);
         return ResponseEntity.ok(actualizado);
@@ -59,5 +60,12 @@ public class HorarioCanchaController {
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Optional.empty());
         }
+    }
+
+    //Validar disponibilidad de horario para reservas
+    @GetMapping("/validar-disponibilidad-2")
+    public ResponseEntity<Boolean> validarDisponibilidad(@RequestParam Long canchaId, @RequestParam LocalDate fecha, @RequestParam LocalTime hora, @RequestParam int duracionHoras) {
+        boolean existeReserva = horarioCanchaService.validarDisponibilidad(canchaId, fecha, hora, duracionHoras);
+        return ResponseEntity.ok(existeReserva);
     }
 }
