@@ -5,9 +5,12 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import reservaCanchasDeportivas.rcd.DTO.UsuarioDTO;
 import reservaCanchasDeportivas.rcd.model.Usuario;
 import reservaCanchasDeportivas.rcd.service.UsuarioService;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,14 +33,21 @@ public class UsuarioController {
     }
 
     @PostMapping("/registrar")
-    public ResponseEntity<String> registrarUsuario(@RequestBody Usuario usuario){
-        usuarioService.registrarUsuario(usuario);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Usuario registrado exitosamente");
+    public ResponseEntity<UsuarioDTO> registrarUsuario(@RequestBody Usuario usuario){
+        Usuario creado = usuarioService.registrarUsuario(usuario);
+        return ResponseEntity.ok(UsuarioDTO.toDTO(creado));
     }
 
     @PutMapping("/editar/{id}")
-    public ResponseEntity<Usuario> actualizarUsuario(@PathVariable Long id, @RequestBody Usuario usuarioAct){
-        Usuario actualizado = usuarioService.actualizarUsuario(id, usuarioAct);
+    public ResponseEntity<Usuario> actualizarUsuario(@PathVariable Long id, @RequestBody Usuario usuarioAct, Authentication authentication){
+
+        String rolUsuarioLogeado = authentication.getAuthorities().stream()
+            .map(GrantedAuthority::getAuthority)
+            .filter(r -> r.startsWith("ROLE_"))
+            .map(r -> r.replace("ROLE_", ""))
+            .findFirst()
+            .orElse("USER");
+        Usuario actualizado = usuarioService.actualizarUsuario(id, usuarioAct, rolUsuarioLogeado);
         return ResponseEntity.ok(actualizado);
     }
 
