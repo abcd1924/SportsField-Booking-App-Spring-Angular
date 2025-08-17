@@ -1,5 +1,7 @@
 package reservaCanchasDeportivas.rcd.security;
 
+import java.util.List;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -10,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
 
 @Configuration
 public class SecurityConfig {
@@ -20,25 +23,40 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+            throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, JwtAuthFilter jwtAuthFilter) throws Exception {
         http
-            .csrf().disable()
-            .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/canchas-deportivas/editar{id}", "/api/canchas-deportivas/crear").hasRole("ADMIN")
-                .requestMatchers("/api/horarios-canchas/crear", "/api/horarios-canchas/editar/{id}").hasAnyRole("ADMIN", "RECEPCIONISTA")
-                .requestMatchers("/api/reservas/crear", "/api/reservas/confirmar/{id}", "/api/reservas/cancelar/{id}", "/api/reservas/buscar/futuras-confirmadas").hasAnyRole("ADMIN", "RECEPCIONISTA")
-                .requestMatchers("/api/comprobantes/crear").hasAnyRole("ADMIN", "RECEPCIONISTA")
-                .requestMatchers("/api/usuarios/editar/{id}").hasAnyRole("USER", "ADMIN")
-                .requestMatchers("/api/usuarios/buscar/email/{email}", "/api/usuarios/existe/documento/{numDocumento}", "api/usuarios").hasAnyRole("ADMIN", "RECEPCIONISTA")
-                .requestMatchers("/api/auth/**").permitAll()
-                .anyRequest().authenticated()
-            );
+                .csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.configurationSource(request -> {
+                    var corsConfig = new CorsConfiguration();
+                    corsConfig.setAllowedOrigins(List.of("http://localhost:4200")); // Frontend Angular
+                    corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+                    corsConfig.setAllowedHeaders(List.of("*"));
+                    corsConfig.setAllowCredentials(true); // si usas cookies o auth headers
+                    return corsConfig;
+                }))
+                .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/canchas-deportivas/editar{id}", "/api/canchas-deportivas/crear")
+                        .hasRole("ADMIN")
+                        .requestMatchers("/api/horarios-canchas/crear", "/api/horarios-canchas/editar/{id}")
+                        .hasAnyRole("ADMIN", "RECEPCIONISTA")
+                        .requestMatchers("/api/reservas/crear", "/api/reservas/confirmar/{id}",
+                                "/api/reservas/cancelar/{id}", "/api/reservas/buscar/futuras-confirmadas")
+                        .hasAnyRole("ADMIN", "RECEPCIONISTA")
+                        .requestMatchers("/api/comprobantes/crear").hasAnyRole("ADMIN", "RECEPCIONISTA")
+                        .requestMatchers("/api/usuarios/editar/{id}").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/api/usuarios/buscar/email/{email}",
+                                "/api/usuarios/existe/documento/{numDocumento}", "/api/usuarios")
+                        .hasAnyRole("ADMIN", "RECEPCIONISTA")
+                        .requestMatchers("/api/auth/login", "/api/canchas-deportivas", "/api/horarios-canchas")
+                        .permitAll()
+                        .anyRequest().authenticated());
         http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }

@@ -16,25 +16,34 @@ import jakarta.servlet.http.HttpServletResponse;
 import reservaCanchasDeportivas.rcd.service.AppUserDetailsService;
 
 @Component
-public class JwtAuthFilter extends OncePerRequestFilter{
-    @Autowired 
+public class JwtAuthFilter extends OncePerRequestFilter {
+    @Autowired
     JwtUtil jwtUtil;
 
     @Autowired
     AppUserDetailsService uds;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
+            throws ServletException, IOException {
         String h = req.getHeader("Authorization");
+        
         if (h != null && h.startsWith("Bearer ")) {
             String token = h.substring(7);
-            if(jwtUtil.validarToken(token)) {
+            if (jwtUtil.validarToken(token)) {
                 String username = jwtUtil.extractUsername(token);
                 UserDetails ud = uds.loadUserByUsername(username);
-                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(ud, null, ud.getAuthorities());
+                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(ud, null,
+                        ud.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(auth);
             }
         }
         chain.doFilter(req, res);
+    }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getServletPath();
+        return path.startsWith("/api/auth/");
     }
 }
