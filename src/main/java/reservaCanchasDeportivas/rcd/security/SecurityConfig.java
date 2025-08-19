@@ -37,12 +37,12 @@ public class SecurityConfig {
                     corsConfig.setAllowedOrigins(List.of("http://localhost:4200")); // Frontend Angular
                     corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                     corsConfig.setAllowedHeaders(List.of("*"));
-                    corsConfig.setAllowCredentials(true); // si usas cookies o auth headers
+                    corsConfig.setAllowCredentials(true);
                     return corsConfig;
                 }))
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/canchas-deportivas/editar{id}", "/api/canchas-deportivas/crear")
+                        .requestMatchers("/api/canchas-deportivas/editar/{id}", "/api/canchas-deportivas/crear")
                         .hasRole("ADMIN")
                         .requestMatchers("/api/horarios-canchas/crear", "/api/horarios-canchas/editar/{id}")
                         .hasAnyRole("ADMIN", "RECEPCIONISTA")
