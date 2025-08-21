@@ -116,4 +116,10 @@ public class HorarioCanchaService {
         return !hayReserva; // Devuelve true solo si NO hay reserva
     }
 
+    public void eliminar(Long id) {
+        HorarioCancha horarioCancha = horarioCanchaRepository.findById(id)
+            .orElseThrow(()-> new RuntimeException("No se puede eliminar. No se encontró horario con ID: " +id));
+        
+            horarioCanchaRepository.deleteById(id);
+    }
 }

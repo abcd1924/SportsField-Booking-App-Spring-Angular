@@ -1,6 +1,5 @@
 package reservaCanchasDeportivas.rcd.controller;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -9,6 +8,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -81,25 +81,16 @@ public class CanchaDeportivaController {
         }
     }
 
-    // Búsqueda avanzada - Filtrar canchas por tipo, precio, capacidad, iluminación y estado
-    @GetMapping("/buscar-avanzado")
-    public ResponseEntity<List<CanchaDeportiva>> buscarCanchaAvanzado(
-            @RequestParam(required = false) String tipoCancha,
-            @RequestParam(required = false) BigDecimal precioMin,
-            @RequestParam(required = false) BigDecimal precioMax,
-            @RequestParam(required = false) Integer capacidadMin,
-            @RequestParam(required = false) String iluminacion,
-            @RequestParam(required = false) String estado) {
-        List<CanchaDeportiva> canchas = canchaDeportivaService.buscarAvanzado(tipoCancha, precioMin, precioMax,
-                capacidadMin, iluminacion, estado);
-        return ResponseEntity.ok(canchas);
-    }
-
     // Buscar canchas disponibles en un rango de fechas y horas
     @GetMapping("/disponibles")
     public ResponseEntity<List<CanchaDeportiva>> buscarCanchasDisponibles(@RequestParam("fechaInicio") @DateTimeFormat(iso = ISO.DATE_TIME) LocalDateTime fechaInicio,
             @RequestParam("fechaFin") @DateTimeFormat(iso = ISO.DATE_TIME) LocalDateTime fechaFin) {
         List<CanchaDeportiva> disponibles = canchaDeportivaService.buscarCanchasDisponibles(fechaInicio, fechaFin);
         return ResponseEntity.ok(disponibles);
+    }
+
+    @DeleteMapping("/eliminar/{id}")
+    public void eliminarCanchaDeportiva(@PathVariable Long id) {
+        canchaDeportivaService.eliminar(id);
     }
 }

@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import reservaCanchasDeportivas.rcd.model.HorarioCancha;
 import reservaCanchasDeportivas.rcd.service.HorarioCanchaService;
+
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -67,5 +69,11 @@ public class HorarioCanchaController {
     public ResponseEntity<Boolean> validarDisponibilidad(@RequestParam Long canchaId, @RequestParam LocalDate fecha, @RequestParam LocalTime hora, @RequestParam int duracionHoras) {
         boolean existeReserva = horarioCanchaService.validarDisponibilidad(canchaId, fecha, hora, duracionHoras);
         return ResponseEntity.ok(existeReserva);
+    }
+
+    // Eliminar horario con ID
+    @DeleteMapping("/eliminar/{id}")
+    public void eliminarHorario(@PathVariable Long id) {
+        horarioCanchaService.eliminar(id);
     }
 }

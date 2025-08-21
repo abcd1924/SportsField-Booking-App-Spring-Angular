@@ -72,6 +72,13 @@ public class UsuarioService {
         return usuarioRepository.save(usuarioExistente);
     }
 
+    public void eliminar(Long id) {
+        Usuario usuario = usuarioRepository.findById(id)
+            .orElseThrow(()-> new RuntimeException("No se puede eliminar. Usuario no encontrado con ID: " +id));
+
+        usuarioRepository.deleteById(id);
+    }
+
     // Logging de eventos
     private static final Logger logger = LoggerFactory.getLogger(UsuarioService.class);
 
