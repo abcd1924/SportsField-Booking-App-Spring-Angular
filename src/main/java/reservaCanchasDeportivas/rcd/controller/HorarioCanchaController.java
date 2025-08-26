@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import jakarta.validation.Valid;
 import reservaCanchasDeportivas.rcd.model.HorarioCancha;
 import reservaCanchasDeportivas.rcd.service.HorarioCanchaService;
 
@@ -35,13 +37,13 @@ public class HorarioCanchaController {
     }
 
     @PostMapping("/crear")
-    public ResponseEntity<String> crearHorario(@RequestBody HorarioCancha horarioCancha) {
+    public ResponseEntity<String> crearHorario(@Valid @RequestBody HorarioCancha horarioCancha) {
         horarioCanchaService.crearHorarioCancha(horarioCancha);
         return ResponseEntity.status(HttpStatus.CREATED).body("Horaio creado exitosamente");
     }
 
     @PutMapping("/editar/{id}")
-    public ResponseEntity<HorarioCancha> actualizarHorario(@PathVariable Long id, @RequestBody HorarioCancha horario){
+    public ResponseEntity<HorarioCancha> actualizarHorario(@Valid @PathVariable Long id, @RequestBody HorarioCancha horario){
         HorarioCancha actualizado = horarioCanchaService.actualizarHorarioCancha(id, horario);
         return ResponseEntity.ok(actualizado);
     }

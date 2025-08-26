@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import jakarta.validation.Valid;
 import reservaCanchasDeportivas.rcd.DTO.UsuarioDTO;
 import reservaCanchasDeportivas.rcd.model.Usuario;
 import reservaCanchasDeportivas.rcd.service.UsuarioService;
@@ -34,13 +36,13 @@ public class UsuarioController {
     }
 
     @PostMapping("/registrar")
-    public ResponseEntity<UsuarioDTO> registrarUsuario(@RequestBody Usuario usuario){
+    public ResponseEntity<UsuarioDTO> registrarUsuario(@Valid @RequestBody Usuario usuario){
         Usuario creado = usuarioService.registrarUsuario(usuario);
         return ResponseEntity.ok(UsuarioDTO.toDTO(creado));
     }
 
     @PutMapping("/editar/{id}")
-    public ResponseEntity<Usuario> actualizarUsuario(@PathVariable Long id, @RequestBody Usuario usuarioAct, Authentication authentication){
+    public ResponseEntity<Usuario> actualizarUsuario(@Valid @PathVariable Long id, @RequestBody Usuario usuarioAct, Authentication authentication){
 
         String rolUsuarioLogeado = authentication.getAuthorities().stream()
             .map(GrantedAuthority::getAuthority)

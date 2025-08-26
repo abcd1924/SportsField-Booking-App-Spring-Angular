@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import jakarta.validation.Valid;
 import reservaCanchasDeportivas.rcd.model.CanchaDeportiva;
 import reservaCanchasDeportivas.rcd.service.CanchaDeportivaService;
 
@@ -36,7 +38,7 @@ public class CanchaDeportivaController {
     }
 
     @PutMapping("/editar/{id}")
-    public ResponseEntity<CanchaDeportiva> actualizarCanchaDeportiva(@PathVariable Long id,
+    public ResponseEntity<CanchaDeportiva> actualizarCanchaDeportiva(@Valid @PathVariable Long id,
             @RequestBody CanchaDeportiva canchaAct) {
         CanchaDeportiva actualizada = canchaDeportivaService.actualizarCanchaDeportiva(id, canchaAct);
         return ResponseEntity.ok(actualizada);
@@ -44,9 +46,9 @@ public class CanchaDeportivaController {
     }
 
     @PostMapping("/crear")
-    public ResponseEntity<String> crearCanchaDeportiva(@RequestBody CanchaDeportiva cancha) {
-        canchaDeportivaService.crearCanchaDeportiva(cancha);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Cancha creada exitosamente");
+    public ResponseEntity<CanchaDeportiva> crearCanchaDeportiva(@Valid @RequestBody CanchaDeportiva cancha) {
+        CanchaDeportiva creada = canchaDeportivaService.crearCanchaDeportiva(cancha);
+        return ResponseEntity.status(HttpStatus.CREATED).body(creada);
     }
 
     // Listar canchas disponibles (estado = ACTIVA)
