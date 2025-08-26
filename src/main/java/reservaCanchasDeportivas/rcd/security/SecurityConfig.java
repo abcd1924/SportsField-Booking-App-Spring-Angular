@@ -51,10 +51,11 @@ public class SecurityConfig {
                         .hasAnyRole("ADMIN", "RECEPCIONISTA")
                         .requestMatchers("/api/comprobantes/crear").hasAnyRole("ADMIN", "RECEPCIONISTA")
                         .requestMatchers("/api/usuarios/editar/{id}").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers("/api/usuarios/buscar/email/{email}",
-                                "/api/usuarios/existe/documento/{numDocumento}", "/api/usuarios")
+                        .requestMatchers("/api/usuarios/existe/documento/{numDocumento}", "/api/usuarios")
                         .hasAnyRole("ADMIN", "RECEPCIONISTA")
-                        .requestMatchers("/api/auth/login", "/api/canchas-deportivas", "/api/horarios-canchas")
+                        .requestMatchers("/api/usuarios/buscar/email/{email}")
+                        .authenticated()
+                        .requestMatchers("/api/auth/login", "/api/usuarios/registrar", "/api/canchas-deportivas", "/api/horarios-canchas")
                         .permitAll()
                         .anyRequest().authenticated());
         http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

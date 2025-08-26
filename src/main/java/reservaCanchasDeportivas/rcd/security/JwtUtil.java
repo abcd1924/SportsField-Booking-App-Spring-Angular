@@ -15,6 +15,7 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import reservaCanchasDeportivas.rcd.model.Usuario;
 
 @Service
 public class JwtUtil {
@@ -28,12 +29,19 @@ public class JwtUtil {
         return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String generateToken(UserDetails user) {
+    public String generateToken(UserDetails user, Usuario usuario) {
         Date now = new Date();
         Date exp = new Date(now.getTime() + expirationMs);
         return Jwts.builder()
             .setSubject(user.getUsername())
             .claim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
+            .claim("nombre", usuario.getNombre())
+            .claim("apellido", usuario.getApellido())
+            .claim("fechaNacimiento", usuario.getFechaNacimiento().toString())
+            .claim("tipoDocumento", usuario.getTipoDocumento())
+            .claim("numDocumento", usuario.getNumDocumento())
+            .claim("telefono", usuario.getTelefono())
+            .claim("genero", usuario.getGenero())
             .setIssuedAt(now)
             .setExpiration(exp)
             .setId(UUID.randomUUID().toString())
