@@ -1,8 +1,11 @@
 package reservaCanchasDeportivas.rcd.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -36,9 +39,20 @@ public class UsuarioController {
     }
 
     @PostMapping("/registrar")
-    public ResponseEntity<UsuarioDTO> registrarUsuario(@Valid @RequestBody Usuario usuario){
+    public ResponseEntity<?> registrarUsuario(@Valid @RequestBody Usuario usuario){
+        try {
         Usuario creado = usuarioService.registrarUsuario(usuario);
-        return ResponseEntity.ok(UsuarioDTO.toDTO(creado));
+
+        Map<String, Object> successResponse = new HashMap<>();
+        successResponse.put("success", true);
+        successResponse.put("message", "Usuario registrado exitosamente");
+        successResponse.put("data", UsuarioDTO.toDTO(creado));
+        
+        return ResponseEntity.status(HttpStatus.CREATED).body(successResponse);
+        
+        } catch (DataIntegrityViolationException ex) {
+            throw ex;
+        }
     }
 
     @PutMapping("/editar/{id}")
