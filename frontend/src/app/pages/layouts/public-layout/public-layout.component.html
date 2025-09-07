@@ -1,0 +1,61 @@
+ <div class="public-layout">
+      <!-- HEADER público (sin autenticación) -->
+      <header class="public-header">
+        <div class="container">
+          <div class="header-content">
+            <h1 class="brand" routerLink="/">
+              🏟️ Reserva Canchas
+            </h1>
+            
+            <nav class="public-nav">
+              <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                Inicio
+              </a>
+              <a routerLink="/canchas" routerLinkActive="active">
+                Ver Canchas
+              </a>
+              <a routerLink="/login" routerLinkActive="active" class="login-btn">
+                <i class="pi pi-sign-in"></i>
+                Iniciar Sesión
+              </a>
+            </nav>
+          </div>
+        </div>
+      </header>
+
+      <!-- CONTENIDO PRINCIPAL -->
+      <main class="public-main">
+        <router-outlet></router-outlet>
+      </main>
+
+      <!-- FOOTER -->
+      <footer class="public-footer">
+        <div class="container">
+          <div class="footer-content">
+            <div class="footer-section">
+              <h3>🏟️ Reserva Canchas</h3>
+              <p>El mejor sistema para reservar canchas deportivas</p>
+            </div>
+            
+            <div class="footer-section">
+              <h4>Enlaces</h4>
+              <ul>
+                <li><a routerLink="/">Inicio</a></li>
+                <li><a routerLink="/canchas">Canchas</a></li>
+                <li><a routerLink="/login">Iniciar Sesión</a></li>
+              </ul>
+            </div>
+            
+            <div class="footer-section">
+              <h4>Contacto</h4>
+              <p>📧 info&#64;reservacanchas.com</p>
+              <p>📱 +51 999 888 777</p>
+            </div>
+          </div>
+          
+          <div class="footer-bottom">
+            <p>&copy; 2024 Sistema de Reservas. Todos los derechos reservados.</p>
+          </div>
+        </div>
+      </footer>
+    </div>

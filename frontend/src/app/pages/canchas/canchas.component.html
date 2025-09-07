@@ -1,0 +1,33 @@
+<div class="container mt-3">
+  <h2 class="mb-3">Listado de Canchas Deportivas</h2>
+
+
+
+  <!-- Mensaje de error -->
+
+
+  <!-- Tabla de canchas -->
+  <table *ngIf="canchas && canchas.length > 0" class="table table-striped table-bordered">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Ubicación</th>
+        <th>Disponibilidad</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let cancha of canchas">
+        <td>{{ cancha.id }}</td>
+        <td>{{ cancha.tipoCancha }}</td>
+
+        <td>{{ cancha.estado ? 'Disponible' : 'Ocupada' }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Mensaje si no hay registros -->
+  <div *ngIf="canchas && canchas.length === 0" class="alert alert-warning">
+    No hay canchas registradas.
+  </div>
+</div>

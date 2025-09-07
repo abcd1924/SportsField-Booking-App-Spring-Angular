@@ -1,0 +1,30 @@
+<div class="user-layout">
+    <!-- HEADER más simple para usuarios -->
+    <header class="user-header">
+        <div class="header-left">
+            <h1 class="brand">🏟️ Reserva Canchas</h1>
+        </div>
+
+        <nav class="header-nav">
+            <a *ngFor="let item of navItems" [routerLink]="item.routerLink" routerLinkActive="active"
+                class="nav-link">
+                <i [class]="item.icon"></i>
+                {{ item.label }}
+            </a>
+        </nav>
+
+        
+    </header>
+
+    <!-- CONTENIDO PRINCIPAL (sin sidebar) -->
+    <main class="user-main">
+        <div class="container">
+            <router-outlet></router-outlet>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="user-footer">
+        <p>&copy; 2024 Sistema de Reservas - Todos los derechos reservados</p>
+    </footer>
+</div>

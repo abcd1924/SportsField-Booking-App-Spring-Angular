@@ -1,0 +1,223 @@
+<body>
+    <div class="container">
+        <h2 class="form-title">Registro de Nueva Cuenta</h2>
+        
+        <!-- Mensaje de éxito -->
+        <div *ngIf="mensajeExito" class="mensaje-exito">
+            <span class="icono-mensaje">✓</span>
+            {{ mensajeExito }}
+        </div>
+        
+        <!-- Mensaje de error general -->
+        <div *ngIf="mensajeErrorGeneral" class="mensaje-error">
+            <span class="icono-mensaje">⚠</span>
+            {{ mensajeErrorGeneral }}
+        </div>
+        
+        <!-- Indicador de carga -->
+        <div *ngIf="cargando" class="cargando">
+            <div class="spinner"></div>
+            Registrando usuario, por favor espera...
+        </div>
+        
+        <form [formGroup]="registroFormReactivo" (ngSubmit)="registrar()">
+            
+            <!-- Nombre y Apellido -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="nombre">
+                        Nombre <span class="requerido">*</span>
+                    </label>
+                    <input 
+                        id="nombre"
+                        type="text" 
+                        formControlName="nombre"
+                        [class.campo-con-error]="tieneError('nombre')"
+                        placeholder="Ingresa tu nombre">
+                    <span *ngIf="tieneError('nombre')" class="error-campo">
+                        {{ obtenerMensajeError('nombre') }}
+                    </span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="apellido">
+                        Apellido <span class="requerido">*</span>
+                    </label>
+                    <input 
+                        id="apellido"
+                        type="text" 
+                        formControlName="apellido"
+                        [class.campo-con-error]="tieneError('apellido')"
+                        placeholder="Ingresa tu apellido">
+                    <span *ngIf="tieneError('apellido')" class="error-campo">
+                        {{ obtenerMensajeError('apellido') }}
+                    </span>
+                </div>
+            </div>
+            
+            <!-- Email -->
+            <div class="form-group">
+                <label for="email">
+                    Email <span class="requerido">*</span>
+                </label>
+                <input 
+                    id="email"
+                    type="email" 
+                    formControlName="email"
+                    [class.campo-con-error]="tieneError('email')"
+                    placeholder="ejemplo@correo.com">
+                <span *ngIf="tieneError('email')" class="error-campo">
+                    {{ obtenerMensajeError('email') }}
+                </span>
+            </div>
+            
+            <!-- Fecha de Nacimiento -->
+            <div class="form-group">
+                <label for="fechaNacimiento">
+                    Fecha de Nacimiento <span class="requerido">*</span>
+                </label>
+                <input 
+                    id="fechaNacimiento"
+                    type="date" 
+                    formControlName="fechaNacimiento"
+                    [class.campo-con-error]="tieneError('fechaNacimiento')">
+                <span *ngIf="tieneError('fechaNacimiento')" class="error-campo">
+                    {{ obtenerMensajeError('fechaNacimiento') }}
+                </span>
+            </div>
+
+            <!-- Tipo de Documento y Número de Documento -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="tipoDocumento">
+                        Tipo de Documento <span class="requerido">*</span>
+                    </label>
+                    <select 
+                        id="tipoDocumento"
+                        formControlName="tipoDocumento"
+                        [class.campo-con-error]="tieneError('tipoDocumento')">
+                        <option value="">Selecciona un tipo</option>
+                        <option *ngFor="let tipo of tiposDocumento" [value]="tipo.value">
+                            {{ tipo.label }}
+                        </option>
+                    </select>
+                    <span *ngIf="tieneError('tipoDocumento')" class="error-campo">
+                        {{ obtenerMensajeError('tipoDocumento') }}
+                    </span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="numDocumento">
+                        Número de Documento <span class="requerido">*</span>
+                    </label>
+                    <input 
+                        id="numDocumento"
+                        type="text" 
+                        formControlName="numDocumento"
+                        [class.campo-con-error]="tieneError('numDocumento')"
+                        [placeholder]="getPlaceholderDocumento()">
+                    <span *ngIf="tieneError('numDocumento')" class="error-campo">
+                        {{ obtenerMensajeError('numDocumento') }}
+                    </span>
+                </div>
+            </div>
+
+            <!-- Teléfono y Género -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="telefono">
+                        Teléfono <span class="requerido">*</span>
+                    </label>
+                    <input 
+                        id="telefono"
+                        type="tel" 
+                        formControlName="telefono"
+                        [class.campo-con-error]="tieneError('telefono')"
+                        placeholder="987654321 (9 dígitos)">
+                    <span *ngIf="tieneError('telefono')" class="error-campo">
+                        {{ obtenerMensajeError('telefono') }}
+                    </span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="genero">
+                        Género <span class="requerido">*</span>
+                    </label>
+                    <select 
+                        id="genero"
+                        formControlName="genero"
+                        [class.campo-con-error]="tieneError('genero')">
+                        <option value="">Selecciona tu género</option>
+                        <option *ngFor="let genero of generos" [value]="genero.value">
+                            {{ genero.label }}
+                        </option>
+                    </select>
+                    <span *ngIf="tieneError('genero')" class="error-campo">
+                        {{ obtenerMensajeError('genero') }}
+                    </span>
+                </div>
+            </div>
+
+            <!-- Contraseñas -->
+            <div class="form-group">
+                <label for="password">
+                    Contraseña <span class="requerido">*</span>
+                </label>
+                <input 
+                    id="password"
+                    type="password" 
+                    formControlName="password"
+                    [class.campo-con-error]="tieneError('password')"
+                    placeholder="Mínimo 8 caracteres con mayúscula, minúscula, número y símbolo">
+                <span *ngIf="tieneError('password')" class="error-campo">
+                    {{ obtenerMensajeError('password') }}
+                </span>
+            </div>
+
+            <div class="form-group">
+                <label for="confirmPassword">
+                    Confirmar Contraseña <span class="requerido">*</span>
+                </label>
+                <input 
+                    id="confirmPassword"
+                    type="password" 
+                    formControlName="confirmPassword"
+                    [class.campo-con-error]="tieneError('confirmPassword') || passwordsNoCoinciden()"
+                    placeholder="Repite tu contraseña">
+                <span *ngIf="tieneError('confirmPassword')" class="error-campo">
+                    {{ obtenerMensajeError('confirmPassword') }}
+                </span>
+                <span *ngIf="passwordsNoCoinciden()" class="error-campo">
+                    Las contraseñas no coinciden
+                </span>
+            </div>
+
+            <!-- Botón de Registro -->
+            <button 
+                type="submit" 
+                class="btn-registrar"
+                [disabled]="registroFormReactivo.invalid || cargando">
+                <span *ngIf="cargando" class="spinner"></span>
+                <span *ngIf="cargando">Registrando...</span>
+                <span *ngIf="!cargando">Registrar Cuenta</span>
+            </button>
+        </form>
+    </div>
+
+    <script>
+        // Método adicional para el placeholder dinámico del documento
+        function getPlaceholderDocumento() {
+            const tipoDoc = this.registroFormReactivo?.get('tipoDocumento')?.value;
+            switch (tipoDoc) {
+                case 'DNI':
+                    return '12345678 (8 dígitos)';
+                case 'Carnet_Extranjeria':
+                    return 'CE123456789 (9-12 caracteres)';
+                case 'Pasaporte':
+                    return 'AB123456 (6-9 caracteres)';
+                default:
+                    return 'Selecciona el tipo primero';
+            }
+        }
+    </script>
+</body>
