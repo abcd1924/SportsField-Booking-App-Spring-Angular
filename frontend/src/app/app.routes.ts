@@ -26,6 +26,7 @@ import { NuevaReservaComponent } from './pages/user/nueva-reserva/nueva-reserva.
 import { PerfilUserComponent } from './pages/user/perfil-user/perfil-user.component';
 import { UnauthorizedComponent } from './pages/error/unauthorized/unauthorized.component';
 import { NotFoundComponent } from './pages/error/not-found/not-found.component';
+import { LoginAdminComponent } from './pages/login-admin/login-admin.component';
 
 const roleGuard = (expectedRoles: string[]) => {
     return () => {
@@ -71,7 +72,8 @@ export const routes: Routes = [
             { path: '', component: HomeComponent },
             { path: 'login', component: LoginComponent },
             { path: 'register', component: RegisterComponent },
-            { path: 'canchas', component: CanchasComponent }
+            { path: 'canchas', component: CanchasComponent },
+            { path: 'admin/login', component: LoginAdminComponent }
         ]
     },
 
