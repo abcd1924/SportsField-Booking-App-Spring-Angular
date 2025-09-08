@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceso Administrativo</title>
+</head>
+
+<body>
+    <div>
+        <div>
+            <h2>Panel Administrativo</h2>
+            <p>Sistema de Gestión de Canchas Deportivas</p>
+        </div>
+
+        <div>Acceso Restringido - Solo Personal Autorizado</div>
+    </div>
+
+    <div>
+        <div *ngIf="mensajeError">{{ mensajeError }}</div>
+
+        <form [formGroup]="loginAdminForm" (ngSubmit)="onLoginAdmin()">
+
+            <!-- Campo Email -->
+            <div>
+                <label for="email">Email Corporativo</label>
+                <input type="email" id="email" formControlName="email" [class.campo-error]="tieneError('email')"
+                    placeholder="admin@empresa.com">
+                <div *ngIf="tieneError('email')">{{ obtenerMensajeError('email') }}</div>
+            </div>
+
+            <!-- Campo Contraseña-->
+            <div>
+                <label for="password">Contraseña</label>
+                <input type="password" id="password" formControlName="password"
+                    [class.campo-error]="tieneError('pasasword')" placeholder="Tu contraseña">
+                <div *ngIf="tieneError('password')">{{ obtenerMensajeError('password') }}</div>
+            </div>
+
+            <!-- Botón de Login -->
+             <button type="submit" [disabled]="loginAdminForm.invalid || cargando">
+                <div *ngIf="cargando"></div>
+                <span *ngIf="cargando">Verificando acceso...</span>
+                <span *ngIf="!cargando">Acceder al Sistema</span>
+             </button>
+        </form>
+    </div>
+</body>
+
+</html>
