@@ -1,12 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-home',
   standalone: true,
   imports: [],
+  providers: [],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss' 
 })
-export class HomeComponent {
-
+export class HomeComponent{
+  
 }
