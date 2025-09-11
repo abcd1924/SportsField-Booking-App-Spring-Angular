@@ -1,0 +1,69 @@
+#Hero {
+  background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
+                    url('../../../assets/img/home-img-1.jpg');
+  background-size: cover;
+  background-position: right;
+}
+
+/* En pantallas grandes, hacerlo más claro */
+@media (min-width: 640px) {
+  #Hero {
+    background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
+                      url('../../../assets/img/home-img-1.jpg');
+  }
+}
+
+/* Animaciones personalizadas */
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slide-up {
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in {
+    animation: fade-in 1s ease-out;
+}
+
+.animate-slide-up {
+    animation: slide-up 1s ease-out 0.3s both;
+}
+
+.animate-slide-up-delayed {
+    animation: slide-up 1s ease-out 0.6s both;
+}
+
+.animate-fade-in-up {
+    animation: fade-in 1s ease-out 0.9s both;
+}
+
+/* Estilos para hover effects más suaves */
+p-card:hover {
+    transform: translateY(-8px);
+}
+
+/* Gradiente para los botones de PrimeNG */
+::ng-deep .p-button {
+    transition: all 0.3s ease;
+}
+
+::ng-deep .p-button:hover {
+    transform: translateY(-2px);
+}

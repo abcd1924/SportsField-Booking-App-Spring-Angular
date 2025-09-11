@@ -1,2 +1,202 @@
-<h1>Página de inicio</h1>
-<p class="text-black">hola a todos</p>
+<!-- Hero Section -->
+<section class="relative min-h-screen flex items-center overflow-hidden" id="Hero">
+    <div class="ml-7 px-4 relative z-10">
+        <div class="mx-auto max-w-4xl text-left text-white">
+            <h1 class="text-6xl md:text-9xl font-bold mb-6 animate-fade-in">
+                <span class="text-green-400">Reserva</span> tu Cancha
+            </h1>
+            <h3 class="text-3xl mb-8 font-semibold text-gray-200 leading-relaxed animate-slide-up">
+                La plataforma más fácil y rápida para reservar canchas deportivas.
+                ¡Encuentra tu cancha ideal y juega cuando quieras!
+            </h3>
+
+            <div class="flex flex-col sm:flex-row gap-4 mb-12 animate-slide-up-delayed">
+                <p-button [rounded]="true" label="Ver Canchas Disponibles" routerLink="/canchas" size="large"
+                    class="hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
+                    [style]="{'padding-left': '2rem', 'padding-right': '2rem', 'padding-top': '1rem', 'padding-bottom': '1rem'}">
+                </p-button>
+
+                <p-button [rounded]="true" label="Registrarse Gratis" routerLink="/register" outlined="true"
+                    size="large" class="hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
+                    [style]="{'padding-left': '2rem', 'padding-right': '2rem', 'padding-top': '1rem', 'padding-bottom': '1rem'}">
+                </p-button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Sección de Tipos de Canchas -->
+<section class="py-20 bg-gray-50">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-6">
+                Tipos de <span class="text-green-600">Canchas</span>
+            </h2>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                Ofrecemos una variedad de canchas deportivas para todos los gustos y necesidades
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <!-- Fútbol -->
+            <p-card class="h-full duration-300 transform hover:-translate-y-2 cursor-pointer group"
+                [style]="{'background-color': '#ECFDF5'}">
+                <div class="text-center">
+                    <div
+                        class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-green-200 transition-colors duration-300">
+                        <span class="text-4xl">⚽</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4">Fútbol</h3>
+                    <p class="text-gray-600 mb-6 leading-relaxed">
+                        Canchas de césped sintético y natural para la pelotita
+                    </p>
+                    <p-tag>
+                        <span>Desde S/80 por hora</span>
+                    </p-tag>
+                </div>
+            </p-card>
+
+            <!-- Básquet -->
+            <p-card class="h-full duration-300 transform hover:-translate-y-2 cursor-pointer group"
+                [style]="{'background-color': '#FFF7ED'}">
+                <div class="text-center">
+                    <div
+                        class="w-20 h-20 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-orange-200 transition-colors duration-300">
+                        <span class="text-4xl">🏀</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4">Básquetbol</h3>
+                    <p class="text-gray-600 mb-6 leading-relaxed">
+                        Canchas techadas con tableros profesionales y piso de calidad
+                    </p>
+                    <p-tag value="Desde S/60 por hora" severity="warn"></p-tag>
+                </div>
+            </p-card>
+
+            <!-- Vóley -->
+            <p-card class="h-full duration-300 transform hover:-translate-y-2 cursor-pointer group"
+                [style]="{'background-color': '#EFF6FF'}">
+                <div class="text-center">
+                    <div
+                        class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-blue-200 transition-colors duration-300">
+                        <span class="text-4xl">🏐</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4">Vóleibol</h3>
+                    <p class="text-gray-600 mb-6 leading-relaxed">
+                        Canchas de arena y piso duro con redes profesionales
+                    </p>
+                    <p-tag value="Desde S/50 por hora" severity="info"></p-tag>
+                </div>
+            </p-card>
+
+            <!-- Tenis -->
+            <p-card class="h-full duration-300 transform hover:-translate-y-2 cursor-pointer group"
+                [style]="{'background-color': '#ECFDF5'}">
+                <div class="text-center">
+                    <div
+                        class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-green-200 transition-colors duration-300">
+                        <span class="text-4xl">🎾</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4">Tenis</h3>
+                    <p class="text-gray-600 mb-6 leading-relaxed">
+                        Canchas de polvo de ladrillo y cemento para jugadores exigentes
+                    </p>
+                    <p-tag value="Desde S/70 por hora"></p-tag>
+                </div>
+            </p-card>
+        </div>
+    </div>
+</section>
+
+<!-- Sección Cómo Funciona -->
+<section class="py-20 bg-white">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-6">
+                ¿Cómo <span class="text-green-600">Funciona</span>?
+            </h2>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                Reservar tu cancha es súper fácil. Solo sigue estos 3 simples pasos
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+            <!-- Paso 1 -->
+            <div class="text-center group">
+                <div class="relative mb-8">
+                    <div
+                        class="w-24 h-24 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center mx-auto text-white text-3xl font-bold shadow-lg group-hover:shadow-2xl transform group-hover:scale-110 transition-all duration-300">
+                        1
+                    </div>
+                    <!-- Flecha conectora -->
+                    <div
+                        class="hidden md:block absolute top-1/2 left-full w-20 h-0.5 bg-green-200 transform -translate-y-1/2 ml-8">
+                    </div>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-800 mb-4">Elige tu Cancha</h3>
+                <p class="text-gray-600 leading-relaxed">
+                    Navega por nuestras canchas disponibles y selecciona la que más te guste según tu deporte favorito
+                </p>
+            </div>
+
+            <!-- Paso 2 -->
+            <div class="text-center group">
+                <div class="relative mb-8">
+                    <div
+                        class="w-24 h-24 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center mx-auto text-white text-3xl font-bold shadow-lg group-hover:shadow-2xl transform group-hover:scale-110 transition-all duration-300">
+                        2
+                    </div>
+                    <!-- Flecha conectora -->
+                    <div
+                        class="hidden md:block absolute top-1/2 left-full w-20 h-0.5 bg-green-200 transform -translate-y-1/2 ml-8">
+                    </div>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-800 mb-4">Selecciona Fecha y Hora</h3>
+                <p class="text-gray-600 leading-relaxed">
+                    Usa nuestro calendario intuitivo para elegir el día y horario que mejor se adapte a tu agenda
+                </p>
+            </div>
+
+            <!-- Paso 3 -->
+            <div class="text-center group">
+                <div class="relative mb-8">
+                    <div
+                        class="w-24 h-24 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center mx-auto text-white text-3xl font-bold shadow-lg group-hover:shadow-2xl transform group-hover:scale-110 transition-all duration-300">
+                        3
+                    </div>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-800 mb-4">¡Confirma y Juega!</h3>
+                <p class="text-gray-600 leading-relaxed">
+                    Genera tu comprobante y realiza el pago en nuestro local. ¡Ya estás listo para jugar!
+                </p>
+            </div>
+        </div>
+
+        <div class="text-center mt-16">
+            <p-button label="Comenzar Ahora" icon="pi pi-arrow-right" routerLink="/login" size="large"
+                class="hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300">
+            </p-button>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Final -->
+<section class="py-20 bg-gradient-to-r from-green-600 to-emerald-700 text-white">
+    <div class="container mx-auto px-4 text-center">
+        <h2 class="text-4xl md:text-5xl font-bold mb-6">
+            ¿Listo para tu próximo partido?
+        </h2>
+        <p class="text-xl mb-10 text-green-100 max-w-2xl mx-auto leading-relaxed">
+            Únete a miles de deportistas que ya confían en nosotros para reservar sus canchas favoritas
+        </p>
+
+        <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <p-button label="Ver Canchas" icon="pi pi-eye" routerLink="/canchas" size="large" severity="secondary"
+                class="px-8 py-4 text-lg font-semibold"
+                [style]="{'background-color': '#253900', 'border': '2px solid #253900'}">
+            </p-button>
+
+            <p-button label="Crear Cuenta" icon="pi pi-user-plus" routerLink="/register" size="large" class="px-8 py-4">
+            </p-button>
+        </div>
+    </div>
+</section>
