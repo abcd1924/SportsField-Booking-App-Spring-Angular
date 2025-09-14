@@ -1,61 +1,152 @@
- <div class="public-layout">
-      <!-- HEADER público (sin autenticación) -->
-      <header class="public-header">
-        <div class="container">
-          <div class="header-content">
-            <h1 class="brand" routerLink="/">
-              🏟️ Reserva Canchas
-            </h1>
-            
-            <nav class="public-nav">
-              <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-                Inicio
+<html>
+
+<body>
+  <div class="public-layout">
+    <!-- HEADER INTELIGENTE -->
+    <header class="public-header" [class.transparent]="isHomePage && !isScrolled"
+      [class.solid]="!isHomePage || isScrolled">
+      <div class="container">
+        <div class="header-content">
+          <h1 class="brand" routerLink="/">
+            🏟️ Reserva Canchas
+          </h1>
+
+          <nav class="public-nav">
+            <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">
+              Inicio
+            </a>
+            <a routerLink="/canchas" routerLinkActive="active" class="nav-link">
+              Ver Canchas
+            </a>
+            <a routerLink="/login" routerLinkActive="active" class="nav-link login-btn">
+              <i class="pi pi-sign-in"></i>
+              Iniciar Sesión
+            </a>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="public-main" [class.with-padding]="!isHomePage">
+      <router-outlet></router-outlet>
+    </main>
+
+    <!-- FOOTER MODERNO Y DEPORTIVO -->
+    <footer class="public-footer">
+      <div class="container">
+        <div class="footer-content">
+          <!-- Sección Principal -->
+          <div class="footer-section fade-in">
+            <h3>🏟️ Reserva Canchas</h3>
+            <p style="margin-bottom: 1.5rem;">
+              La plataforma digital para reservar canchas deportivas en Perú.
+              Conectamos deportistas con las mejores instalaciones.
+            </p>
+
+            <div class="social-links">
+              <a href="#" class="social-link" title="Facebook">
+                <i class="pi pi-facebook"></i>
               </a>
-              <a routerLink="/canchas" routerLinkActive="active">
-                Ver Canchas
+              <a href="#" class="social-link" title="Instagram">
+                <i class="pi pi-instagram"></i>
               </a>
-              <a routerLink="/login" routerLinkActive="active" class="login-btn">
-                <i class="pi pi-sign-in"></i>
-                Iniciar Sesión
+              <a href="#" class="social-link" title="Twitter">
+                <i class="pi pi-twitter"></i>
               </a>
-            </nav>
+              <a href="#" class="social-link" title="YouTube">
+                <i class="pi pi-youtube"></i>
+              </a>
+            </div>
+          </div>
+
+          <!-- Enlaces Rápidos -->
+          <div class="footer-section fade-in">
+            <h4>Enlaces Rápidos</h4>
+            <ul>
+              <li><a routerLink="/">Inicio</a></li>
+              <li><a routerLink="/canchas">Ver Canchas</a></li>
+              <li><a routerLink="/register">Registrarse</a></li>
+              <li><a routerLink="/login">Iniciar Sesión</a></li>
+            </ul>
+          </div>
+
+          <!-- Información de Contacto -->
+          <div class="footer-section fade-in">
+            <h4>Contacto</h4>
+
+            <div class="contact-item">
+              <div class="contact-icon">
+                <i class="pi pi-envelope"></i>
+              </div>
+              <div>
+                <strong>Email:</strong><br>
+                info&#64;reservacanchas.com
+              </div>
+            </div>
+
+            <div class="contact-item">
+              <div class="contact-icon">
+                <i class="pi pi-phone"></i>
+              </div>
+              <div>
+                <strong>Teléfono:</strong><br>
+                +51 999 888 777
+              </div>
+            </div>
+
+            <div class="contact-item">
+              <div class="contact-icon">
+                <i class="pi pi-map-marker"></i>
+              </div>
+              <div>
+                <strong>Ubicación:</strong><br>
+                Lima, Perú
+              </div>
+            </div>
           </div>
         </div>
-      </header>
 
-      <!-- CONTENIDO PRINCIPAL -->
-      <main class="public-main">
-        <router-outlet></router-outlet>
-      </main>
-
-      <!-- FOOTER -->
-      <footer class="public-footer">
-        <div class="container">
-          <div class="footer-content">
-            <div class="footer-section">
-              <h3>🏟️ Reserva Canchas</h3>
-              <p>El mejor sistema para reservar canchas deportivas</p>
-            </div>
-            
-            <div class="footer-section">
-              <h4>Enlaces</h4>
-              <ul>
-                <li><a routerLink="/">Inicio</a></li>
-                <li><a routerLink="/canchas">Canchas</a></li>
-                <li><a routerLink="/login">Iniciar Sesión</a></li>
-              </ul>
-            </div>
-            
-            <div class="footer-section">
-              <h4>Contacto</h4>
-              <p>📧 info&#64;reservacanchas.com</p>
-              <p>📱 +51 999 888 777</p>
-            </div>
-          </div>
-          
-          <div class="footer-bottom">
-            <p>&copy; 2024 Sistema de Reservas. Todos los derechos reservados.</p>
-          </div>
+        <div class="footer-bottom">
+          <p>&copy; 2025 Reserva Canchas. Todos los derechos reservados. | Hecho con 💚 para los deportistas peruanos
+          </p>
         </div>
-      </footer>
-    </div>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // Script para cambiar el header cuando se hace scroll
+    window.addEventListener('scroll', function () {
+      const header = document.getElementById('publicHeader');
+      if (window.scrollY > 50) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    });
+
+    // Animación de aparición para elementos del footer
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.animationDelay = Math.random() * 0.3 + 's';
+          entry.target.classList.add('fade-in');
+        }
+      });
+    }, observerOptions);
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.footer-section').forEach(el => {
+        observer.observe(el);
+      });
+    });
+  </script>
+</body>
+
+</html>
