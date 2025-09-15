@@ -21,7 +21,7 @@ export class LoginComponent {
   loginForm: FormGroup;
   user: User | null = null;
 
-  cargando = false; // Indicador de carga
+  cargando = false;
   mensajeError = '';
 
   constructor(private router: Router) {
@@ -68,6 +68,9 @@ export class LoginComponent {
           console.log("Redirigiendo a perfil con email:", credenciales.email);
           this.router.navigate(['user', 'perfil']);
         }
+
+        // Verificar el rol y actuar según sea necesario
+        this.verificarRolYRedirigir(res.user?.rol);
       },
       error: (err) => {
         this.cargando = false;
@@ -107,5 +110,50 @@ export class LoginComponent {
     if (errors['email']) return 'Ingrese un email válido';
 
     return 'Campo inválido';
+  }
+
+  // Verifica el rol y redirige según sea necesario - solo permite USER
+  private verificarRolYRedirigir(rol: string): void {
+    switch (rol) {
+      case 'USER':
+        this.redirigirUsuario();
+        break;
+
+      case 'ADMIN':
+        this.manejarRolIncorrecto('ADMIN', 'Este es el login para usuarios normales.');
+        break;
+
+      case 'RECEPCIONISTA':
+        this.manejarRolIncorrecto('RECEPCIONISTA', 'Este es el login para usuarios normales.');
+        break;
+
+      default:
+        this.manejarRolIncorrecto('DESCONOCDO', 'Rol de usuario no válido.');
+    }
+  }
+
+  // Maneja cuando alguien con rol incorrecto intenta iniciar sesión
+  private manejarRolIncorrecto(rol: string, mensaje: string): void {
+    this.authService.logout();
+
+    if (rol === 'ADMIN' || rol === 'RECEPCIONISTA') {
+      this.mensajeError = `${mensaje} Por favor, use el login administrativo para acceder.`;
+
+      setTimeout(() => {
+        this.router.navigate(['/admin/login']);
+      }, 3000);
+    } else {
+      this.mensajeError = `${mensaje} Rol de usuario no reconocido. Contacte al soporte.`;
+    }
+  }
+
+  // Redirige al usuario normal a su área correspondiente
+  private redirigirUsuario(): void {
+    if (this.authService.redirectUrl) {
+      this.router.navigateByUrl(this.authService.redirectUrl);
+      this.authService.redirectUrl = null;
+    } else {
+      this.router.navigate(['user', 'perfil']);
+    }
   }
 }
