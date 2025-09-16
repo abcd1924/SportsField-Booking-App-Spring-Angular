@@ -1,26 +1,29 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UsersService } from '../../services/users.service';
 import { CommonModule } from '@angular/common';
-import { FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors } from '@angular/forms';
+import { FormGroup, ReactiveFormsModule, ValidationErrors } from '@angular/forms';
 import { FormBuilder } from '@angular/forms';
 import { Validators } from '@angular/forms';
 import { AbstractControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ErrorResponse } from '../../models/errorsRegister/errorResponse';
 import { SuccessResponse } from '../../models/errorsRegister/successResponse';
+import { ButtonModule } from 'primeng/button';
+import { ProgressSpinner } from 'primeng/progressspinner';
+import { DatePicker } from 'primeng/datepicker';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, ButtonModule, ProgressSpinner, DatePicker, RouterLink],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss'
 })
 export class RegisterComponent implements OnInit, OnDestroy {
 
   registroFormReactivo: FormGroup;
-  private subscriptions = new Subscription(); // Para limpiar subscripciones
+  private subscriptions = new Subscription();
 
   // Variables para manejar errores del backend
   cargando = false;

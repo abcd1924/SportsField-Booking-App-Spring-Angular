@@ -1,207 +1,240 @@
-<body>
-    <div class="container">
-        <h2 class="form-title">Registro de Nueva Cuenta</h2>
-        
-        <!-- Mensaje de éxito -->
-        <div *ngIf="mensajeExito" class="mensaje-exito">
-            <span class="icono-mensaje">✓</span>
-            {{ mensajeExito }}
+<body class="min-h-screen flex items-center justify-center pattern relative">
+    <div class="absolute top-6 left-6">
+        <p-button label="Regresar" icon="pi pi-arrow-left" variant="text" severity="success" routerLink="/"></p-button>
+    </div>
+
+    <div class="bg-white/95 backdrop-blur-sm shadow-2xl rounded-2xl p-8 w-full max-w-xl m-4">
+        <!-- Header del registro-->
+        <div class="text-center mb-8">
+            <div class="text-6xl mb-4">🏟️</div>
+            <h2 class="text-3xl font-bold text-gray-800 mb-2">¡Únete al Equipo!</h2>
+            <p class="text-gray-600 text-lg">Crea tu cuenta y comienza a reservar canchas</p>
+
+            <!-- Indicador de progreso visual-->
+            <div class="mt-4 flex items-center justify-center gap-2">
+                <div class="w-8 h-2 bg-green-500 rounded-full"></div>
+                <div class="w-16 h-2 bg-green-200 rounded-full"></div>
+                <div class="w-8 h-2 bg-green-100 rounded-full"></div>
+            </div>
+            <p class="text-xs text-gray-500 mt-2">Solo toma 2 minutos</p>
         </div>
-        
-        <!-- Mensaje de error general -->
-        <div *ngIf="mensajeErrorGeneral" class="mensaje-error">
-            <span class="icono-mensaje">⚠</span>
-            {{ mensajeErrorGeneral }}
+
+        <!-- Mensaje de error/éxito -->
+        <div *ngIf="mensajeErrorGeneral"
+            class="p-4 mb-6 text-sm text-red-700 bg-red-58 border border-red-200 rounded-xl">
+            <div class="flex items-start gap-3">
+                <i class="pi pi-exclamation-triangle text-lg mt-0.5"></i>
+                <div>
+                    <div class="font-semibold mb-1">Error en el formulario</div>
+                    <div>{{ mensajeErrorGeneral }}</div>
+                </div>
+            </div>
         </div>
-        
+
+        <div *ngIf="mensajeExito" class="p-4 mb-6 text-sm text-green-700 bg-green-200 rounded-xl">
+            <div class="flex items-start gap-3">
+                <i class="pi pi-check-circle text-lg mt-0.5"></i>
+                <div>
+                    <div class="font-semibold mb-1">¡Registro exitoso!</div>
+                    <div>{{ mensajeExito }}</div>
+                </div>
+            </div>
+        </div>
+
         <!-- Indicador de carga -->
-        <div *ngIf="cargando" class="cargando">
-            <div class="spinner"></div>
-            Registrando usuario, por favor espera...
+        <div *ngIf="cargando" class="p-6 mb-6 text-center bg-green-50 border border-green-200 rounded-xl">
+            <div class="flex items-center justify-center gap-3 text-green-700">
+                <p-progress-spinner [style]="{ width: '24px', height: '24px' }" strokeWidth="4"></p-progress-spinner>
+                <span class="font-medium">Creando tu cuenta...</span>
+            </div>
         </div>
-        
-        <form [formGroup]="registroFormReactivo" (ngSubmit)="registrar()">
-            
-            <!-- Nombre y Apellido -->
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="nombre">
-                        Nombre <span class="requerido">*</span>
-                    </label>
-                    <input 
-                        id="nombre"
-                        type="text" 
-                        formControlName="nombre"
-                        [class.campo-con-error]="tieneError('nombre')"
-                        placeholder="Ingresa tu nombre">
-                    <span *ngIf="tieneError('nombre')" class="error-campo">
-                        {{ obtenerMensajeError('nombre') }}
-                    </span>
-                </div>
-                
-                <div class="form-group">
-                    <label for="apellido">
-                        Apellido <span class="requerido">*</span>
-                    </label>
-                    <input 
-                        id="apellido"
-                        type="text" 
-                        formControlName="apellido"
-                        [class.campo-con-error]="tieneError('apellido')"
-                        placeholder="Ingresa tu apellido">
-                    <span *ngIf="tieneError('apellido')" class="error-campo">
-                        {{ obtenerMensajeError('apellido') }}
-                    </span>
-                </div>
-            </div>
-            
-            <!-- Email -->
-            <div class="form-group">
-                <label for="email">
-                    Email <span class="requerido">*</span>
-                </label>
-                <input 
-                    id="email"
-                    type="email" 
-                    formControlName="email"
-                    [class.campo-con-error]="tieneError('email')"
-                    placeholder="ejemplo@correo.com">
-                <span *ngIf="tieneError('email')" class="error-campo">
-                    {{ obtenerMensajeError('email') }}
-                </span>
-            </div>
-            
-            <!-- Fecha de Nacimiento -->
-            <div class="form-group">
-                <label for="fechaNacimiento">
-                    Fecha de Nacimiento <span class="requerido">*</span>
-                </label>
-                <input 
-                    id="fechaNacimiento"
-                    type="date" 
-                    formControlName="fechaNacimiento"
-                    [class.campo-con-error]="tieneError('fechaNacimiento')">
-                <span *ngIf="tieneError('fechaNacimiento')" class="error-campo">
-                    {{ obtenerMensajeError('fechaNacimiento') }}
-                </span>
-            </div>
 
-            <!-- Tipo de Documento y Número de Documento -->
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="tipoDocumento">
-                        Tipo de Documento <span class="requerido">*</span>
-                    </label>
-                    <select 
-                        id="tipoDocumento"
-                        formControlName="tipoDocumento"
-                        [class.campo-con-error]="tieneError('tipoDocumento')">
-                        <option value="">Selecciona un tipo</option>
-                        <option *ngFor="let tipo of tiposDocumento" [value]="tipo.value">
-                            {{ tipo.label }}
-                        </option>
-                    </select>
-                    <span *ngIf="tieneError('tipoDocumento')" class="error-campo">
-                        {{ obtenerMensajeError('tipoDocumento') }}
-                    </span>
+        <!-- Formulario de registro -->
+        <form [formGroup]="registroFormReactivo" (ngSubmit)="registrar()" class="space-y-6">
+
+            <!-- Información Personal -->
+            <div class="border border-gray-200 rounded-xl p-6 bg-gray-50/50">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                    <i class="pi pi-user text-blue-600"></i>
+                    Información Personal
+                </h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label for="nombre" class="block text-sm font-medium text-gray-700 mb-2">Nombre</label>
+                        <input type="text" id="nombre" formControlName="nombre"
+                            class="w-full rounded-lg border border-gray-300 p-3 shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-800 placeholder-gray-400"
+                            placeholder="Tu nombre" [class.border-red-500]="tieneError('nombre')">
+                        <div *ngIf="tieneError('nombre')" class="text-xs text-red-600 mt-1">
+                            {{ obtenerMensajeError('nombre') }}
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="apellido" class="block text-sm font-medium text-gray-700 mb-2">Apellido</label>
+                        <input type="text" id="apellido" formControlName="apellido"
+                            class="w-full rounded-lg border border-gray-300 p-3 shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-800 placeholder-gray-400"
+                            placeholder="Tu apellido" [class.border-red-500]="tieneError('apellido')">
+                        <div *ngIf="tieneError('apellido')" class="text-xs text-red-600 mt-1">
+                            {{ obtenerMensajeError('apellido') }}
+                        </div>
+                    </div>
                 </div>
-                
-                <div class="form-group">
-                    <label for="numDocumento">
-                        Número de Documento <span class="requerido">*</span>
-                    </label>
-                    <input 
-                        id="numDocumento"
-                        type="text" 
-                        formControlName="numDocumento"
-                        [class.campo-con-error]="tieneError('numDocumento')"
-                        [placeholder]="getPlaceholderDocumento()">
-                    <span *ngIf="tieneError('numDocumento')" class="error-campo">
-                        {{ obtenerMensajeError('numDocumento') }}
-                    </span>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="genero" class="block text-sm font-medium text-gray-700 mb-2">Género</label>
+                        <select id="genero" formControlName="genero"
+                            class="w-full rounded-lg border border-gray-300 p-3 shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-800"
+                            [class.border-red-500]="tieneError('genero')">
+                            <option value="" class="text-gray-400">Selecciona tu género</option>
+                            <option *ngFor="let genero of generos" [value]="genero.value">{{ genero.label }}</option>
+                        </select>
+                        <div *ngIf="tieneError('genero')" class="text-xs text-red-600 mt-1">
+                            {{ obtenerMensajeError('genero' )}}
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="fechaNacimiento" class="block text-sm font-medium text-gray-700 mb-2">Fecha de
+                            Nacimiento *</label>
+                        <input id="fechaNacimiento" type="date" formControlName="fechaNacimiento"
+                            class="w-full rounded-lg border border-gray-300 p-3 shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                            [class.border-red-500]="tieneError('fechaNacimiento')">
+                        <div *ngIf="tieneError('fechaNacimiento')" class="text-xs text-red-600 mt-1">
+                            {{ obtenerMensajeError('fechaNacimiento') }}
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Teléfono y Género -->
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="telefono">
-                        Teléfono <span class="requerido">*</span>
-                    </label>
-                    <input 
-                        id="telefono"
-                        type="tel" 
-                        formControlName="telefono"
-                        [class.campo-con-error]="tieneError('telefono')"
-                        placeholder="987654321 (9 dígitos)">
-                    <span *ngIf="tieneError('telefono')" class="error-campo">
-                        {{ obtenerMensajeError('telefono') }}
-                    </span>
+            <!-- Documentos -->
+            <div class="border border-gray-200 rounded-xl p-6 bg-blue-50/30">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                    <i class="pi pi-id-card text-yellow-600"></i>
+                    Documentos
+                </h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="tipoDocumento" class="block text-sm font-medium text-gray-700 mb-2">Tipo de
+                            Documento</label>
+                        <select id="tipoDocumento" formControlName="tipoDocumento"
+                            class="w-full rounded-lg border border-gray-300 p-3 shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-800"
+                            [class.border-red-500]="tieneError('tipoDocumento')">
+                            <option value="" class="text-gray-400">Selecciona un tipo</option>
+                            <option *ngFor="let tipo of tiposDocumento" [value]="tipo.value">{{ tipo.label }}</option>
+                        </select>
+                        <div *ngIf="tieneError('tipoDocumento')" class="text-xs text-red-600 mt-1">
+                            {{ obtenerMensajeError('tipoDocumento')}}
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="numDocumento" class="block text-sm font-medium text-gray-700 mb-2">Número de
+                            Documento</label>
+                        <input type="text" id="numDocumento" formControlName="numDocumento"
+                            class="w-full rounded-lg border border-gray-300 p-3 shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-800 placeholder-gray-400"
+                            [placeholder]="getPlaceholderDocumento()"
+                            [class.border-red-500]="tieneError('numDocumento')">
+                        <div *ngIf="tieneError('numDocumento')" class="text-xs text-red-600 mt-1">
+                            {{ obtenerMensajeError('numDocumento')}}
+                        </div>
+                    </div>
                 </div>
-                
-                <div class="form-group">
-                    <label for="genero">
-                        Género <span class="requerido">*</span>
-                    </label>
-                    <select 
-                        id="genero"
-                        formControlName="genero"
-                        [class.campo-con-error]="tieneError('genero')">
-                        <option value="">Selecciona tu género</option>
-                        <option *ngFor="let genero of generos" [value]="genero.value">
-                            {{ genero.label }}
-                        </option>
-                    </select>
-                    <span *ngIf="tieneError('genero')" class="error-campo">
-                        {{ obtenerMensajeError('genero') }}
-                    </span>
+            </div>
+
+            <!-- Información de Contacto -->
+            <div class="border border-gray-200 rounded-xl p-6 bg-purple-50/30">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                    <i class="pi pi-phone text-green-600"></i>
+                    Información de Contacto
+                </h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="telefono" class="block text-sm font-medium text-gray-700 mb-2">Teléfono</label>
+                        <input type="tel" id="telefono" formControlName="telefono"
+                            class="w-full rounded-lg border border-gray-300 p-3 shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-800 placeholder-gray-400"
+                            placeholder="987654321" [class.border-red-500]="tieneError('telefono')">
+                        <div *ngIf="tieneError('telefono')" class="text-xs text-red-600 mt-1">
+                            {{ obtenerMensajeError('telefono') }}
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                        <input type="email" id="email" formControlName="email"
+                            class="w-full rounded-lg border border-gray-300 p-3 shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-800 placeholder-gray-400"
+                            placeholder="tu@email.com" [class.border-red-500]="tieneError('email')">
+                        <div *ngIf="tieneError('email')" class="text-xs text-red-600 mt-1">
+                            {{ obtenerMensajeError('email')}}
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Contraseñas -->
-            <div class="form-group">
-                <label for="password">
-                    Contraseña <span class="requerido">*</span>
-                </label>
-                <input 
-                    id="password"
-                    type="password" 
-                    formControlName="password"
-                    [class.campo-con-error]="tieneError('password')"
-                    placeholder="Mínimo 8 caracteres con mayúscula, minúscula, número y símbolo">
-                <span *ngIf="tieneError('password')" class="error-campo">
-                    {{ obtenerMensajeError('password') }}
-                </span>
+            <!-- Seguridad -->
+            <div class="border border-gray-200 rounded-xl p-6 bg-red-50/30">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                    <i class="pi pi-lock text-red-600"></i>
+                    Seguridad de la Cuenta
+                </h3>
+
+                <div class="grid grid-cols-1 gap-4">
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Contraseña</label>
+                        <input type="password" id="password" formControlName="password"
+                            class="w-full rounded-lg border border-gray-300 p-3 shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-800 placeholder-gray-400"
+                            placeholder="Mínimo 8 caracateres" [class.border-red-500]="tieneError('password')">
+                        <div *ngIf="tieneError('password')" class="text-xs text-red-600 mt-1">
+                            {{ obtenerMensajeError('password') }}
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="confirmPassword" class="block text-sm font-medium text-gray-700 mb-2">Confirmar
+                            Contraseña</label>
+                        <input type="password" id="confirmPassword" formControlName="confirmPassword"
+                            class="w-full rounded-lg border border-gray-300 p-3 shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-800"
+                            [class.border-red-500]="tieneError('confirmPassword') || passwordsNoCoinciden()">
+                        <div *ngIf="tieneError('confirmPassword')" class="text-xs text-red-600 mt-1">
+                            {{ obtenerMensajeError('confirmPassword') }}
+                        </div>
+                        <div *ngIf="passwordsNoCoinciden()" class="text-xs text-red-600 mt-1">
+                            Las constraseñas no coinciden
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label for="confirmPassword">
-                    Confirmar Contraseña <span class="requerido">*</span>
-                </label>
-                <input 
-                    id="confirmPassword"
-                    type="password" 
-                    formControlName="confirmPassword"
-                    [class.campo-con-error]="tieneError('confirmPassword') || passwordsNoCoinciden()"
-                    placeholder="Repite tu contraseña">
-                <span *ngIf="tieneError('confirmPassword')" class="error-campo">
-                    {{ obtenerMensajeError('confirmPassword') }}
-                </span>
-                <span *ngIf="passwordsNoCoinciden()" class="error-campo">
-                    Las contraseñas no coinciden
-                </span>
-            </div>
+            <!-- Botón de registro -->
+            <div class="pt-4">
+                <button type="submit" [disabled]="registroFormReactivo.invalid || cargando"
+                    class="w-full flex items-center justify-center gap-3 rounded-xl bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold px-6 py-4 text-lg transition-all duration-300 hover:from-green-700 hover:to-emerald-700 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transform hover:-translate-y-0.5 disabled:hover:transform-none">
+                    <div *ngIf="cargando" class="felx items-center gap-2">
+                        <p-progress-spinner [style]="{ width: '28px', height: '20px' }"
+                            strokeWidth="4"></p-progress-spinner>
+                        <span>Creando cuenta...</span>
+                    </div>
 
-            <!-- Botón de Registro -->
-            <button 
-                type="submit" 
-                class="btn-registrar"
-                [disabled]="registroFormReactivo.invalid || cargando">
-                <span *ngIf="cargando" class="spinner"></span>
-                <span *ngIf="cargando">Registrando...</span>
-                <span *ngIf="!cargando">Registrar Cuenta</span>
-            </button>
+                    <div *ngIf="!cargando" class="flex items-center gap-2">
+                        <i></i>
+                        <span>Crear mi Cuenta</span>
+                    </div>
+                </button>
+            </div>
         </form>
+
+        <!-- Enlaces adicionales -->
+        <div class="mt-8 text-center">
+            <div class="text-sm text-gray-600">
+                ¿Ya tienes una cuenta?
+                <a routerLink="/login" class="text-green-600 hover:text-green-700 font-semibold hover:underline">
+                    Inicia sesión aquí
+                </a>
+            </div>
+        </div>
     </div>
 
     <script>

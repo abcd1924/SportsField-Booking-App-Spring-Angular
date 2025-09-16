@@ -11,7 +11,11 @@ export const appConfig: ApplicationConfig = {
   providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes), provideHttpClient(withInterceptors([authInterceptor])), provideAnimationsAsync(),
   providePrimeNG({
     theme: {
-      preset: Aura
+      preset: Aura,
+      options: {
+        darkModeSelector: '.my-app-dark'
+      }
+
     },
     translation: {
       monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],

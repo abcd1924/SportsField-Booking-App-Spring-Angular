@@ -52,7 +52,7 @@
 
       <!-- Botón -->
       <button type="submit" [disabled]="loginForm.invalid || cargando"
-        class="w-full flex items-center justify-center gap-2 rounded-lg bg-lime-600 font-medium px-4 py-3 transition-all duration-300 hover:bg-[#406102] disabled:opacity-50 disabled:cursor-not-allowed">
+        class="w-full text-white flex items-center justify-center gap-2 rounded-lg bg-lime-600 font-medium px-4 py-3 transition-all duration-300 hover:bg-[#406102] disabled:opacity-50 disabled:cursor-not-allowed">
         <p-progress-spinner *ngIf="cargando" [style]="{ width: '20px', height: '20px' }" strokeWidth="4"
           animationDuration="3s" ariaLabel="Cargando" class="force-white-spinner">
         </p-progress-spinner>
