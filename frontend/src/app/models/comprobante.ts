@@ -7,5 +7,5 @@ export interface comprobante {
     subtotal: number;
     total: number;
     igv: number;
-    reserva: reserva;
+    reservaId: number;
 }

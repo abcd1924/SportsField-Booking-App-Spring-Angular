@@ -5,7 +5,7 @@ export interface canchaDeportiva {
     precioPorHora: number;
     capacidadJugadores: number;
     tipoGrass: string;
-    descripcion: string;
+    descripcion?: string;
     estado: string;
     iluminacion: string;
 }
