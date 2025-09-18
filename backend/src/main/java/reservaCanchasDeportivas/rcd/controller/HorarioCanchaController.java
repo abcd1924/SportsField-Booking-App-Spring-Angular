@@ -56,7 +56,7 @@ public class HorarioCanchaController {
     }
 
     //Validar disponiblidad de horario
-    @GetMapping("/validar-disponibilidad")
+    @GetMapping("/disponibilidad-horario")
     public ResponseEntity<Optional<HorarioCancha>> validarDisponibilidadHorario(@RequestParam Long canchaId, @RequestParam String dia, @RequestParam LocalTime hora){
         Optional<HorarioCancha> horarios = horarioCanchaService.validarDisponibilidadHorario(canchaId, dia, hora);
         if(horarios.isPresent()){
@@ -67,7 +67,7 @@ public class HorarioCanchaController {
     }
 
     //Validar disponibilidad de horario para reservas
-    @GetMapping("/validar-disponibilidad-2")
+    @GetMapping("/disponibilidad-reserva")
     public ResponseEntity<Boolean> validarDisponibilidad(@RequestParam Long canchaId, @RequestParam LocalDate fecha, @RequestParam LocalTime hora, @RequestParam int duracionHoras) {
         boolean existeReserva = horarioCanchaService.validarDisponibilidad(canchaId, fecha, hora, duracionHoras);
         return ResponseEntity.ok(existeReserva);
@@ -78,4 +78,18 @@ public class HorarioCanchaController {
     public void eliminarHorario(@PathVariable Long id) {
         horarioCanchaService.eliminar(id);
     }
+
+    // Obtener todos los horarios de una cancha específica
+    @GetMapping("/cancha/{canchaId}")
+    public ResponseEntity <List<HorarioCancha>> obtenerHorariosPorCancha(@PathVariable Long canchaId) {
+        List<HorarioCancha> horarios = horarioCanchaService.obtenerHorariosPorCancha(canchaId);
+        return ResponseEntity.ok(horarios);
+    }
+
+    // Solo horarios disponibles
+    @GetMapping("/cancha/{canchaId}/disponibles")
+    public ResponseEntity<List<HorarioCancha>> obtenerHorariosDisponibles(@PathVariable Long canchaId) {
+        List<HorarioCancha> horarios = horarioCanchaService.obtenerHorariosDisponibles(canchaId);
+        return ResponseEntity.ok(horarios);
+    }   
 }

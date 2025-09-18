@@ -74,12 +74,12 @@ public class CanchaDeportivaController {
 
     // Buscar cancha por id
     @GetMapping("/buscar/{id}")
-    public ResponseEntity<Optional<CanchaDeportiva>> obtenerCanchaPorId(@PathVariable Long id) {
+    public ResponseEntity<CanchaDeportiva> obtenerCanchaPorId(@PathVariable Long id) {
         Optional<CanchaDeportiva> cancha = canchaDeportivaService.obtenerCanchaPorId(id);
         if (cancha.isPresent()) {
-            return ResponseEntity.ok(cancha);
+            return ResponseEntity.ok(cancha.get());
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Optional.empty());
+            return ResponseEntity.notFound().build();
         }
     }
 

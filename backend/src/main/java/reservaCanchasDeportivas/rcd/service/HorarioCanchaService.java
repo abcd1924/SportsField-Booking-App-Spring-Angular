@@ -122,4 +122,14 @@ public class HorarioCanchaService {
         
             horarioCanchaRepository.deleteById(id);
     }
+
+    // Método para obtener todos los horarios de una cancha específica
+    public List<HorarioCancha> obtenerHorariosPorCancha(Long canchaId) {
+        return horarioCanchaRepository.findByCanchaDeportivaId(canchaId);
+    }
+
+    // Método para obtener solo horarios disponibles
+    public List<HorarioCancha> obtenerHorariosDisponibles(Long canchaId) {
+        return horarioCanchaRepository.findByCanchaDeportivaIdAndDisponibleTrue(canchaId);
+    }
 }

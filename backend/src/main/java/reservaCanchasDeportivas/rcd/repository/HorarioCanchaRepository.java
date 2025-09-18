@@ -17,6 +17,10 @@ public interface HorarioCanchaRepository extends JpaRepository<HorarioCancha, Lo
 
         List<HorarioCancha> findByCanchaDeportivaIdAndDiaSemana(Long canchaId, String diaSemana);
 
+        List<HorarioCancha> findByCanchaDeportivaId(Long canchaId);
+
+        List<HorarioCancha> findByCanchaDeportivaIdAndDisponibleTrue(Long canchaId);
+
         // Buscar un horario específico para validar si existe
         @Query("SELECT h FROM HorarioCancha h WHERE h.canchaDeportiva.id = :canchaId AND h.diaSemana = :dia AND :hora >= h.horaInicio AND :hora < h.horaFin AND UPPER(h.diaSemana) = UPPER(:dia)")
         Optional<HorarioCancha> validarDisponibilidadHorario(
