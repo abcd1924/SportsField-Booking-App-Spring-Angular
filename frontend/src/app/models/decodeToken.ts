@@ -1,5 +1,6 @@
 export interface decodeToken {
   sub: string;
+  userId?: number;
   roles: string[];
   nombre: string;
   apellido: string;

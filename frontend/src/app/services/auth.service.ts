@@ -20,7 +20,7 @@ export class AuthService {
 
   constructor(private http: HttpClient) { }
 
-  login(credentials: { email: string, password: string }): Observable<LoginSuccessResponse>{
+  login(credentials: { email: string, password: string }): Observable<LoginSuccessResponse> {
     return this.http.post<LoginSuccessResponse>(`${this.apiUrl}/login`, credentials);
   }
 
@@ -29,7 +29,7 @@ export class AuthService {
   }
 
   saveUser(user: any) {
-    if(user) {
+    if (user) {
       localStorage.setItem(this.userKey, JSON.stringify(user));
     }
   }
@@ -76,7 +76,7 @@ export class AuthService {
 
     try {
       return jwtDecode<decodeToken>(token);
-    } catch (e){
+    } catch (e) {
       console.error("Error al codificar el token", e)
       return null;
     }
@@ -89,5 +89,25 @@ export class AuthService {
 
   getCurrentUser(): decodeToken | null {
     return this.getUserInfo();
+  }
+
+  // Para Reserva Service
+  getCurrentUserForReservations(): { id: number; nombre: string; email: string } | null {
+    const savedUser = this.getSavedUser();
+    if (savedUser && savedUser.id) {
+      return {
+        id: savedUser.id,
+        nombre: savedUser.nombre,
+        email: savedUser.email
+      };
+    }
+    return null;
+  }
+
+  // Verifica si hay un usuario completamente autenticado
+  isFullyAuthenticated(): boolean {
+    const hasValidToken = this.isLoggedIn();
+    const hasUserData = this.getSavedUser() !== null;
+    return hasValidToken && hasUserData;
   }
 }
