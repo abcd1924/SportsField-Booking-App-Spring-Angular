@@ -1,0 +1,105 @@
+import { Injectable } from '@angular/core';
+import { environment } from '../models/environment';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { reserva } from '../models/reserva';
+import { ReservaRequest } from '../models/auxiliares/reservaRequest';
+import { AuthService } from './auth.service';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class ReservaService {
+  private apiUrl = `${environment.apiUrl}/reservas`;
+
+  constructor(private http: HttpClient, private authService: AuthService) { }
+
+  listarTodasLasReservas(): Observable<reserva[]> {
+    return this.http.get<reserva[]>(this.apiUrl);
+  }
+
+  crearReserva(reservaData: ReservaRequest): Observable<string> {
+    return this.http.post(`${this.apiUrl}/crear`, reservaData, { responseType: 'text' });
+  }
+
+  confirmarReserva(id: number): Observable<reserva> {
+    return this.http.put<reserva>(`${this.apiUrl}/confirmar/${id}`, {});
+  }
+
+  cancelarReserva(id: number): Observable<reserva> {
+    return this.http.put<reserva>(`${this.apiUrl}/cancelar/${id}`, {});
+  }
+
+  obtenerReservasPorUsuario(usuarioId: number): Observable<reserva[]> {
+    return this.http.get<reserva[]>(`${this.apiUrl}/buscar/usuario/${usuarioId}`);
+  }
+
+  obtenerReservaPorCodigoUnico(codigoUnico: string): Observable<reserva> {
+    return this.http.get<reserva>(`${this.apiUrl}/buscar/codUnico/${codigoUnico}`);
+  }
+
+  obtenerReservaPorId(id: number): Observable<reserva> {
+    return this.http.get<reserva>(`${this.apiUrl}/buscar/id/${id}`);
+  }
+
+  buscarReservasFuturasConfirmadas(): Observable<reserva[]> {
+    return this.http.get<reserva[]>(`${this.apiUrl}/buscar/futuras-confirmadas`);
+  }
+
+  // Métodos de conveniencia
+
+  private obtenerUsuarioActual(): { id: number, nombre: string; email: string } | null {
+    return this.authService.getCurrentUserForReservations();
+  }
+
+  // Obtiene las reservas del usuario actualmente logueado
+  obtenerMisReservas(): Observable<reserva[]> {
+    const usuarioActual = this.obtenerUsuarioActual();
+    if (!usuarioActual) {
+      throw new Error('Usuario no autenticado');
+    }
+    return this.obtenerReservasPorUsuario(usuarioActual.id);
+  }
+
+  // Crea una reserva para el usuario actualmente logueado
+  crearMiReserva(fechaInicio: Date, fechaFin: Date, canchaId: number): Observable<string> {
+    const usuarioActual = this.obtenerUsuarioActual();
+    if (!usuarioActual) {
+      throw new Error('Usuario no autenticado');
+    }
+
+    const reservaData: ReservaRequest = {
+      fechaInicio,
+      fechaFin,
+      canchaDeportivaId: canchaId,
+      usuarioId: usuarioActual.id
+    };
+
+    return this.crearReserva(reservaData);
+  }
+
+  puedeCancelarReserva(reserva: reserva): boolean {
+    const usuarioActual = this.obtenerUsuarioActual();
+    if (!usuarioActual) return false;
+
+    const esDelUsuario = reserva.userId === usuarioActual.id;
+    const estadoCancelable = ['PENDIENTE', 'CONFIRMADA'].includes(reserva.estado);
+    const esFutura = new Date(reserva.fechaInicio) > new Date();
+
+    return esDelUsuario && estadoCancelable && esFutura;
+  }
+
+  formatearEstado(estado: string): { texto: string; clase: string } {
+    const estados: { [key: string]: { texto: string; clase: string } } = {
+      'PENDIENTE': { texto: 'Pendiente', clase: 'bg-yellow-100 text-yellow-800' },
+      'CONFIRMADA': { texto: 'Confirmada', clase: 'bg-green-100 text-green-800' },
+      'CANCELADA': { texto: 'Cancelada', clase: 'bg-red-100 text-red-800' }
+    };
+
+    return estados[estado] || { texto: estado, clase: 'bg-gray-100 text-gray-800' };
+  }
+
+  calcularPrecioTotal(horasTotales: number, precioPorHora: number): number {
+    return horasTotales * precioPorHora;
+  }
+}
