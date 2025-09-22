@@ -58,23 +58,23 @@ public class ReservaController {
 
     //Obtener reserva por código único
     @GetMapping("/buscar/codUnico/{codUnico}")
-    public ResponseEntity<Optional<Reserva>> obtenerReservaPorCodigoUnico(@PathVariable String codUnico){
+    public ResponseEntity<Reserva> obtenerReservaPorCodigoUnico(@PathVariable String codUnico){
         Optional<Reserva> reserva = reservaService.obtenerReservaPorCodigoUnico(codUnico);
         if(reserva.isPresent()){
-            return ResponseEntity.ok(reserva);
+            return ResponseEntity.ok(reserva.get());
         } else {
-            return ResponseEntity.status(HttpStatus.CREATED).body(Optional.empty());
+            return ResponseEntity.notFound().build();
         }
     }
 
     //Obtener reserva por ID
     @GetMapping("/buscar/id/{id}")
-    public ResponseEntity<Optional<Reserva>> obtenerReservasPorId(@PathVariable Long id){
+    public ResponseEntity<Reserva> obtenerReservasPorId(@PathVariable Long id){
         Optional<Reserva> reserva = reservaService.obtenerReservasPorId(id);
         if(reserva.isPresent()){
-            return ResponseEntity.ok(reserva);
+            return ResponseEntity.ok(reserva.get());
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Optional.empty());
+            return ResponseEntity.notFound().build();
         }
     }
 

@@ -34,6 +34,7 @@ public class JwtUtil {
         Date exp = new Date(now.getTime() + expirationMs);
         return Jwts.builder()
             .setSubject(user.getUsername())
+            .claim("id", usuario.getId())
             .claim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
             .claim("nombre", usuario.getNombre())
             .claim("apellido", usuario.getApellido())
