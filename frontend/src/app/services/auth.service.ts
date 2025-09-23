@@ -93,16 +93,29 @@ export class AuthService {
 
   // Para Reserva Service
   getCurrentUserForReservations(): { id: number; nombre: string; email: string } | null {
-    const savedUser = this.getSavedUser();
-    if (savedUser && savedUser.id) {
-      return {
-        id: savedUser.id,
-        nombre: savedUser.nombre,
-        email: savedUser.email
-      };
-    }
-    return null;
+  // Opción 1: Usar datos guardados (preferible)
+  const savedUser = this.getSavedUser();
+  if (savedUser && savedUser.id) {
+    return {
+      id: savedUser.id,
+      nombre: savedUser.nombre,
+      email: savedUser.email
+    };
   }
+
+  // Opción 2: Fallback usando el token
+  const tokenInfo = this.getUserInfo();
+  if (tokenInfo && tokenInfo.userId && tokenInfo.sub) {
+    return {
+      id: tokenInfo.userId,
+      nombre: tokenInfo.nombre,
+      email: tokenInfo.sub
+    };
+  }
+
+  return null;
+}
+
 
   // Verifica si hay un usuario completamente autenticado
   isFullyAuthenticated(): boolean {
