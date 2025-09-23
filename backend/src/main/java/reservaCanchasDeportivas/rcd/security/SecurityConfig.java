@@ -55,7 +55,7 @@ public class SecurityConfig {
                         .hasAnyRole("ADMIN", "RECEPCIONISTA")
                         .requestMatchers("/api/usuarios/buscar/email/{email}")
                         .authenticated()
-                        .requestMatchers("/api/auth/login", "/api/usuarios/registrar", "/api/canchas-deportivas", "/api/horarios-canchas")
+                        .requestMatchers("/api/auth/login", "/api/usuarios/registrar", "/api/canchas-deportivas", "/api/canchas-deportivas/activas", "/api/horarios-canchas")
                         .permitAll()
                         .anyRequest().authenticated());
         http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
