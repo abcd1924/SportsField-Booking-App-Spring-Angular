@@ -4,4 +4,5 @@ export interface HorarioDisponible {
     horaFin: string;
     disponible: boolean;
     precio: number;
+    duracionHoras: number;
 }
