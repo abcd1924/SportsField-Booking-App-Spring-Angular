@@ -12,11 +12,13 @@
 
     <!-- Mensaje de error -->
     <div *ngIf="mensajeError" class="p-3 mb-4">
-      <div *ngIf="!mensajeError.includes('login administrativo')" class="p-4 text-sm text-red-700 bg-red-100 rounded-lg">
+      <div *ngIf="!mensajeError.includes('login administrativo')"
+        class="p-4 text-sm text-red-700 bg-red-100 rounded-lg">
         {{ mensajeError}}
       </div>
 
-      <div *ngIf="mensajeError.includes('login administrativo')" class="p-4 text-sm text-blue-700 bg-blue-100 rounded-lg border border-blue-300">
+      <div *ngIf="mensajeError.includes('login administrativo')"
+        class="p-4 text-sm text-blue-700 bg-blue-100 rounded-lg border border-blue-300">
         <div class="font-semibold">Acceso restringido</div>
         <div> {{ mensajeError}} </div>
         <div>
