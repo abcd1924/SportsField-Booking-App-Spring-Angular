@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import reservaCanchasDeportivas.rcd.model.EstadoReserva;
 import reservaCanchasDeportivas.rcd.model.Reserva;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,6 +20,8 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
     List<Reserva> findByEstado(String estado);
 
     boolean existsByCodUnico(String cod_unico);
+
+    List<Reserva> findByEstadoAndFechaCreacionBefore(EstadoReserva estado, LocalDateTime fechaLimite);
 
     // Buscar reservas activas para una cancha en una fecha determinada (evita
     // solapamientos)
