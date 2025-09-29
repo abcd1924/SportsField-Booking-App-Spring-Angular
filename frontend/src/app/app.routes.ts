@@ -27,6 +27,9 @@ import { PerfilUserComponent } from './pages/user/perfil-user/perfil-user.compon
 import { UnauthorizedComponent } from './pages/error/unauthorized/unauthorized.component';
 import { NotFoundComponent } from './pages/error/not-found/not-found.component';
 import { LoginAdminComponent } from './pages/login-admin/login-admin.component';
+import { CanchasDetalleComponent } from './pages/canchas-detalle/canchas-detalle.component';
+import { ReservaConfirmarComponent } from './pages/reserva-confirmar/reserva-confirmar.component';
+import { ComprobanteComponent } from './pages/comprobante/comprobante.component';
 
 const roleGuard = (expectedRoles: string[]) => {
     return () => {
@@ -70,10 +73,29 @@ export const routes: Routes = [
         component: PublicLayoutComponent,
         children: [
             { path: '', component: HomeComponent },
-            { path: 'login', component: LoginComponent },
-            { path: 'register', component: RegisterComponent },
             { path: 'canchas', component: CanchasComponent },
-            { path: 'admin/login', component: LoginAdminComponent }
+            { path: 'canchas/:id', component: CanchasDetalleComponent }
+        ]
+    },
+
+    { path: 'login', component: LoginComponent },
+    { path: 'register', component: RegisterComponent },
+    { path: 'admin/login', component: LoginAdminComponent },
+
+    // RESERVA
+    {
+        path: 'reserva',
+        children: [
+            {
+                path: 'confirmar/:reservaId',
+                component: ReservaConfirmarComponent,
+                canActivate: [authGuard]
+            },
+            {
+                path: 'comprobante/:comprobanteId',
+                component: ComprobanteComponent,
+                canActivate: [authGuard]
+            }
         ]
     },
 
@@ -91,7 +113,7 @@ export const routes: Routes = [
                 children: [
                     { path: '', component: CanchasAdminComponent },
                     { path: 'nuevo', component: CanchasFormComponent },
-                    { path: 'editar/id', component: CanchasFormComponent }
+                    { path: 'editar/:id', component: CanchasFormComponent }
                 ]
             },
             // Gestión de usuarios
@@ -120,7 +142,7 @@ export const routes: Routes = [
             { path: 'comprobantes', component: ComprobantesRecepcionistaComponent },
 
             // Consulta de usuarios para ADMIN y RECEPCIONISTA
-            { path: 'usuarios', component: UsuariosRecepcionistaComponent}
+            { path: 'usuarios', component: UsuariosRecepcionistaComponent }
         ]
     },
 
@@ -131,7 +153,7 @@ export const routes: Routes = [
         canActivate: [authGuard, roleGuard(['USER'])],
         children: [
             { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-            { path: 'dashboard', component: DashboardUserComponent},
+            { path: 'dashboard', component: DashboardUserComponent },
 
             // Reservas del usuarios
             { path: 'mis-reservas', component: MisReservasComponent },
@@ -147,5 +169,5 @@ export const routes: Routes = [
     { path: '404', component: NotFoundComponent },
 
     // Wildcard route
-    { path: '**', redirectTo: '/404'}
+    { path: '**', redirectTo: '/404' }
 ];
