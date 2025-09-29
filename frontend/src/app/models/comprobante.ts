@@ -3,9 +3,9 @@ import { reserva } from "./reserva";
 export interface comprobante {
     id: number;
     codigoComprobante: string;
-    fechaEmision: Date;
+    fechaEmision: string | Date;
     subtotal: number;
     total: number;
     igv: number;
-    reservaId: number;
+    reserva: reserva;
 }
