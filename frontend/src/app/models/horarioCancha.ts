@@ -6,5 +6,5 @@ export interface horarioCancha {
     horaInicio: string;
     horaFin: string;
     disponible: boolean;
-    canchaDeportivaId: number;
+    canchaDeportiva: canchaDeportiva;
 }

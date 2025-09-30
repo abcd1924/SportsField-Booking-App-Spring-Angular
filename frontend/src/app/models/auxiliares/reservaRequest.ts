@@ -1,6 +1,8 @@
+import { canchaDeportiva } from "../canchaDeportiva";
+
 export interface ReservaRequest {
-    canchaDeportivaId: number;
-    usuarioId: number;
+    canchaDeportiva: { id: number };
+    usuario: { id: number };
     fechaInicio: Date;
     fechaFin: Date;
 }

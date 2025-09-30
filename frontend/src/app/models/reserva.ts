@@ -9,6 +9,6 @@ export interface reserva {
     fechaCreacionReserva: Date;
     fechaInicio: Date;
     fechaFin: Date;
-    userId: number;
-    canchaDeportivaId: number;
+    user: User;
+    canchaDeportiva: canchaDeportiva;
 }
