@@ -29,10 +29,10 @@ public class ReservaController {
         return ResponseEntity.ok(reservas);
     }
 
-    @PostMapping("/crear")
-    public ResponseEntity<String> crearReserva(@RequestBody Reserva reserva){
-        reservaService.crearReserva(reserva);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Reserva creada con estado PENDIENTE");
+    @PostMapping("/temporal")
+    public ResponseEntity<Reserva> crearReservaTemporal(@RequestBody Reserva reserva){
+        Reserva creada = reservaService.crearReservaTemporal(reserva);
+        return ResponseEntity.status(HttpStatus.CREATED).body(creada);
     }
 
     //Confirmar reserva por ID

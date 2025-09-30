@@ -19,9 +19,9 @@ public class Reserva {
     @Column(nullable = false)
     private int horasTotales;
 
-    @NotBlank(message = "Escoga un estado")
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String estado;
+    private EstadoReserva estado;
 
     @Column(nullable = false)
     private LocalDateTime fechaCreacionReserva = LocalDateTime.now();
@@ -51,14 +51,6 @@ public class Reserva {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getEstado() {
-        return estado;
-    }
-
-    public void setEstado(String estado) {
-        this.estado = estado;
     }
 
     public Usuario getUsuario() {
@@ -115,5 +107,13 @@ public class Reserva {
 
     public void setFechaFin(LocalDateTime fechaFin) {
         this.fechaFin = fechaFin;
+    }
+
+    public EstadoReserva getEstado() {
+        return estado;
+    }
+
+    public void setEstado(EstadoReserva estado) {
+        this.estado = estado;
     }    
 }

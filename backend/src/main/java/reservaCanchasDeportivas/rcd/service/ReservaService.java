@@ -8,6 +8,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import reservaCanchasDeportivas.rcd.model.EstadoReserva;
 import reservaCanchasDeportivas.rcd.model.Reserva;
 import reservaCanchasDeportivas.rcd.repository.ReservaRepository;
 
@@ -16,17 +17,15 @@ public class ReservaService {
     @Autowired
     private ReservaRepository reservaRepository;
 
-    public Reserva crearReserva(Reserva reserva) {
-        
+    public Reserva crearReservaTemporal(Reserva reserva) {
         String codigo;
-        do{
+        do {
             codigo = generarCodigoUnico();
         } while (reservaRepository.existsByCodUnico(codigo));
-        
-        reserva.setCodUnico(codigo);
-        reserva.setEstado("PENDIENTE"); // Estado por defecto al crear
 
-        //Calcular horas totales
+        reserva.setCodUnico(codigo);
+        reserva.setEstado(EstadoReserva.TEMPORAL);
+
         if(reserva.getFechaFin().isBefore(reserva.getFechaInicio())){
             throw new IllegalArgumentException("La fecha de fin debe ser posterior a la fecha de inicio");
         }
@@ -55,7 +54,7 @@ public class ReservaService {
     public Reserva cancelarReserva(Long id) {
         Reserva reserva = reservaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Reserva no encontrada"));
-        reserva.setEstado("CANCELADA");
+        reserva.setEstado(EstadoReserva.CANCELADA);
         return reservaRepository.save(reserva);
     }
 
@@ -66,7 +65,7 @@ public class ReservaService {
     public Reserva confirmarReserva(Long id){
         Reserva reserva = reservaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Reserva no encontrada"));
-        reserva.setEstado("CONFIRMADA");
+        reserva.setEstado(EstadoReserva.CONFIRMADA);
         return reservaRepository.save(reserva);
     }
 

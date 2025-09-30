@@ -27,11 +27,11 @@ public class ReservaCleanupJob {
 
         LocalDateTime tiempoLimite = LocalDateTime.now().minus(15, ChronoUnit.MINUTES);
 
-        List<Reserva> reservasExpiradas = reservaRepository.findByEstadoAndFechaCreacionBefore(EstadoReserva.TEMPORAL,
+        List<Reserva> reservasExpiradas = reservaRepository.findByEstadoAndFechaCreacionReservaBefore(EstadoReserva.TEMPORAL,
                 tiempoLimite);
 
         for (Reserva reserva : reservasExpiradas) {
-            reserva.setEstado(EstadoReserva.EXPIRADA.name());
+            reserva.setEstado(EstadoReserva.EXPIRADA);
             reservaRepository.save(reserva);
 
             log.info("Reserva {} marcada como EXPIRADA", reserva.getId());

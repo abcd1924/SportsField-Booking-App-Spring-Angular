@@ -17,20 +17,20 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
 
     List<Reserva> findByUsuarioId(Long usuario);
 
-    List<Reserva> findByEstado(String estado);
+    List<Reserva> findByEstado(EstadoReserva estado);
 
     boolean existsByCodUnico(String cod_unico);
 
-    List<Reserva> findByEstadoAndFechaCreacionBefore(EstadoReserva estado, LocalDateTime fechaLimite);
+    List<Reserva> findByEstadoAndFechaCreacionReservaBefore(EstadoReserva estado, LocalDateTime fechaLimite);
 
     // Buscar reservas activas para una cancha en una fecha determinada (evita
     // solapamientos)
-    @Query("SELECT r FROM Reserva r WHERE r.canchaDeportiva.id = :canchaId AND r.fechaCreacionReserva =:fechaHora and r.estado = 'CANCELADA'")
-    List<Reserva> findByCanchaIdAndFechaHoraAndEstado(@Param("canchaId") Long canchaId,
+    @Query("SELECT r FROM Reserva r WHERE r.canchaDeportiva.id = :canchaId AND r.fechaCreacionReserva =:fechaHora and r.estado = EstadoReserva.CANCELADA")
+    List<Reserva> findByCanchaIdAndFechaHoraAndEstadoReserva(@Param("canchaId") Long canchaId,
             @Param("fechaHora") LocalDateTime fechaHora);
 
     // Buscar reservas futuras confirmadas (para reportes o frontend)
-    @Query("SELECT r FROM Reserva r WHERE r.fechaCreacionReserva > CURRENT_TIMESTAMP AND r.estado = 'CONFIRMADA'")
+    @Query("SELECT r FROM Reserva r WHERE r.fechaCreacionReserva > CURRENT_TIMESTAMP AND r.estado = EstadoReserva.CONFIRMADA")
     List<Reserva> findFutureConfirmedReservations();
 
     // Verificar si existe una reserva en un horario específico para una cancha - usado en HorarioCanchaService
