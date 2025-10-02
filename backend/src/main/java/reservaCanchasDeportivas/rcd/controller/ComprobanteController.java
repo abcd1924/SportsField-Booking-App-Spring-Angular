@@ -47,6 +47,7 @@ public class ComprobanteController {
             Comprobante comprobante = comprobanteService.generarComprobantePorReservaId(reservaId);
             return ResponseEntity.status(HttpStatus.CREATED).body(comprobante);
         } catch (RuntimeException e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }

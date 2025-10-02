@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reservaCanchasDeportivas.rcd.model.Comprobante;
+import reservaCanchasDeportivas.rcd.model.EstadoReserva;
 import reservaCanchasDeportivas.rcd.model.Reserva;
 import reservaCanchasDeportivas.rcd.repository.ComprobanteRepository;
 
@@ -27,7 +28,7 @@ public class ComprobanteService {
         Reserva reserva = reservaService.obtenerReservasPorId(reservaId)
                 .orElseThrow(() -> new RuntimeException("Reserva no encontrada con ID: " + reservaId));
 
-        if (!"CONFIRMADA".equals(reserva.getEstado())) {
+        if (reserva.getEstado() != EstadoReserva.CONFIRMADA) {
             throw new RuntimeException(
                     "La reserva debe estar CONFIRMADA para generar comprobante. Estado actual: " + reserva.getEstado());
         }

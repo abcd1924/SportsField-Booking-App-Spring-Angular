@@ -38,15 +38,23 @@ public class ReservaController {
     //Confirmar reserva por ID
     @PutMapping("/confirmar/{id}")
     public ResponseEntity<Reserva> confirmarReserva(@PathVariable Long id){
+        try {
         Reserva confirmada = reservaService.confirmarReserva(id);
         return ResponseEntity.ok(confirmada);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
 
     //Cancelar reserva por ID
     @PutMapping("/cancelar/{id}")
     public ResponseEntity<Reserva> cancelarReserva(@PathVariable Long id){
+        try {
         Reserva cancelada = reservaService.cancelarReserva(id);
         return ResponseEntity.ok(cancelada);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
 
     //Obtener reservas por usuario
