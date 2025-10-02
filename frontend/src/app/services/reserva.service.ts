@@ -18,8 +18,8 @@ export class ReservaService {
     return this.http.get<reserva[]>(this.apiUrl);
   }
 
-  crearReserva(reservaData: ReservaRequest): Observable<string> {
-    return this.http.post(`${this.apiUrl}/crear`, reservaData, { responseType: 'text' });
+  crearReservaTemporal(reservaData: ReservaRequest): Observable<reserva> {
+    return this.http.post<reserva>(`${this.apiUrl}/temporal`, reservaData);
   }
 
   confirmarReserva(id: number): Observable<reserva> {
@@ -62,7 +62,7 @@ export class ReservaService {
   }
 
   // Crea una reserva para el usuario actualmente logueado
-  crearMiReserva(fechaInicio: Date, fechaFin: Date, canchaId: number): Observable<string> {
+  crearMiReserva(fechaInicio: Date, fechaFin: Date, canchaId: number): Observable<reserva> {
     const usuarioActual = this.obtenerUsuarioActual();
     if (!usuarioActual) {
       throw new Error('Usuario no autenticado');
@@ -71,18 +71,18 @@ export class ReservaService {
     const reservaData: ReservaRequest = {
       fechaInicio,
       fechaFin,
-      canchaDeportivaId: canchaId,
-      usuarioId: usuarioActual.id
+      canchaDeportiva: { id: canchaId },
+      usuario: { id: usuarioActual.id }
     };
 
-    return this.crearReserva(reservaData);
+    return this.crearReservaTemporal(reservaData);
   }
 
   puedeCancelarReserva(reserva: reserva): boolean {
     const usuarioActual = this.obtenerUsuarioActual();
     if (!usuarioActual) return false;
 
-    const esDelUsuario = reserva.userId === usuarioActual.id;
+    const esDelUsuario = reserva.usuario.id === usuarioActual.id;
     const estadoCancelable = ['PENDIENTE', 'CONFIRMADA'].includes(reserva.estado);
     const esFutura = new Date(reserva.fechaInicio) > new Date();
 
