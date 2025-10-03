@@ -1,0 +1,256 @@
+<div class="min-h-screen bg-gray-50 py-8">
+    <div class="container mx-auto px-4 max-w-6xl">
+
+        <div class="mb-6">
+            <p-button label="Volver a canchas" icon="pi pi-arrow-left" [text]="true" severity="success"
+                (onClick)="volverACanchas()">
+            </p-button>
+        </div>
+
+        <!-- Estado de carga -->
+        <div *ngIf="cargando" class="space-y-6">
+            <div class="bg-white rounded-2xl shadow-lg p-8">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <p-skeleton height="300px" class="w-full rounded-xl"></p-skeleton>
+                    <div class="space-y-4">
+                        <p-skeleton height="2rem" class="w-3/4"></p-skeleton>
+                        <p-skeleton height="1rem" class="w-full"></p-skeleton>
+                        <p-skeleton height="1rem" class="w-2/3"></p-skeleton>
+                        <p-skeleton height="3rem" class="w-1/2"></p-skeleton>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contenido principal -->
+        <div *ngIf="cancha && !cargando" class="space-y-8">
+
+            <!-- Información de la cancha -->
+            <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+                    <!-- Imagen -->
+                    <div class="relative">
+                        <img [src]="getImagenCancha(cancha.tipoCancha)" [alt]="'Cancha ' + cancha.numeroCancha"
+                            class="w-full h-80 object-cover" (error)="onImageError($event)">
+
+                        <!-- Badge de estado -->
+                        <div class="absolute top-4 left-4">
+                            <p-tag [value]="cancha.estado" [severity]="getEstadoSeverity(cancha.estado)"
+                                [rounded]="true">
+                            </p-tag>
+                        </div>
+                    </div>
+
+                    <!-- Información básica -->
+                    <div class="p-8">
+                        <div class="flex items-start justify-between mb-4">
+                            <div>
+                                <h1 class="text-3xl font-bold text-gray-800 mb-2">
+                                    {{ getIconoTipoCancha(cancha.tipoCancha) }} Cancha {{ cancha.numeroCancha }}
+                                </h1>
+                                <p class="text-xl text-green-600 font-semibold">
+                                    {{ cancha.tipoCancha }}
+                                </p>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-3xl font-bold text-green-600">
+                                    S/ {{ cancha.precioPorHora }}
+                                </div>
+                                <div class="text-sm text-gray-500">por hora</div>
+                            </div>
+                        </div>
+
+                        <!-- Descripción -->
+                        <p class="text-gray-600 leading-relaxed mb-6">
+                            {{ cancha.descripcion || 'Cancha deportiva de alta calidad con excelentes instalaciones.' }}
+                        </p>
+
+                        <!-- Características -->
+                        <div class="grid grid-cols-2 gap-4 mb-6">
+                            <div class="flex items-center gap-2">
+                                <i class="pi pi-users text-green-600"></i>
+                                <span class="text-sm">
+                                    <strong>Capacidad:</strong> {{ cancha.capacidadJugadores }} jugadores
+                                </span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <i class="pi pi-sun text-green-600"></i>
+                                <span class="text-sm">
+                                    <strong>Superficie:</strong> {{ cancha.tipoGrass }}
+                                </span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <i class="pi pi-eye text-green-600"></i>
+                                <span class="text-sm">
+                                    <strong>Iluminación:</strong> {{ cancha.iluminacion }}
+                                </span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <i class="pi pi-check-circle text-green-600"></i>
+                                <span class="text-sm">
+                                    <strong>Estado:</strong> {{ cancha.estado }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Botón de reserva rápida -->
+                        <div *ngIf="cancha?.estado === 'DISPONIBLE' || cancha?.estado === 'ACTIVA'">
+                            <p-button label="Escoger horario" icon="pi pi-calendar" size="large"
+                                styleClass="w-full mb-4" (onClick)="scrollToReserva()">
+                            </p-button>
+                            <p class="text-xs text-gray-500 text-center">
+                                Selecciona fecha y horario más abajo
+                            </p>
+                        </div>
+
+                        <!-- Mensaje si no está disponible -->
+                        <div *ngIf="cancha.estado !== 'DISPONIBLE' && cancha.estado !== 'ACTIVA'">
+                            <p-button label="Cancha no disponible" icon="pi pi-times" size="large" severity="secondary"
+                                [disabled]="true" styleClass="w-full">
+                            </p-button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sistema de reservas -->
+        <div *ngIf="cancha?.estado === 'DISPONIBLE' || cancha?.estado === 'ACTIVA'" id="seccion-reserva"
+            class="bg-white rounded-2xl shadow-lg p-8 mt-3">
+
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+                <i class="pi pi-calendar text-green-600"></i>
+                Hacer tu Reserva
+            </h2>
+
+            <!-- Selector de fecha -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-3">
+                        Selecciona la Fecha
+                    </label>
+                    <p-datepicker [(ngModel)]="fechaSeleccionada" (onSelect)="onFechaSeleccionada()"
+                        [minDate]="fechaMinima" [maxDate]="fechaMaxima" [inline]="true" dateFormat="dd/mm/yy"
+                        styleClass="w-full">
+                    </p-datepicker>
+                </div>
+
+                <!-- Horarios disponibles -->
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-3">
+                        Horarios Disponibles
+                    </label>
+
+                    <!-- Estado cuando no hay fecha seleccionada -->
+                    <div *ngIf="!fechaSeleccionada" class="flex items-center justify-center h-64 bg-gray-50 rounded-lg">
+                        <div class="text-center text-gray-500">
+                            <i class="pi pi-calendar text-3xl mb-2"></i>
+                            <p>Selecciona una fecha para ver horarios</p>
+                        </div>
+                    </div>
+
+                    <!-- Cargando horarios -->
+                    <div *ngIf="fechaSeleccionada && cargandoHorarios" class="space-y-3">
+                        <p-skeleton height="3rem" class="w-full rounded-lg" *ngFor="let item of [1,2,3,4]"></p-skeleton>
+                    </div>
+
+                    <!-- Lista de horarios -->
+                    <div *ngIf="fechaSeleccionada && !cargandoHorarios" class="space-y-3 max-h-64 overflow-y-auto">
+
+                        <!-- Horario disponible -->
+                        <div *ngFor="let horario of horariosDisponibles; trackBy: trackByHorarioId"
+                            class="flex items-center justify-between p-3 border rounded-lg hover:bg-green-50 transition-colors cursor-pointer"
+                            [class.bg-green-50]="horarioSeleccionado?.id === horario.id"
+                            [class.border-green-300]="horarioSeleccionado?.id === horario.id"
+                            [class.opacity-50]="!horario.disponible" [class.cursor-not-allowed]="!horario.disponible"
+                            (click)="seleccionarHorario(horario)">
+
+                            <div class="flex items-center gap-3">
+                                <i class="pi pi-clock text-green-600"></i>
+                                <div>
+                                    <div class="font-semibold">
+                                        {{ formatearHorario(horario.horaInicio, horario.horaFin) }}
+                                    </div>
+                                    <div class="text-xs text-gray-500">
+                                        {{ horario.duracionHoras }}h - S/ {{ horario.precio }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center">
+                                <p-tag [value]="horario.disponible ? 'Disponible' : 'Ocupado'"
+                                    [severity]="horario.disponible ? 'success' : 'danger'" [rounded]="true">
+                                </p-tag>
+                            </div>
+                        </div>
+
+                        <!-- Mensaje cuando no hay horarios -->
+                        <div *ngIf="horariosDisponibles.length === 0" class="text-center py-8 text-gray-500">
+                            <i class="pi pi-times-circle text-2xl mb-2"></i>
+                            <p>No hay horarios disponibles para esta fecha</p>
+                            <p class="text-sm">Intenta con otra fecha</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resumen de la reserva -->
+            <div *ngIf="horarioSeleccionado" class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-6 mb-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Resumen de tu Reserva</h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div class="flex items-center gap-2">
+                        <i class="pi pi-map-marker text-green-600"></i>
+                        <div>
+                            <div class="text-sm text-gray-600">Cancha</div>
+                            <div class="font-semibold">{{ cancha?.tipoCancha }} {{ cancha?.numeroCancha }}</div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <i class="pi pi-calendar text-green-600"></i>
+                        <div>
+                            <div class="text-sm text-gray-600">Fecha y Hora</div>
+                            <div class="font-semibold">
+                                {{ formatearFecha(fechaSeleccionada!) }}
+                            </div>
+                            <div class="text-sm">
+                                {{ formatearHorario(horarioSeleccionado.horaInicio, horarioSeleccionado.horaFin) }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <i class="pi pi-money-bill text-green-600"></i>
+                        <div>
+                            <div class="text-sm text-gray-600">Precio Total</div>
+                            <div class="font-bold text-xl text-green-600">
+                                S/ {{ horarioSeleccionado.precio }}
+                            </div>
+                            <div class="text-sm">
+                                {{ horarioSeleccionado.duracionHoras }}h × S/ {{ cancha?.precioPorHora }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mensaje de Error -->
+                <div *ngIf="error && !cargando" class="mb-6">
+                    <p-message severity="error" [text]="error" styleClass="w-full"></p-message>
+                </div>
+
+                <!-- Botones de acción -->
+                <div class="flex gap-3">
+                    <p-button label="Continuar" icon="pi pi-check" size="large" styleClass="flex-1"
+                        (onClick)="procesarReserva()" [loading]="procesandoReserva">
+                    </p-button>
+
+                    <p-button label="Cancelar" icon="pi pi-times" size="large" [outlined]="true" severity="secondary"
+                        (onClick)="cancelarSeleccion()">
+                    </p-button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
