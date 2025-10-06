@@ -1,6 +1,3 @@
-import { canchaDeportiva } from "./canchaDeportiva";
-import { User } from "./user";
-
 export interface reserva {
     id: number;
     codUnico: string;
@@ -9,6 +6,21 @@ export interface reserva {
     fechaCreacionReserva: Date;
     fechaInicio: Date;
     fechaFin: Date;
-    user: User;
-    canchaDeportiva: canchaDeportiva;
+    usuario: {
+        id: number,
+        nombre: string;
+        apellido: string;
+        email: string;
+        telefono?: string;
+    };
+    canchaDeportiva: {
+        id: number;
+        tipoCancha: string;
+        numeroCancha: string;
+        precioPorHora: number;
+        capacidadJugadores: number;
+        tipoGrass: string;
+        descripcion?: string;
+    };
+
 }
