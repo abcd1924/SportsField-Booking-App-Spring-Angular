@@ -46,16 +46,21 @@ public class SecurityConfig {
                         .hasRole("ADMIN")
                         .requestMatchers("/api/horarios-canchas/crear", "/api/horarios-canchas/editar/{id}")
                         .hasAnyRole("ADMIN", "RECEPCIONISTA")
-                        .requestMatchers("/api/reservas/crear", "/api/reservas/confirmar/{id}",
+                        .requestMatchers("/api/reservas/crear",
                                 "/api/reservas/cancelar/{id}", "/api/reservas/buscar/futuras-confirmadas")
                         .hasAnyRole("ADMIN", "RECEPCIONISTA")
-                        .requestMatchers("/api/comprobantes/crear").hasAnyRole("ADMIN", "RECEPCIONISTA")
+                        .requestMatchers("/api/comprobantes/crear", "/api/comprobantes/generar/{reservaId}",
+                                "/api/comprobantes/buscar/reservaId/{reservaId}",
+                                "/api/comprobantes/descargar/{comprobanteId}", "/api/reservas/temporal", "/api/reservas/confirmar/{id}")
+                        .hasAnyRole("ADMIN", "RECEPCIONISTA", "USER")
                         .requestMatchers("/api/usuarios/editar/{id}").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/api/usuarios/existe/documento/{numDocumento}", "/api/usuarios")
                         .hasAnyRole("ADMIN", "RECEPCIONISTA")
                         .requestMatchers("/api/usuarios/buscar/email/{email}")
                         .authenticated()
-                        .requestMatchers("/api/auth/login", "/api/usuarios/registrar", "/api/canchas-deportivas", "/api/canchas-deportivas/activas", "/api/horarios-canchas")
+                        .requestMatchers("/api/auth/login", "/api/usuarios/registrar", "/api/canchas-deportivas",
+                                "/api/canchas-deportivas/activas", "/api/horarios-canchas", "/api/horarios-canchas/disponibles-por-fecha",
+                                "/api/canchas-deportivas/buscar/{id}", "/api/horarios-canchas/buscar/**")
                         .permitAll()
                         .anyRequest().authenticated());
         http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

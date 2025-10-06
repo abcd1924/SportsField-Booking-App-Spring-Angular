@@ -79,6 +79,10 @@ public class UsuarioService {
         usuarioRepository.deleteById(id);
     }
 
+    public Optional<Usuario> buscarPorId(Long id) {
+        return usuarioRepository.findById(id);
+    }
+
     // Logging de eventos
     private static final Logger logger = LoggerFactory.getLogger(UsuarioService.class);
 

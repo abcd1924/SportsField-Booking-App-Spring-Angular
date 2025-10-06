@@ -1,15 +1,19 @@
 package reservaCanchasDeportivas.rcd.service;
 
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
+import reservaCanchasDeportivas.rcd.DTO.ReservaDTO;
+import reservaCanchasDeportivas.rcd.errors.HorarioNoDisponibleException;
+import reservaCanchasDeportivas.rcd.model.CanchaDeportiva;
 import reservaCanchasDeportivas.rcd.model.EstadoReserva;
 import reservaCanchasDeportivas.rcd.model.Reserva;
+import reservaCanchasDeportivas.rcd.model.Usuario;
 import reservaCanchasDeportivas.rcd.repository.ReservaRepository;
 
 @Service
@@ -17,25 +21,56 @@ public class ReservaService {
     @Autowired
     private ReservaRepository reservaRepository;
 
-    public Reserva crearReservaTemporal(Reserva reserva) {
+    @Autowired
+    private CanchaDeportivaService canchaDeportivaService;
+
+    @Autowired
+    private UsuarioService usuarioService;
+
+    @Transactional
+    public Reserva crearReservaTemporal(ReservaDTO reservaDTO) {
+
+        List<EstadoReserva> estadosOcupados = Arrays.asList(
+                EstadoReserva.TEMPORAL,
+                EstadoReserva.CONFIRMADA);
+
+        List<Reserva> reservasConflicto = reservaRepository.findReservasEnRango(reservaDTO.getCanchaDeportivaId(),
+                reservaDTO.getFechaInicio(), reservaDTO.getFechaFin(), estadosOcupados);
+
+        if (!reservasConflicto.isEmpty()) {
+            throw new HorarioNoDisponibleException(
+                    "Este horario ya ha sido reservado. Por favor seleccione otro horario.");
+        }
+
+        CanchaDeportiva cancha = canchaDeportivaService.obtenerCanchaPorId(reservaDTO.getCanchaDeportivaId())
+                .orElseThrow(() -> new RuntimeException("Cancha no encontrada"));
+
+        Usuario usuario = usuarioService.buscarPorId(reservaDTO.getUsuarioId())
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
         String codigo;
         do {
             codigo = generarCodigoUnico();
         } while (reservaRepository.existsByCodUnico(codigo));
 
-        reserva.setCodUnico(codigo);
-        reserva.setEstado(EstadoReserva.TEMPORAL);
-
-        if(reserva.getFechaFin().isBefore(reserva.getFechaInicio())){
+        if (reservaDTO.getFechaFin().isBefore(reservaDTO.getFechaInicio())) {
             throw new IllegalArgumentException("La fecha de fin debe ser posterior a la fecha de inicio");
         }
+
+        Reserva reserva = new Reserva();
+        reserva.setCodUnico(codigo);
+        reserva.setEstado(EstadoReserva.TEMPORAL);
+        reserva.setFechaInicio(reservaDTO.getFechaInicio());
+        reserva.setFechaFin(reservaDTO.getFechaFin());
         long horas = Duration.between(reserva.getFechaInicio(), reserva.getFechaFin()).toHours();
         reserva.setHorasTotales((int) horas);
+        reserva.setCanchaDeportiva(cancha);
+        reserva.setUsuario(usuario);
 
         return reservaRepository.save(reserva);
     }
 
-    public List<Reserva> listarReservas(){
+    public List<Reserva> listarReservas() {
         return reservaRepository.findAll();
     }
 
@@ -58,18 +93,14 @@ public class ReservaService {
         return reservaRepository.save(reserva);
     }
 
-    public List<Reserva> buscarReservasFuturasConfirmadas() {
-        return reservaRepository.findFutureConfirmedReservations();
-    }
-
-    public Reserva confirmarReserva(Long id){
+    public Reserva confirmarReserva(Long id) {
         Reserva reserva = reservaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Reserva no encontrada"));
         reserva.setEstado(EstadoReserva.CONFIRMADA);
         return reservaRepository.save(reserva);
     }
 
-    public String generarCodigoUnico(){
+    public String generarCodigoUnico() {
         return "RCD-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase() + "-" + System.currentTimeMillis();
     }
 }

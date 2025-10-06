@@ -1,6 +1,7 @@
 package reservaCanchasDeportivas.rcd.controller;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import reservaCanchasDeportivas.rcd.DTO.ReservaDTO;
+import reservaCanchasDeportivas.rcd.errors.HorarioNoDisponibleException;
 import reservaCanchasDeportivas.rcd.model.Reserva;
 import reservaCanchasDeportivas.rcd.service.ReservaService;
 
@@ -24,72 +28,79 @@ public class ReservaController {
     private ReservaService reservaService;
 
     @GetMapping
-    public ResponseEntity<List<Reserva>> listarReservas(){
+    public ResponseEntity<List<Reserva>> listarReservas() {
         List<Reserva> reservas = reservaService.listarReservas();
         return ResponseEntity.ok(reservas);
     }
 
-    @PostMapping("/temporal")
-    public ResponseEntity<Reserva> crearReservaTemporal(@RequestBody Reserva reserva){
-        Reserva creada = reservaService.crearReservaTemporal(reserva);
-        return ResponseEntity.status(HttpStatus.CREATED).body(creada);
+    @PostMapping("/crear-temporal")
+    public ResponseEntity<?> crearReservaTemporal(@RequestBody ReservaDTO reservaDTO) {
+        try {
+            Reserva reserva = reservaService.crearReservaTemporal(reservaDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body(reserva);
+        } catch (HorarioNoDisponibleException e) {
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body(Map.of(
+                            "error", "HORARIO_NO_DISPONIBLE",
+                            "mensaje", e.getMessage()));
+        } catch (RuntimeException e) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of(
+                            "error", "ERROR_CREACION",
+                            "mensaje", e.getMessage()));
+        }
     }
 
-    //Confirmar reserva por ID
+    // Confirmar reserva por ID
     @PutMapping("/confirmar/{id}")
-    public ResponseEntity<Reserva> confirmarReserva(@PathVariable Long id){
+    public ResponseEntity<Reserva> confirmarReserva(@PathVariable Long id) {
         try {
-        Reserva confirmada = reservaService.confirmarReserva(id);
-        return ResponseEntity.ok(confirmada);
+            Reserva confirmada = reservaService.confirmarReserva(id);
+            return ResponseEntity.ok(confirmada);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
 
-    //Cancelar reserva por ID
+    // Cancelar reserva por ID
     @PutMapping("/cancelar/{id}")
-    public ResponseEntity<Reserva> cancelarReserva(@PathVariable Long id){
+    public ResponseEntity<Reserva> cancelarReserva(@PathVariable Long id) {
         try {
-        Reserva cancelada = reservaService.cancelarReserva(id);
-        return ResponseEntity.ok(cancelada);
+            Reserva cancelada = reservaService.cancelarReserva(id);
+            return ResponseEntity.ok(cancelada);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
 
-    //Obtener reservas por usuario
+    // Obtener reservas por usuario
     @GetMapping("/buscar/usuario/{usuarioId}")
-    public ResponseEntity<List<Reserva>> obtenerReservaPorUsuario(@PathVariable Long usuarioId){
+    public ResponseEntity<List<Reserva>> obtenerReservaPorUsuario(@PathVariable Long usuarioId) {
         List<Reserva> reservas = reservaService.obtenerReservasPorUsuario(usuarioId);
         return ResponseEntity.ok(reservas);
     }
 
-    //Obtener reserva por código único
+    // Obtener reserva por código único
     @GetMapping("/buscar/codUnico/{codUnico}")
-    public ResponseEntity<Reserva> obtenerReservaPorCodigoUnico(@PathVariable String codUnico){
+    public ResponseEntity<Reserva> obtenerReservaPorCodigoUnico(@PathVariable String codUnico) {
         Optional<Reserva> reserva = reservaService.obtenerReservaPorCodigoUnico(codUnico);
-        if(reserva.isPresent()){
+        if (reserva.isPresent()) {
             return ResponseEntity.ok(reserva.get());
         } else {
             return ResponseEntity.notFound().build();
         }
     }
 
-    //Obtener reserva por ID
+    // Obtener reserva por ID
     @GetMapping("/buscar/id/{id}")
-    public ResponseEntity<Reserva> obtenerReservasPorId(@PathVariable Long id){
+    public ResponseEntity<Reserva> obtenerReservasPorId(@PathVariable Long id) {
         Optional<Reserva> reserva = reservaService.obtenerReservasPorId(id);
-        if(reserva.isPresent()){
+        if (reserva.isPresent()) {
             return ResponseEntity.ok(reserva.get());
         } else {
             return ResponseEntity.notFound().build();
         }
-    }
-
-    //Buscar reservas futuras confirmadas
-    @GetMapping("/buscar/futuras-confirmadas")
-    public ResponseEntity<List<Reserva>> buscarReservasFuturasConfirmadas(){
-        List<Reserva> reservas = reservaService.buscarReservasFuturasConfirmadas();
-        return ResponseEntity.ok(reservas);
     }
 }
