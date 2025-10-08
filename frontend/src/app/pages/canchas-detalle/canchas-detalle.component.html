@@ -158,18 +158,22 @@
                     <!-- Lista de horarios -->
                     <div *ngIf="fechaSeleccionada && !cargandoHorarios" class="space-y-3 max-h-64 overflow-y-auto">
 
-                        <!-- Horario disponible -->
+                        <!-- CAMBIO AQUÍ: Agregar condición para deshabilitar el click -->
                         <div *ngFor="let horario of horariosDisponibles; trackBy: trackByHorarioId"
-                            class="flex items-center justify-between p-3 border rounded-lg hover:bg-green-50 transition-colors cursor-pointer"
+                            class="flex items-center justify-between p-3 border rounded-lg transition-colors"
+                            [class.hover:bg-green-50]="horario.disponible" [class.cursor-pointer]="horario.disponible"
                             [class.bg-green-50]="horarioSeleccionado?.id === horario.id"
                             [class.border-green-300]="horarioSeleccionado?.id === horario.id"
                             [class.opacity-50]="!horario.disponible" [class.cursor-not-allowed]="!horario.disponible"
-                            (click)="seleccionarHorario(horario)">
+                            [class.bg-gray-100]="!horario.disponible"
+                            (click)="horario.disponible ? seleccionarHorario(horario) : null">
 
                             <div class="flex items-center gap-3">
-                                <i class="pi pi-clock text-green-600"></i>
+                                <i class="pi pi-clock" [class.text-green-600]="horario.disponible"
+                                    [class.text-gray-400]="!horario.disponible"></i>
                                 <div>
-                                    <div class="font-semibold">
+                                    <div class="font-semibold" [class.text-gray-800]="horario.disponible"
+                                        [class.text-gray-400]="!horario.disponible">
                                         {{ formatearHorario(horario.horaInicio, horario.horaFin) }}
                                     </div>
                                     <div class="text-xs text-gray-500">

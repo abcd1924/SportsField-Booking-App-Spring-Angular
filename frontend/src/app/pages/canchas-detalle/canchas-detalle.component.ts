@@ -117,26 +117,30 @@ export class CanchasDetalleComponent implements OnInit {
     this.cargandoHorarios = true;
     this.horariosDisponibles = [];
 
-    const diaSemana = HorarioUtils.obtenerDiaSemana(this.fechaSeleccionada);
-
-    this.horarioService.obtenerHorariosPorCanchaYDia(this.cancha.id, diaSemana).subscribe({
+    // Usar el nuevo endpoint que verifica disponibilidad real
+    this.horarioService.obtenerHorariosConDisponibilidad(
+      this.cancha.id,
+      this.fechaSeleccionada
+    ).subscribe({
       next: (horarios) => {
+        // Los horarios ya vienen con el campo "disponible" calculado
         this.horariosDisponibles = horarios.map(horario => ({
           id: horario.id,
           horaInicio: horario.horaInicio,
           horaFin: horario.horaFin,
-          disponible: horario.disponible,
+          disponible: horario.disponible, // Backend ya verificó TODAS las reservas
           precio: this.calcularPrecio(horario.horaInicio, horario.horaFin),
           duracionHoras: HorarioUtils.calcularDuracionHoras(horario.horaInicio, horario.horaFin)
         }));
         this.cargandoHorarios = false;
       },
       error: (err) => {
-        console.error('Error al cargar horarios: ', err);
+        console.error('Error al cargar horarios:', err);
         this.cargandoHorarios = false;
       }
     });
   }
+
 
   // PASO 5: Usuario selecciona un horario específico
   seleccionarHorario(horario: HorarioDisponible): void {
@@ -157,6 +161,7 @@ export class CanchasDetalleComponent implements OnInit {
   }
 
   // PASO 7: Crear reserva temporal
+
   procesarReserva(): void {
     if (!this.cancha || !this.fechaSeleccionada || !this.horarioSeleccionado) return;
 
@@ -169,22 +174,31 @@ export class CanchasDetalleComponent implements OnInit {
       return;
     }
 
-    const fechaInicio = new Date(this.fechaSeleccionada);
+    // Extraer horas
     const [horaInicioHoras, horaInicioMinutos] = this.horarioSeleccionado.horaInicio.split(':').map(Number);
-    fechaInicio.setHours(horaInicioHoras, horaInicioMinutos, 0, 0);
-
-    const fechaFin = new Date(this.fechaSeleccionada);
     const [horaFinHoras, horaFinMinutos] = this.horarioSeleccionado.horaFin.split(':').map(Number);
-    fechaFin.setHours(horaFinHoras, horaFinMinutos, 0, 0);
 
+    // Formatear como string ISO sin zona horaria
+    const fechaInicioStr = this.formatearFechaParaBackend(
+      this.fechaSeleccionada,
+      horaInicioHoras,
+      horaInicioMinutos
+    );
+
+    const fechaFinStr = this.formatearFechaParaBackend(
+      this.fechaSeleccionada,
+      horaFinHoras,
+      horaFinMinutos
+    );
+
+    // Enviar como strings, no como objetos Date
     const reservaData = {
-      fechaInicio,
-      fechaFin,
-      canchaDeportiva: { id: this.cancha.id },
-      usuario: { id: usuarioActual.id }
+      fechaInicio: fechaInicioStr,  // String: "2025-10-06T08:00:00"
+      fechaFin: fechaFinStr,         // String: "2025-10-06T10:00:00"
+      canchaDeportivaId: this.cancha.id ,
+      usuarioId: usuarioActual.id
     }
 
-    // Reserva temporal
     this.reservaService.crearReservaTemporal(reservaData).subscribe({
       next: (reserva) => {
         this.procesandoReserva = false;
@@ -192,10 +206,35 @@ export class CanchasDetalleComponent implements OnInit {
       },
       error: (err) => {
         this.procesandoReserva = false;
-        this.error = "No se puedo crear la reserva. Intente nuevamente.";
+        if (err.status === 409) {
+          this.error = err.error.mensaje || "Este horario ya ha sido reservado por otro usuario.";
+
+          // Recargar horarios para mostrar el estado actualizado
+          this.cargarHorariosDisponibles();
+
+          // Limpiar selección
+          this.horarioSeleccionado = null;
+        } else {
+          this.error = "No se pudo crear la reserva. Intente nuevamente."
+        }
+
         console.error('Error al crear reserva:', err);
       }
-    })
+    });
+  }
+
+  /**
+   * Formatea fecha y hora como string ISO sin zona horaria
+   * Formato: "2025-10-06T08:00:00"
+   */
+  private formatearFechaParaBackend(fecha: Date, horas: number, minutos: number): string {
+    const año = fecha.getFullYear();
+    const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+    const dia = String(fecha.getDate()).padStart(2, '0');
+    const horasStr = String(horas).padStart(2, '0');
+    const minutosStr = String(minutos).padStart(2, '0');
+
+    return `${año}-${mes}-${dia}T${horasStr}:${minutosStr}:00`;
   }
 
   // Métodos Auxiliares
