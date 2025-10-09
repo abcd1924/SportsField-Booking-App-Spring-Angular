@@ -30,6 +30,10 @@ export class ComprobanteService {
     })
   }
 
+  obtenerComprobantePorId(comprobanteId: number): Observable<comprobante> {
+    return this.http.get<comprobante>(`${this.apiUrl}/${comprobanteId}`);
+  }
+
   listarComprobantes(): Observable<comprobante[]> {
     return this.http.get<comprobante[]>(this.apiUrl);
   }

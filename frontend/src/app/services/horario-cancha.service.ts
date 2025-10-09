@@ -3,6 +3,7 @@ import { environment } from '../models/environment';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
 import { horarioCancha } from '../models/horarioCancha';
+import { HorarioDisponibilidadDTO } from '../models/auxiliares/horarioDisponibilidadDTO';
 
 @Injectable({
   providedIn: 'root'
@@ -73,7 +74,7 @@ export class HorarioCanchaService {
           observer.next(todosLosHorarios as horarioCancha[]);
           observer.complete();
         })
-          .catch(error => observer.error(error));
+        .catch(error => observer.error(error));
     })
   }
 
@@ -84,4 +85,29 @@ export class HorarioCanchaService {
         map(horarios => horarios.filter(h => h.disponible))
       );
   }
+
+  // 
+  obtenerHorariosConDisponibilidad(canchaId: number, fecha: Date): Observable<HorarioDisponibilidadDTO[]> {
+    const fechaStr = this.formatearFechaParaBackend(fecha);
+
+    return this.http.get<HorarioDisponibilidadDTO[]>(
+      `${this.apiUrl}/disponibles-por-fecha`,
+      {
+        params: {
+          canchaId: canchaId.toString(),
+          fecha: fechaStr
+        }
+      }
+    );
+  }
+  
+  private formatearFechaParaBackend(fecha: Date): string {
+    const año = fecha.getFullYear();
+    const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+    const dia = String(fecha.getDate()).padStart(2, '0');
+
+    return `${año}-${mes}-${dia}`; // "2025-10-06"
+  }
+
+
 }
