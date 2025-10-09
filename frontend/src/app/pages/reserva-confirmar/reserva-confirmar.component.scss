@@ -1,0 +1,25 @@
+/* Animación para el timer cuando está por expirar */
+.timer-pulse {
+    animation: pulse 1s ease-in-out infinite;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+/* Transición suave para los cards */
+p-card {
+    transition: transform 0.2s ease-in-out;
+}
+
+p-card:hover {
+    transform: translateY(-2px);
+}

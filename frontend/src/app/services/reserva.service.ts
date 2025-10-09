@@ -19,7 +19,7 @@ export class ReservaService {
   }
 
   crearReservaTemporal(reservaData: ReservaRequest): Observable<reserva> {
-    return this.http.post<reserva>(`${this.apiUrl}/temporal`, reservaData);
+    return this.http.post<reserva>(`${this.apiUrl}/crear-temporal`, reservaData);
   }
 
   confirmarReserva(id: number): Observable<reserva> {
@@ -42,12 +42,8 @@ export class ReservaService {
     return this.http.get<reserva>(`${this.apiUrl}/buscar/id/${id}`);
   }
 
-  buscarReservasFuturasConfirmadas(): Observable<reserva[]> {
-    return this.http.get<reserva[]>(`${this.apiUrl}/buscar/futuras-confirmadas`);
-  }
-
   // Métodos de conveniencia
-
+  
   private obtenerUsuarioActual(): { id: number, nombre: string; email: string } | null {
     return this.authService.getCurrentUserForReservations();
   }
@@ -59,23 +55,6 @@ export class ReservaService {
       throw new Error('Usuario no autenticado');
     }
     return this.obtenerReservasPorUsuario(usuarioActual.id);
-  }
-
-  // Crea una reserva para el usuario actualmente logueado
-  crearMiReserva(fechaInicio: Date, fechaFin: Date, canchaId: number): Observable<reserva> {
-    const usuarioActual = this.obtenerUsuarioActual();
-    if (!usuarioActual) {
-      throw new Error('Usuario no autenticado');
-    }
-
-    const reservaData: ReservaRequest = {
-      fechaInicio,
-      fechaFin,
-      canchaDeportiva: { id: canchaId },
-      usuario: { id: usuarioActual.id }
-    };
-
-    return this.crearReservaTemporal(reservaData);
   }
 
   puedeCancelarReserva(reserva: reserva): boolean {
