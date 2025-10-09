@@ -41,6 +41,16 @@ public class ComprobanteController {
         return ResponseEntity.ok(comprobantes);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Comprobante> obtenerComprobantePorId(@PathVariable Long id) {
+        Optional<Comprobante> comprobante = comprobanteService.obtenerComprobantePorId(id);
+        if (comprobante.isPresent()) {
+            return ResponseEntity.ok(comprobante.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
     @PostMapping("/generar/{reservaId}")
     public ResponseEntity<Comprobante> generarComprobante(@PathVariable Long reservaId) {
         try {

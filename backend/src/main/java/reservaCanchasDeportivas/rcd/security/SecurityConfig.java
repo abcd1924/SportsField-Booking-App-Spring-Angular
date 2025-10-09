@@ -47,11 +47,11 @@ public class SecurityConfig {
                         .requestMatchers("/api/horarios-canchas/crear", "/api/horarios-canchas/editar/{id}")
                         .hasAnyRole("ADMIN", "RECEPCIONISTA")
                         .requestMatchers("/api/reservas/crear",
-                                "/api/reservas/cancelar/{id}", "/api/reservas/buscar/futuras-confirmadas")
+                                "/api/reservas/buscar/futuras-confirmadas")
                         .hasAnyRole("ADMIN", "RECEPCIONISTA")
                         .requestMatchers("/api/comprobantes/crear", "/api/comprobantes/generar/{reservaId}",
                                 "/api/comprobantes/buscar/reservaId/{reservaId}",
-                                "/api/comprobantes/descargar/{comprobanteId}", "/api/reservas/temporal", "/api/reservas/confirmar/{id}")
+                                "/api/comprobantes/descargar/{comprobanteId}", "/api/reservas/crear-temporal", "/api/reservas/confirmar/{id}", "/api/reservas/cancelar/{id}")
                         .hasAnyRole("ADMIN", "RECEPCIONISTA", "USER")
                         .requestMatchers("/api/usuarios/editar/{id}").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/api/usuarios/existe/documento/{numDocumento}", "/api/usuarios")
