@@ -1,1 +1,260 @@
-<p>comprobante works!</p>
+<div class="min-h-screen bg-gradient-to-br from-green-50 to-emerald-50 py-8 px-4">
+    <div class="max-w-4xl mx-auto">
+
+        <!-- Loading State -->
+        <div *ngIf="cargando" class="flex justify-center items-center py-20">
+            <p-progressSpinner></p-progressSpinner>
+        </div>
+
+        <!-- Error State -->
+        <p-message *ngIf="error && !cargando" severity="error" [text]="error" styleClass="mb-4 w-full">
+        </p-message>
+
+        <!-- Contenido Principal -->
+        <div *ngIf="comprobante && comprobante.reserva && comprobante.reserva.canchaDeportiva && comprobante.reserva.usuario && !cargando">
+
+            <!-- Header de Éxito -->
+            <div class="text-center mb-8">
+                <div
+                    class="inline-flex items-center justify-center w-20 h-20 bg-green-500 rounded-full mb-4 animate-bounce">
+                    <i class="pi pi-check text-4xl text-white"></i>
+                </div>
+                <h1 class="text-4xl font-bold text-gray-800 mb-2">¡Reserva Confirmada!</h1>
+                <p class="text-xl text-gray-600">Tu reserva ha sido procesada exitosamente</p>
+            </div>
+
+            <!-- Card Principal del Comprobante -->
+            <p-card styleClass="mb-6 shadow-2xl">
+                <ng-template pTemplate="header">
+                    <div class="bg-gradient-to-r from-green-600 to-emerald-600 p-6 text-white">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h2 class="text-2xl font-bold mb-1">Comprobante de Reserva</h2>
+                                <p class="text-green-100">Documento generado automáticamente</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-sm text-green-100">Código</p>
+                                <p class="text-xl font-mono font-bold">{{ comprobante.codigoComprobante }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+
+                <!-- Información del Cliente -->
+                <div class="mb-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                        <i class="pi pi-user text-green-600"></i>
+                        Datos del Cliente
+                    </h3>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 p-4 rounded-lg">
+                        <div>
+                            <p class="text-sm text-gray-600 mb-1">Nombre Completo</p>
+                            <p class="text-lg font-semibold text-gray-800">{{ nombreCompletoUsuario }}</p>
+                        </div>
+
+                        <div>
+                            <p class="text-sm text-gray-600 mb-1">Correo Electrónico</p>
+                            <p class="text-lg font-semibold text-gray-800">
+                                {{ comprobante?.reserva?.usuario?.email }}
+                            </p>
+                        </div>
+
+                        <div *ngIf="comprobante?.reserva?.usuario?.telefono">
+                            <p class="text-sm text-gray-600 mb-1">Teléfono</p>
+                            <p class="text-lg font-semibold text-gray-800">
+                                {{ comprobante?.reserva?.usuario?.telefono }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <p-divider></p-divider>
+
+                <!-- Detalles de la Cancha y Reserva -->
+                <div class="mb-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                        <i class="pi pi-calendar text-green-600"></i>
+                        Detalles de la Reserva
+                    </h3>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Cancha -->
+                        <div
+                            class="bg-gradient-to-r from-green-50 to-emerald-50 p-4 rounded-lg border-l-4 border-green-500">
+                            <div class="flex items-center gap-3 mb-2">
+                                <span class="text-3xl">
+                                    {{ getIconoTipoCancha(comprobante?.reserva?.canchaDeportiva?.tipoCancha ?? '') }}
+                                </span>
+                                <div>
+                                    <p class="text-sm text-gray-600">Cancha</p>
+                                    <p class="text-lg font-bold text-gray-800">
+                                        {{ comprobante?.reserva?.canchaDeportiva?.tipoCancha ?? '' }}
+                                    </p>
+                                    <p class="text-sm text-gray-600">
+                                        Nº {{ comprobante?.reserva?.canchaDeportiva?.numeroCancha }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Fecha y Hora -->
+                        <div class="bg-gradient-to-r from-blue-50 to-sky-50 p-4 rounded-lg border-l-4 border-blue-500">
+                            <div class="flex items-center gap-3 mb-2">
+                                <i class="pi pi-calendar text-3xl text-blue-600"></i>
+                                <div>
+                                    <p class="text-sm text-gray-600">Fecha</p>
+                                    <p class="text-lg font-bold text-gray-800">
+                                        {{ fechaReservaFormateada }}
+                                    </p>
+                                    <p class="text-sm font-semibold text-gray-700">
+                                        {{ horaInicio }} - {{ horaFin }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Duración -->
+                        <div
+                            class="bg-gradient-to-r from-purple-50 to-violet-50 p-4 rounded-lg border-l-4 border-purple-500">
+                            <div class="flex items-center gap-3">
+                                <i class="pi pi-clock text-3xl text-purple-600"></i>
+                                <div>
+                                    <p class="text-sm text-gray-600">Duración</p>
+                                    <p class="text-lg font-bold text-gray-800">
+                                        {{ comprobante?.reserva?.horasTotales }} hora(s)
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Estado -->
+                        <div
+                            class="bg-gradient-to-r from-yellow-50 to-amber-50 p-4 rounded-lg border-l-4 border-yellow-500">
+                            <div class="flex items-center gap-3">
+                                <i class="pi pi-info-circle text-3xl text-yellow-600"></i>
+                                <div>
+                                    <p class="text-sm text-gray-600">Estado</p>
+                                    <p-tag value="CONFIRMADA" severity="success" styleClass="text-base"></p-tag>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <p-divider></p-divider>
+
+                <!-- Resumen Financiero -->
+                <div class="mb-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                        <i class="pi pi-wallet text-green-600"></i>
+                        Resumen de Costos
+                    </h3>
+
+                    <div class="bg-gray-50 p-6 rounded-lg">
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-700">Precio por hora:</span>
+                                <span class="text-lg font-semibold text-gray-800">
+                                    S/ {{ comprobante?.reserva?.canchaDeportiva?.precioPorHora }}
+                                </span>
+                            </div>
+
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-700">Horas reservadas:</span>
+                                <span class="text-lg font-semibold text-gray-800">
+                                    {{ comprobante?.reserva?.horasTotales }}
+                                </span>
+                            </div>
+
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-700">Subtotal:</span>
+                                <span class="text-lg font-semibold text-gray-800">
+                                    {{ subtotalFormateado }}
+                                </span>
+                            </div>
+
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-700">IGV (18%):</span>
+                                <span class="text-lg font-semibold text-gray-800">
+                                    {{ igvFormateado }}
+                                </span>
+                            </div>
+
+                            <p-divider styleClass="my-3"></p-divider>
+
+                            <div class="flex justify-between items-center bg-green-100 p-4 rounded-lg">
+                                <span class="text-xl font-bold text-gray-800">Total a Pagar:</span>
+                                <span class="text-3xl font-bold text-green-600">
+                                    {{ totalFormateado }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <p-divider></p-divider>
+
+                <!-- Información Adicional -->
+                <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded mb-6">
+                    <h4 class="font-bold text-blue-900 mb-3 flex items-center gap-2">
+                        <i class="pi pi-info-circle"></i>
+                        Información Importante
+                    </h4>
+                    <ul class="space-y-2 text-blue-800">
+                        <li class="flex items-start gap-2">
+                            <i class="pi pi-check-circle text-blue-600 mt-1"></i>
+                            <span>El pago se realizará en el establecimiento al momento de su llegada</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="pi pi-check-circle text-blue-600 mt-1"></i>
+                            <span>Por favor llegue 15 minutos antes de su horario reservado</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="pi pi-check-circle text-blue-600 mt-1"></i>
+                            <span>Presente este comprobante al personal del establecimiento</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Fecha de Emisión -->
+                <div class="text-center text-sm text-gray-500">
+                    <i class="pi pi-clock"></i>
+                    Comprobante emitido el {{ fechaEmisionFormateada }}
+                </div>
+
+                <ng-template pTemplate="footer">
+                    <div class="flex flex-col sm:flex-row gap-3 justify-center pt-4">
+                        <!-- Ver PDF -->
+                        <p-button label="Ver PDF" icon="pi pi-eye" severity="info" styleClass="flex-1 sm:flex-initial"
+                            (onClick)="verPDF()">
+                        </p-button>
+
+                        <!-- Descargar PDF -->
+                        <p-button label="Descargar PDF" icon="pi pi-download" severity="success"
+                            styleClass="flex-1 sm:flex-initial" (onClick)="descargarPDF()">
+                        </p-button>
+
+                        <!-- Mis Reservas -->
+                        <p-button label="Mis Reservas" icon="pi pi-list" [outlined]="true" severity="secondary"
+                            styleClass="flex-1 sm:flex-initial" (onClick)="irAMisReservas()">
+                        </p-button>
+
+                        <!-- Volver a Canchas -->
+                        <p-button label="Ver Canchas" icon="pi pi-home" [outlined]="true" severity="secondary"
+                            styleClass="flex-1 sm:flex-initial" (onClick)="volverACanchas()">
+                        </p-button>
+                    </div>
+                </ng-template>
+            </p-card>
+
+            <!-- Mensaje de Agradecimiento -->
+            <div class="text-center">
+                <p class="text-gray-600 text-lg">
+                    ¡Gracias por confiar en nosotros! Disfruta tu reserva 🎉
+                </p>
+            </div>
+
+        </div>
+    </div>
+</div>
