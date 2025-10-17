@@ -1,30 +1,58 @@
 <div class="user-layout">
-    <!-- HEADER más simple para usuarios -->
-    <header class="user-header">
-        <div class="header-left">
-            <h1 class="brand">🏟️ Reserva Canchas</h1>
+  
+  <!-- HEADER DEL USUARIO -->
+  <header class="user-header">
+    <div class="container">
+      
+      <!-- Brand -->
+      <div class="header-left">
+        <h1 class="brand" [routerLink]="['/user/dashboard']">
+          🏟️ Reserva Canchas
+        </h1>
+      </div>
+
+      <!-- Navegación -->
+      <nav class="header-nav">
+        <a *ngFor="let item of navItems" 
+           [routerLink]="item.routerLink" 
+           routerLinkActive="active"
+           class="nav-link"
+           [routerLinkActiveOptions]="{exact: false}">
+          <i [class]="item.icon"></i>
+          {{ item.label }}
+        </a>
+      </nav>
+
+      <!-- Acciones del usuario -->
+      <div class="header-actions">
+        <!-- Info del usuario -->
+        <div class="user-info" *ngIf="usuario">
+          <div class="user-avatar">
+            {{ obtenerIniciales(usuario.nombre, usuario.apellido) }}
+          </div>
+          <span class="user-name">{{ usuario.nombre }}</span>
         </div>
 
-        <nav class="header-nav">
-            <a *ngFor="let item of navItems" [routerLink]="item.routerLink" routerLinkActive="active"
-                class="nav-link">
-                <i [class]="item.icon"></i>
-                {{ item.label }}
-            </a>
-        </nav>
+        <!-- Botón de cerrar sesión -->
+        <button class="logout-btn" (click)="logout()">
+          <i class="pi pi-sign-out"></i>
+          Salir
+        </button>
+      </div>
 
-        
-    </header>
+    </div>
+  </header>
 
-    <!-- CONTENIDO PRINCIPAL (sin sidebar) -->
-    <main class="user-main">
-        <div class="container">
-            <router-outlet></router-outlet>
-        </div>
-    </main>
+  <!-- CONTENIDO PRINCIPAL -->
+  <main class="user-main">
+    <div class="container">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
 
-    <!-- FOOTER -->
-    <footer class="user-footer">
-        <p>&copy; 2024 Sistema de Reservas - Todos los derechos reservados</p>
-    </footer>
+  <!-- FOOTER -->
+  <footer class="user-footer">
+    <p>&copy; {{ anioActual }} Sistema de Reservas - Todos los derechos reservados</p>
+  </footer>
+
 </div>
