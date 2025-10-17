@@ -91,33 +91,32 @@ export class AuthService {
     return this.getUserInfo();
   }
 
-  // Para Reserva Service
-  getCurrentUserForReservations(): { id: number; nombre: string; email: string } | null {
-  // Opción 1: Usar datos guardados (preferible)
-  const savedUser = this.getSavedUser();
-  if (savedUser && savedUser.id) {
-    return {
-      id: savedUser.id,
-      nombre: savedUser.nombre,
-      email: savedUser.email
-    };
+  getCurrentUserForReservations(): { id: number; nombre: string; apellido: string, email: string } | null {
+    // Usar datos guardados
+    const savedUser = this.getSavedUser();
+    if (savedUser && savedUser.id) {
+      return {
+        id: savedUser.id,
+        nombre: savedUser.nombre,
+        apellido: savedUser.apellido,
+        email: savedUser.email
+      };
+    }
+
+    // Fallback usando el token
+    const tokenInfo = this.getUserInfo();
+    if (tokenInfo && tokenInfo.userId && tokenInfo.sub) {
+      return {
+        id: tokenInfo.userId,
+        nombre: tokenInfo.nombre,
+        apellido: tokenInfo.apellido,
+        email: tokenInfo.sub
+      };
+    }
+
+    return null;
   }
 
-  // Opción 2: Fallback usando el token
-  const tokenInfo = this.getUserInfo();
-  if (tokenInfo && tokenInfo.userId && tokenInfo.sub) {
-    return {
-      id: tokenInfo.userId,
-      nombre: tokenInfo.nombre,
-      email: tokenInfo.sub
-    };
-  }
-
-  return null;
-}
-
-
-  // Verifica si hay un usuario completamente autenticado
   isFullyAuthenticated(): boolean {
     const hasValidToken = this.isLoggedIn();
     const hasUserData = this.getSavedUser() !== null;

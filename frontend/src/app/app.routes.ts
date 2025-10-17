@@ -1,4 +1,4 @@
-import { Router, Routes } from '@angular/router';
+import { CanActivateFn, Router, Routes } from '@angular/router';
 import { authGuard } from './guards/auth.guard';
 import { PublicLayoutComponent } from './pages/layouts/public-layout/public-layout.component';
 import { HomeComponent } from './pages/home/home.component';
@@ -22,7 +22,6 @@ import { UsuariosRecepcionistaComponent } from './pages/recepcionista/usuarios-r
 import { UserLayoutComponent } from './pages/layouts/user-layout/user-layout.component';
 import { DashboardUserComponent } from './pages/user/dashboard-user/dashboard-user.component';
 import { MisReservasComponent } from './pages/user/mis-reservas/mis-reservas.component';
-import { NuevaReservaComponent } from './pages/user/nueva-reserva/nueva-reserva.component';
 import { PerfilUserComponent } from './pages/user/perfil-user/perfil-user.component';
 import { UnauthorizedComponent } from './pages/error/unauthorized/unauthorized.component';
 import { NotFoundComponent } from './pages/error/not-found/not-found.component';
@@ -31,17 +30,20 @@ import { CanchasDetalleComponent } from './pages/canchas-detalle/canchas-detalle
 import { ReservaConfirmarComponent } from './pages/reserva-confirmar/reserva-confirmar.component';
 import { ComprobanteComponent } from './pages/comprobante/comprobante.component';
 
-const roleGuard = (expectedRoles: string[]) => {
-    return () => {
+export const roleGuard = (expectedRoles: string[]): CanActivateFn => {
+    return (route, state) => {
         const authService = inject(AuthService);
         const router = inject(Router);
 
-        const userRole = authService.getUserRole();
+        const savedUser = authService.getSavedUser();
 
-        if (!userRole) {
+        if (!savedUser || !savedUser.rol) {
+            authService.redirectUrl = state.url;
             router.navigate(['/login']);
             return false;
         }
+
+        const userRole = savedUser.rol;
 
         if (expectedRoles.includes(userRole)) {
             return true;
@@ -157,7 +159,6 @@ export const routes: Routes = [
 
             // Reservas del usuarios
             { path: 'mis-reservas', component: MisReservasComponent },
-            { path: 'nueva-reserva', component: NuevaReservaComponent },
 
             // Perfil (USER y ADMIN pueden editar)
             { path: 'perfil', component: PerfilUserComponent }
