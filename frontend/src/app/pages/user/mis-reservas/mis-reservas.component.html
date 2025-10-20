@@ -1,1 +1,189 @@
-<p>mis-reservas works!</p>
+<div class="min-h-screen bg-gray-50 py-6 px-4">
+  <div class="container mx-auto max-w-7xl">
+
+    <!-- Header -->
+    <div class="mb-8 flex justify-between items-center">
+      <div>
+        <h1 class="text-3xl font-bold text-gray-800 mb-2">Mis Reservas</h1>
+        <p class="text-gray-600">Gestiona y revisa todas tus reservas</p>
+      </div>
+      
+      <p-button 
+        icon="pi pi-refresh" 
+        label="Actualizar"
+        [outlined]="true"
+        (onClick)="recargarReservas()"
+        [loading]="cargando">
+      </p-button>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="cargando" class="flex justify-center items-center py-20">
+      <p-progressSpinner></p-progressSpinner>
+    </div>
+
+    <!-- Error State -->
+    <p-message *ngIf="error && !cargando" 
+               severity="error" 
+               [text]="error" 
+               styleClass="mb-4 w-full">
+    </p-message>
+
+    <!-- Contenido Principal -->
+    <div *ngIf="!cargando && !error">
+
+      <!-- Tabs de Navegación -->
+      <div class="bg-white rounded-lg shadow-sm p-2 mb-6">
+        <div class="flex gap-2">
+          <button 
+            class="tab-button"
+            [class.active]="tabActivo === 'activas'"
+            (click)="cambiarTab('activas')">
+            <i class="pi pi-calendar-plus"></i>
+            Activas ({{ reservasActivas.length }})
+          </button>
+          
+          <button 
+            class="tab-button"
+            [class.active]="tabActivo === 'pasadas'"
+            (click)="cambiarTab('pasadas')">
+            <i class="pi pi-history"></i>
+            Historial ({{ reservasPasadas.length }})
+          </button>
+          
+          <button 
+            class="tab-button"
+            [class.active]="tabActivo === 'todas'"
+            (click)="cambiarTab('todas')">
+            <i class="pi pi-list"></i>
+            Todas ({{ todasReservas.length }})
+          </button>
+        </div>
+      </div>
+
+      <!-- Lista de Reservas -->
+      <div class="grid grid-cols-1 gap-4">
+        
+        <!-- Reserva Card -->
+        <p-card *ngFor="let reserva of reservasMostradas" 
+                styleClass="hover:shadow-lg transition-shadow">
+          
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+            
+            <!-- Columna 1: Información de la Cancha (3/12) -->
+            <div class="lg:col-span-3 flex items-center gap-3">
+              <span class="text-5xl">
+                {{ getIconoTipoCancha(reserva.canchaDeportiva.tipoCancha) }}
+              </span>
+              <div>
+                <p class="font-bold text-gray-800 text-lg">
+                  {{ reserva.canchaDeportiva.tipoCancha }}
+                </p>
+                <p class="text-sm text-gray-600">
+                  Cancha Nº {{ reserva.canchaDeportiva.numeroCancha }}
+                </p>
+              </div>
+            </div>
+
+            <!-- Columna 2: Fecha y Hora (4/12) -->
+            <div class="lg:col-span-4 space-y-2">
+              <div class="flex items-center gap-2 text-gray-700">
+                <i class="pi pi-calendar text-green-600"></i>
+                <span class="font-semibold">{{ formatearFecha(reserva.fechaInicio) }}</span>
+              </div>
+              
+              <div class="flex items-center gap-2 text-gray-700">
+                <i class="pi pi-clock text-green-600"></i>
+                <span>
+                  {{ formatearHora(reserva.fechaInicio) }} - 
+                  {{ formatearHora(reserva.fechaFin) }}
+                </span>
+              </div>
+
+              <div class="flex items-center gap-2 text-gray-700">
+                <i class="pi pi-hourglass text-green-600"></i>
+                <span>{{ reserva.horasTotales }} hora(s)</span>
+              </div>
+
+              <!-- Cuenta regresiva para reservas futuras -->
+              <div *ngIf="reserva.estado === 'CONFIRMADA' && diasHasta(reserva.fechaInicio) > 0"
+                   class="flex items-center gap-2 text-blue-600 font-semibold">
+                <i class="pi pi-bell"></i>
+                <span>En {{ diasHasta(reserva.fechaInicio) }} día(s)</span>
+              </div>
+            </div>
+
+            <!-- Columna 3: Estado y Código (2/12) -->
+            <div class="lg:col-span-2 flex flex-col justify-center items-start gap-2">
+              <p-tag 
+                [value]="getEstadoTexto(reserva.estado)" 
+                [severity]="getEstadoSeverity(reserva.estado)"
+                styleClass="text-sm">
+              </p-tag>
+              
+              <div class="text-xs text-gray-500">
+                <i class="pi pi-tag"></i>
+                {{ reserva.codUnico }}
+              </div>
+            </div>
+
+            <!-- Columna 4: Acciones (3/12) -->
+            <div class="lg:col-span-3 flex items-center justify-end gap-2">
+              
+              <!-- Botón Ver PDF -->
+              <p-button 
+                *ngIf="tieneComprobante(reserva)"
+                icon="pi pi-file-pdf" 
+                label="Ver PDF"
+                severity="success"
+                [outlined]="true"
+                styleClass="text-sm"
+                (onClick)="verComprobantePDF(reserva.id)"
+                pTooltip="Ver comprobante en nueva ventana"
+                tooltipPosition="top">
+              </p-button>
+
+              <!-- Botón Descargar PDF -->
+              <p-button 
+                *ngIf="tieneComprobante(reserva)"
+                icon="pi pi-download"
+                [text]="true"
+                severity="success"
+                (onClick)="descargarComprobantePDF(reserva.id)"
+                pTooltip="Descargar comprobante"
+                tooltipPosition="top">
+              </p-button>
+
+              <!-- Mensaje si no tiene comprobante -->
+              <span *ngIf="!tieneComprobante(reserva)" 
+                    class="text-xs text-gray-500 italic">
+                Sin comprobante
+              </span>
+            </div>
+
+          </div>
+        </p-card>
+
+        <!-- Mensaje cuando no hay reservas -->
+        <div *ngIf="reservasMostradas.length === 0" 
+             class="text-center py-16">
+          <i class="pi pi-inbox text-6xl text-gray-300 mb-4"></i>
+          <h3 class="text-xl font-semibold text-gray-600 mb-2">
+            No hay reservas {{ tabActivo === 'activas' ? 'activas' : tabActivo === 'pasadas' ? 'en el historial' : '' }}
+          </h3>
+          <p class="text-gray-500 mb-6">
+            {{ tabActivo === 'activas' ? '¡Es momento de reservar una cancha!' : 'Las reservas anteriores aparecerán aquí' }}
+          </p>
+          <p-button 
+            *ngIf="tabActivo === 'activas'"
+            label="Hacer Nueva Reserva" 
+            icon="pi pi-plus"
+            routerLink="/canchas">
+          </p-button>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
