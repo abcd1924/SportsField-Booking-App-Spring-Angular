@@ -13,11 +13,7 @@
     </div>
 
     <!-- Mensajes -->
-    <p-message 
-      *ngIf="mensaje && mensajeTipo" 
-      [severity]="mensajeTipo" 
-      [text]="mensaje" 
-      styleClass="mb-4 w-full">
+    <p-message *ngIf="mensaje && mensajeTipo" [severity]="mensajeTipo" [text]="mensaje" styleClass="mb-4 w-full">
     </p-message>
 
     <!-- Contenido Principal -->
@@ -25,14 +21,15 @@
 
       <!-- Card de Perfil -->
       <p-card styleClass="mb-6">
-        
+
         <!-- Header del Card con Avatar -->
         <ng-template pTemplate="header">
           <div class="bg-gradient-to-r from-green-600 to-emerald-600 p-8 text-white">
             <div class="flex flex-col md:flex-row items-center gap-6">
-              
+
               <!-- Avatar -->
-              <div class="w-32 h-32 bg-white rounded-full flex items-center justify-center text-green-600 text-4xl font-bold shadow-lg">
+              <div
+                class="w-32 h-32 bg-white rounded-full flex items-center justify-center text-green-600 text-4xl font-bold shadow-lg">
                 {{ inicialesUsuario }}
               </div>
 
@@ -52,11 +49,8 @@
 
               <!-- Botón de edición (desktop) -->
               <div class="ml-auto hidden md:block" *ngIf="!modoEdicion">
-                <p-button 
-                  label="Editar Perfil" 
-                  icon="pi pi-pencil"
-                  styleClass="bg-white text-green-600 border-0 hover:bg-green-50"
-                  (onClick)="activarEdicion()">
+                <p-button label="Editar Perfil" icon="pi pi-pencil"
+                  styleClass="bg-white text-green-600 border-0 hover:bg-green-50" (onClick)="activarEdicion()">
                 </p-button>
               </div>
             </div>
@@ -65,19 +59,15 @@
 
         <!-- Botón de edición (móvil) -->
         <div class="mb-6 md:hidden" *ngIf="!modoEdicion">
-          <p-button 
-            label="Editar Perfil" 
-            icon="pi pi-pencil"
-            styleClass="w-full"
-            (onClick)="activarEdicion()">
+          <p-button label="Editar Perfil" icon="pi pi-pencil" styleClass="w-full" (onClick)="activarEdicion()">
           </p-button>
         </div>
 
         <!-- Modo Vista (Solo Lectura) -->
         <div *ngIf="!modoEdicion">
-          
+
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            
+
             <!-- Información Personal -->
             <div class="space-y-4">
               <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
@@ -129,10 +119,10 @@
 
         <!-- Modo Edición (Formulario) -->
         <div *ngIf="modoEdicion">
-          
+
           <form [formGroup]="perfilForm">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-              
+
               <!-- Columna 1 -->
               <div class="space-y-4">
                 <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
@@ -143,12 +133,7 @@
                 <!-- Nombre -->
                 <div class="field">
                   <label for="nombre" class="form-label">Nombre *</label>
-                  <input 
-                    pInputText 
-                    id="nombre"
-                    formControlName="nombre"
-                    placeholder="Ingrese su nombre"
-                    class="w-full"
+                  <input pInputText id="nombre" formControlName="nombre" placeholder="Ingrese su nombre" class="w-full"
                     [class.p-invalid]="tieneError('nombre')" />
                   <small *ngIf="tieneError('nombre')" class="p-error">
                     {{ obtenerMensajeError('nombre') }}
@@ -158,47 +143,20 @@
                 <!-- Apellido -->
                 <div class="field">
                   <label for="apellido" class="form-label">Apellido *</label>
-                  <input 
-                    pInputText 
-                    id="apellido"
-                    formControlName="apellido"
-                    placeholder="Ingrese su apellido"
-                    class="w-full"
-                    [class.p-invalid]="tieneError('apellido')" />
+                  <input pInputText id="apellido" formControlName="apellido" placeholder="Ingrese su apellido"
+                    class="w-full" [class.p-invalid]="tieneError('apellido')" />
                   <small *ngIf="tieneError('apellido')" class="p-error">
                     {{ obtenerMensajeError('apellido') }}
-                  </small>
-                </div>
-
-                <!-- Fecha de Nacimiento -->
-                <div class="field">
-                  <label for="fechaNacimiento" class="form-label">Fecha de Nacimiento *</label>
-                  <input 
-                    type="date"
-                    pInputText 
-                    id="fechaNacimiento"
-                    formControlName="fechaNacimiento"
-                    class="w-full"
-                    [class.p-invalid]="tieneError('fechaNacimiento')" />
-                  <small *ngIf="tieneError('fechaNacimiento')" class="p-error">
-                    {{ obtenerMensajeError('fechaNacimiento') }}
                   </small>
                 </div>
 
                 <!-- Género -->
                 <div class="field">
                   <label for="genero" class="form-label">Género *</label>
-                  <p-select 
-                    id="genero"
-                    formControlName="genero"
-                    [options]="[
+                  <p-select id="genero" formControlName="genero" [options]="[
                       {label: 'Masculino', value: 'Masculino'},
-                      {label: 'Femenino', value: 'Femenino'},
-                      {label: 'Otro', value: 'Otro'}
-                    ]"
-                    placeholder="Seleccione género"
-                    styleClass="w-full"
-                    [class.p-invalid]="tieneError('genero')">
+                      {label: 'Femenino', value: 'Femenino'}
+                    ]" placeholder="Seleccione género" styleClass="w-full" [class.p-invalid]="tieneError('genero')">
                   </p-select>
                   <small *ngIf="tieneError('genero')" class="p-error">
                     {{ obtenerMensajeError('genero') }}
@@ -210,58 +168,16 @@
               <div class="space-y-4">
                 <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
                   <i class="pi pi-phone text-green-600"></i>
-                  Contacto y Documentación
+                  Contacto
                 </h3>
 
                 <!-- Teléfono -->
                 <div class="field">
                   <label for="telefono" class="form-label">Teléfono *</label>
-                  <input 
-                    pInputText 
-                    id="telefono"
-                    formControlName="telefono"
-                    placeholder="Ej: 987654321"
-                    maxlength="9"
-                    class="w-full"
-                    [class.p-invalid]="tieneError('telefono')" />
+                  <input pInputText id="telefono" formControlName="telefono" placeholder="Ej: 987654321" maxlength="9"
+                    class="w-full" [class.p-invalid]="tieneError('telefono')" />
                   <small *ngIf="tieneError('telefono')" class="p-error">
                     {{ obtenerMensajeError('telefono') }}
-                  </small>
-                </div>
-
-                <!-- Tipo de Documento -->
-                <div class="field">
-                  <label for="tipoDocumento" class="form-label">Tipo de Documento *</label>
-                  <p-select 
-                    id="tipoDocumento"
-                    formControlName="tipoDocumento"
-                    [options]="[
-                      {label: 'DNI', value: 'DNI'},
-                      {label: 'Carnet de Extranjería', value: 'CE'},
-                      {label: 'Pasaporte', value: 'PASAPORTE'}
-                    ]"
-                    placeholder="Seleccione tipo"
-                    styleClass="w-full"
-                    [class.p-invalid]="tieneError('tipoDocumento')">
-                  </p-select>
-                  <small *ngIf="tieneError('tipoDocumento')" class="p-error">
-                    {{ obtenerMensajeError('tipoDocumento') }}
-                  </small>
-                </div>
-
-                <!-- Número de Documento -->
-                <div class="field">
-                  <label for="numDocumento" class="form-label">Número de Documento *</label>
-                  <input 
-                    pInputText 
-                    id="numDocumento"
-                    formControlName="numDocumento"
-                    placeholder="Ej: 12345678"
-                    maxlength="8"
-                    class="w-full"
-                    [class.p-invalid]="tieneError('numDocumento')" />
-                  <small *ngIf="tieneError('numDocumento')" class="p-error">
-                    {{ obtenerMensajeError('numDocumento') }}
                   </small>
                 </div>
               </div>
@@ -270,22 +186,12 @@
 
             <!-- Botones de Acción -->
             <div class="flex flex-col sm:flex-row gap-3 mt-6 pt-6 border-t">
-              <p-button 
-                label="Guardar Cambios" 
-                icon="pi pi-check"
-                styleClass="flex-1"
-                [loading]="guardando"
+              <p-button label="Guardar Cambios" icon="pi pi-check" styleClass="flex-1" [loading]="guardando"
                 (onClick)="guardarCambios()">
               </p-button>
 
-              <p-button 
-                label="Cancelar" 
-                icon="pi pi-times"
-                severity="secondary"
-                [outlined]="true"
-                styleClass="flex-1"
-                [disabled]="guardando"
-                (onClick)="cancelarEdicion()">
+              <p-button label="Cancelar" icon="pi pi-times" severity="secondary" [outlined]="true" styleClass="flex-1"
+                [disabled]="guardando" (onClick)="cancelarEdicion()">
               </p-button>
             </div>
           </form>

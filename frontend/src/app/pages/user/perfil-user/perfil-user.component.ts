@@ -1,8 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { AuthService } from '../../../services/auth.service';
 import { CommonModule } from '@angular/common';
-import { decodeToken } from '../../../models/decodeToken';
-import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UsersService } from '../../../services/users.service';
 import { CardModule } from 'primeng/card';
@@ -38,9 +36,6 @@ export class PerfilUserComponent implements OnInit {
       nombre: ['', [Validators.required, Validators.minLength(2)]],
       apellido: ['', [Validators.required, Validators.minLength(2)]],
       telefono: ['', [Validators.required, Validators.pattern(/^\d{9}$/)]],
-      tipoDocumento: ['', Validators.required],
-      numDocumento: ['', [Validators.required, Validators.pattern(/^\d{8}$/)]],
-      fechaNacimiento: ['', Validators.required],
       genero: ['', Validators.required]
     })
   }
@@ -83,9 +78,6 @@ export class PerfilUserComponent implements OnInit {
       nombre: this.user.nombre || '',
       apellido: this.user.apellido || '',
       telefono: this.user.telefono || '',
-      tipoDocumento: this.user.tipoDocumento || 'DNI',
-      numDocumento: this.user.numDocumento || '',
-      fechaNacimiento: this.user.fechaNacimiento || '',
       genero: this.user.genero || ''
     });
   }
@@ -115,8 +107,10 @@ export class PerfilUserComponent implements OnInit {
     this.mensaje = '';
 
     const datosActualizados = {
-      ...this.user,
-      ...this.perfilForm.value
+      nombre: this.perfilForm.value.nombre,
+      apellido: this.perfilForm.value.apellido,
+      telefono: this.perfilForm.value.telefono,
+      genero: this.perfilForm.value.genero,
     };
 
     this.usersService.actualizarUsuario(this.user.id, datosActualizados).subscribe({
@@ -168,7 +162,7 @@ export class PerfilUserComponent implements OnInit {
 
   formatearFecha(fecha: string): string {
     if (!fecha) return 'No especificado';
-    
+
     const fechaObj = new Date(fecha);
     return fechaObj.toLocaleDateString('es-PE', {
       year: 'numeric',
@@ -179,25 +173,25 @@ export class PerfilUserComponent implements OnInit {
 
   calcularEdad(): number {
     if (!this.user?.fechaNacimiento) return 0;
-    
+
     const hoy = new Date();
     const nacimiento = new Date(this.user.fechaNacimiento);
     let edad = hoy.getFullYear() - nacimiento.getFullYear();
     const mes = hoy.getMonth() - nacimiento.getMonth();
-    
+
     if (mes < 0 || (mes === 0 && hoy.getDate() < nacimiento.getDate())) {
       edad--;
     }
-    
+
     return edad;
   }
 
   get inicialesUsuario(): string {
     if (!this.user) return 'U';
-    
+
     const inicial1 = this.user.nombre?.charAt(0).toUpperCase() || '';
     const inicial2 = this.user.apellido?.charAt(0).toUpperCase() || '';
-    
+
     return `${inicial1}${inicial2}` || 'U';
   }
 }

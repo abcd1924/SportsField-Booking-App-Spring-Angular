@@ -58,15 +58,16 @@ public class UsuarioService {
             usuarioAct.setRol(usuarioExistente.getRol());
         }
 
+        String nuevaContrasena = usuarioAct.getPassword();
+
+        if (nuevaContrasena != null && !nuevaContrasena.isEmpty()) {
+            usuarioExistente.setPassword(passwordEncoder.encode(nuevaContrasena));
+        }
+
         usuarioExistente.setNombre(usuarioAct.getNombre());
         usuarioExistente.setApellido(usuarioAct.getApellido());
-        usuarioExistente.setTipoDocumento(usuarioAct.getTipoDocumento());
-        usuarioExistente.setNumDocumento(usuarioAct.getNumDocumento());
-        usuarioExistente.setEmail(usuarioAct.getEmail());
-        usuarioExistente.setFechaNacimiento(usuarioAct.getFechaNacimiento());
         usuarioExistente.setTelefono(usuarioAct.getTelefono());
         usuarioExistente.setGenero(usuarioAct.getGenero());
-        usuarioExistente.setPassword(passwordEncoder.encode(usuarioAct.getPassword()));
         usuarioExistente.setRol(usuarioAct.getRol());
 
         return usuarioRepository.save(usuarioExistente);
@@ -74,7 +75,7 @@ public class UsuarioService {
 
     public void eliminar(Long id) {
         Usuario usuario = usuarioRepository.findById(id)
-            .orElseThrow(()-> new RuntimeException("No se puede eliminar. Usuario no encontrado con ID: " +id));
+                .orElseThrow(() -> new RuntimeException("No se puede eliminar. Usuario no encontrado con ID: " + id));
 
         usuarioRepository.deleteById(id);
     }
