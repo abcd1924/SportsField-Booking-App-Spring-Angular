@@ -18,6 +18,12 @@ export class UserLayoutComponent implements OnInit {
   usuario: any = null;
   anioActual = new Date().getFullYear();
 
+  showMenu = false;
+
+  toggleMenu(): void {
+    this.showMenu = !this.showMenu;
+  }
+
   logout(): void {
     if (confirm('¿Estás seguro que deseas cerrar sesión?')) {
       this.authService.logout();

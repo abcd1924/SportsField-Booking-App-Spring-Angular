@@ -1,9 +1,9 @@
 <div class="user-layout">
-  
+
   <!-- HEADER DEL USUARIO -->
   <header class="user-header">
     <div class="container">
-      
+
       <!-- Brand -->
       <div class="header-left">
         <h1 class="brand" [routerLink]="['/user/dashboard']">
@@ -12,12 +12,12 @@
       </div>
 
       <!-- Navegación -->
-      <nav class="header-nav">
-        <a *ngFor="let item of navItems" 
-           [routerLink]="item.routerLink" 
-           routerLinkActive="active"
-           class="nav-link"
-           [routerLinkActiveOptions]="{exact: false}">
+      <button class="mobile-menu-btn" (click)="toggleMenu()" aria-label="Menú">
+        <i class="pi pi-bars"></i>
+      </button>
+      <nav class="header-nav" [class.open]="showMenu">
+        <a *ngFor="let item of navItems" [routerLink]="item.routerLink" routerLinkActive="active" class="nav-link"
+          [routerLinkActiveOptions]="{exact: false}"  (click)="showMenu = false">
           <i [class]="item.icon"></i>
           {{ item.label }}
         </a>
