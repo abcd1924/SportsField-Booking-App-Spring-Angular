@@ -3,12 +3,14 @@ import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { User } from '../../models/user';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { ButtonModule } from 'primeng/button';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-login-admin',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, ButtonModule, ProgressSpinnerModule, RouterLink],
   templateUrl: './login-admin.component.html',
   styleUrl: './login-admin.component.scss'
 })
@@ -32,14 +34,13 @@ export class LoginAdminComponent {
   onLoginAdmin() {
     this.mensajeError = '';
 
-    if(this.loginAdminForm.invalid) {
+    if (this.loginAdminForm.invalid) {
       this.loginAdminForm.markAllAsTouched();
       return;
     }
 
     this.cargando = true;
 
-    // Obtener credenciales del formulario
     const credenciales = {
       email: this.loginAdminForm.get('email')?.value,
       password: this.loginAdminForm.get('password')?.value
@@ -59,7 +60,6 @@ export class LoginAdminComponent {
         console.log('Usuario autenticado: ', res.user);
         console.log('Rol del usuario: ', res.user?.rol);
 
-        // Verificar que sea ADMIN o RECEPCIONISTA
         this.verificarRolYRedirigir(res.user?.rol);
       },
 
@@ -70,19 +70,18 @@ export class LoginAdminComponent {
     })
   }
 
-  // Método clave: Verifica el rol y redirige al dashboard apropiado - ADMIN y RECEPCIONISTA
   private verificarRolYRedirigir(rol: string): void {
     switch (rol) {
       case 'ADMIN':
         console.log('Redirigiendo a dashboard de admon');
         this.router.navigate(['/admin/dashboard']);
         break;
-      
+
       case 'RECEPCIONISTA':
         console.log('Redirigiendo a dashboard de recepcionista');
         this.router.navigate(['/recepcionista/dashboard']);
         break;
-      
+
       case 'USER':
         this.mensajeError = 'Acceso denegado. Este portal es solo para administradores y recepcionistas.';
         this.authService.logout();
@@ -95,7 +94,6 @@ export class LoginAdminComponent {
     }
   }
 
-  // Método similar al de login de usuarios
   private procesarErrorLogin(error: any): void {
     console.error('Error en login admin: ', error);
 
@@ -108,7 +106,6 @@ export class LoginAdminComponent {
     }
   }
 
-  // Métodos de validación
   tieneError(campo: string): boolean {
     const control = this.loginAdminForm.get(campo);
     return !!(control && control.invalid && (control.dirty || control.touched));
