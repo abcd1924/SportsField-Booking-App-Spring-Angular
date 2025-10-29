@@ -300,6 +300,16 @@
   font-size: 0.9rem;
 }
 
+.user-session {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  .user-name-link {
+    font-weight: 600;
+  }
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .header-content {

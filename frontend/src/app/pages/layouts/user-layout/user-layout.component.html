@@ -6,7 +6,7 @@
 
       <!-- Brand -->
       <div class="header-left">
-        <h1 class="brand" [routerLink]="['/user/dashboard']">
+        <h1 class="brand" [routerLink]="['/']">
           🏟️ Reserva Canchas
         </h1>
       </div>
@@ -17,10 +17,15 @@
       </button>
       <nav class="header-nav" [class.open]="showMenu">
         <a *ngFor="let item of navItems" [routerLink]="item.routerLink" routerLinkActive="active" class="nav-link"
-          [routerLinkActiveOptions]="{exact: false}"  (click)="showMenu = false">
+          [routerLinkActiveOptions]="{exact: false}" (click)="showMenu = false">
           <i [class]="item.icon"></i>
           {{ item.label }}
         </a>
+        <!-- Botón de cerrar sesión -->
+        <button class="logout-btn" (click)="logout()">
+          <i class="pi pi-sign-out"></i>
+          Salir
+        </button>
       </nav>
 
       <!-- Acciones del usuario -->
@@ -32,12 +37,6 @@
           </div>
           <span class="user-name">{{ usuario.nombre }}</span>
         </div>
-
-        <!-- Botón de cerrar sesión -->
-        <button class="logout-btn" (click)="logout()">
-          <i class="pi pi-sign-out"></i>
-          Salir
-        </button>
       </div>
 
     </div>

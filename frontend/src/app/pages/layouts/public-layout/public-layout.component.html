@@ -2,7 +2,6 @@
 
 <body>
   <div class="public-layout">
-    <!-- HEADER INTELIGENTE -->
     <header class="public-header" [class.transparent]="isHomePage && !isScrolled"
       [class.solid]="!isHomePage || isScrolled">
       <div class="container">
@@ -18,25 +17,28 @@
             <a routerLink="/canchas" routerLinkActive="active" class="nav-link">
               Ver Canchas
             </a>
-            <a routerLink="/login" routerLinkActive="active" class="nav-link login-btn">
+            <a *ngIf="!isLoggedIn" routerLink="/login" routerLinkActive="active" class="nav-link login-btn">
               <i class="pi pi-sign-in"></i>
               Iniciar Sesión
             </a>
+            <div *ngIf="isLoggedIn" class="user-session">
+              <a routerLink="/user/dashboard" class="nav-link user-name-link">
+                <i class="pi pi-user"></i>
+                Hola, {{ userName }}
+              </a>
+            </div>
           </nav>
         </div>
       </div>
     </header>
 
-    <!-- CONTENIDO PRINCIPAL -->
     <main class="public-main" [class.with-padding]="!isHomePage">
       <router-outlet></router-outlet>
     </main>
 
-    <!-- FOOTER MODERNO Y DEPORTIVO -->
     <footer class="public-footer">
       <div class="container">
         <div class="footer-content">
-          <!-- Sección Principal -->
           <div class="footer-section fade-in">
             <h3>🏟️ Reserva Canchas</h3>
             <p style="margin-bottom: 1.5rem;">
@@ -60,7 +62,6 @@
             </div>
           </div>
 
-          <!-- Enlaces Rápidos -->
           <div class="footer-section fade-in">
             <h4>Enlaces Rápidos</h4>
             <ul>
@@ -71,7 +72,6 @@
             </ul>
           </div>
 
-          <!-- Información de Contacto -->
           <div class="footer-section fade-in">
             <h4>Contacto</h4>
 
@@ -116,7 +116,6 @@
   </div>
 
   <script>
-    // Script para cambiar el header cuando se hace scroll
     window.addEventListener('scroll', function () {
       const header = document.getElementById('publicHeader');
       if (window.scrollY > 50) {
@@ -126,7 +125,6 @@
       }
     });
 
-    // Animación de aparición para elementos del footer
     const observerOptions = {
       threshold: 0.1,
       rootMargin: '0px 0px -50px 0px'
