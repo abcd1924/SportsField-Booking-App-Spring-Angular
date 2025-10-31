@@ -109,7 +109,6 @@ export const routes: Routes = [
         children: [
             { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
             { path: 'dashboard', component: DashboardAdminComponent },
-            // Gestión de canchas para ADMIN
             {
                 path: 'canchas',
                 children: [
@@ -118,9 +117,9 @@ export const routes: Routes = [
                     { path: 'editar/:id', component: CanchasFormComponent }
                 ]
             },
-            // Gestión de usuarios
+            { path: 'horarios', component: HorariosRecepcionistaComponent },
+            { path: 'reservas', component: ReservasRecepcionistaComponent },
             { path: 'usuarios', component: UsuariosAdminComponent },
-            // Reportes
             { path: 'reportes', component: ReportesAdminComponent }
         ]
     },
@@ -133,17 +132,9 @@ export const routes: Routes = [
         children: [
             { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
             { path: 'dashboard', component: DashboardRecepcionistaComponent },
-
-            // Gestión de reservas para ADMIN y RECEPCIONISTA
             { path: 'reservas', component: ReservasRecepcionistaComponent },
-
-            // Gestión de horarios para ADMIN y RECEPCIONISTA
             { path: 'horarios', component: HorariosRecepcionistaComponent },
-
-            // Gestión de comprobantes para ADMIN y RECEPCIONISTA
             { path: 'comprobantes', component: ComprobantesRecepcionistaComponent },
-
-            // Consulta de usuarios para ADMIN y RECEPCIONISTA
             { path: 'usuarios', component: UsuariosRecepcionistaComponent }
         ]
     },
