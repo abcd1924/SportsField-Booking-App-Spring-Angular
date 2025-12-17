@@ -1,0 +1,435 @@
+// Colores principales - Verde elegante inspirado en canchas de fútbol
+$primary-green: #10b981;
+$primary-green-dark: #059669;
+$primary-green-light: #34d399;
+$primary-green-bg: #ecfdf5;
+
+$dark-bg: #0f172a;
+$dark-surface: #1e293b;
+$dark-card: #334155;
+$text-primary: #f8fafc;
+$text-secondary: #cbd5e1;
+$border-color: #334155;
+
+.admin-layout {
+    min-height: 100vh;
+    display: flex;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    position: relative;
+}
+
+// ========== BOTÓN HAMBURGUESA (Solo móvil) ==========
+.hamburger-btn {
+    display: none;
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 1100;
+    width: 45px;
+    height: 45px;
+    background: linear-gradient(135deg, $primary-green 0%, $primary-green-dark 100%);
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+    transition: all 0.3s ease;
+
+    span {
+        width: 24px;
+        height: 3px;
+        background: white;
+        border-radius: 2px;
+        transition: all 0.3s ease;
+    }
+
+    &:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 20px rgba(16, 185, 129, 0.6);
+    }
+
+    &.active {
+        span:nth-child(1) {
+            transform: rotate(45deg) translate(7px, 7px);
+        }
+
+        span:nth-child(2) {
+            opacity: 0;
+        }
+
+        span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -7px);
+        }
+    }
+}
+
+// ========== OVERLAY (Solo móvil) ==========
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 998;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+
+    &.active {
+        opacity: 1;
+        pointer-events: all;
+    }
+}
+
+// ========== SIDEBAR VERTICAL ==========
+.admin-sidebar {
+    width: 200px;
+    height: 100vh;
+    background: rgba(30, 41, 59, 0.95);
+    backdrop-filter: blur(10px);
+    border-right: 1px solid rgba(16, 185, 129, 0.2);
+    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    transition: transform 0.3s ease;
+}
+
+// Header del Sidebar
+.sidebar-header {
+    padding: 2rem 1.5rem;
+    border-bottom: 1px solid rgba(16, 185, 129, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, transparent 100%);
+
+    .brand-icon {
+        font-size: 2.5rem;
+        filter: drop-shadow(0 0 15px rgba(16, 185, 129, 0.6));
+    }
+
+    .brand-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .brand-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, $primary-green 0%, $primary-green-light 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin: 0;
+        line-height: 1.2;
+    }
+
+    .admin-badge {
+        background: linear-gradient(135deg, $primary-green 0%, $primary-green-dark 100%);
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 12px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        box-shadow: 0 2px 10px rgba(16, 185, 129, 0.3);
+        align-self: flex-start;
+    }
+}
+
+// Menú de Navegación
+.sidebar-menu {
+    flex: 1;
+    padding: 1.5rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    overflow-y: auto;
+
+    &::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: rgba(16, 185, 129, 0.05);
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: rgba(16, 185, 129, 0.3);
+        border-radius: 3px;
+
+        &:hover {
+            background: rgba(16, 185, 129, 0.5);
+        }
+    }
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    color: $text-secondary;
+    text-decoration: none;
+    border-radius: 12px;
+    font-weight: 500;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+
+    .icon {
+        font-size: 1.5rem;
+        transition: transform 0.3s ease;
+        flex-shrink: 0;
+    }
+
+    span {
+        transition: transform 0.3s ease;
+    }
+
+    &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+        background: linear-gradient(180deg, $primary-green 0%, $primary-green-light 100%);
+        transform: scaleY(0);
+        transition: transform 0.3s ease;
+    }
+
+    &:hover {
+        background: rgba(16, 185, 129, 0.1);
+        color: $primary-green-light;
+        transform: translateX(5px);
+
+        .icon {
+            transform: scale(1.15);
+        }
+
+        &::before {
+            transform: scaleY(1);
+        }
+    }
+
+    &.active {
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(5, 150, 105, 0.1) 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);
+
+        .icon {
+            transform: scale(1.15);
+        }
+
+        &::before {
+            transform: scaleY(1);
+        }
+    }
+}
+
+// Footer del Sidebar
+.sidebar-footer {
+    padding: 1.5rem 1rem;
+    border-top: 1px solid rgba(16, 185, 129, 0.2);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    background: linear-gradient(180deg, transparent 0%, rgba(16, 185, 129, 0.05) 100%);
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    background: rgba(16, 185, 129, 0.1);
+    border-radius: 12px;
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.user-avatar {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, $primary-green 0%, $primary-green-dark 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.1rem;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+    flex-shrink: 0;
+}
+
+.user-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    flex: 1;
+    min-width: 0;
+}
+
+.user-name {
+    color: $text-primary;
+    font-weight: 600;
+    font-size: 0.95rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.user-role {
+    color: $text-secondary;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.logout-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.85rem 1.25rem;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #fca5a5;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    width: 100%;
+
+    .icon {
+        font-size: 1.25rem;
+        transition: transform 0.3s ease;
+    }
+
+    &:hover {
+        background: rgba(239, 68, 68, 0.2);
+        border-color: rgba(239, 68, 68, 0.5);
+        color: #ef4444;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+
+        .icon {
+            transform: translateX(5px);
+        }
+    }
+}
+
+// ========== MAIN CONTENT ==========
+.admin-main {
+    flex: 1;
+    padding: 2rem;
+    overflow-y: auto;
+    min-width: 0;
+}
+
+.content-wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+// ========== RESPONSIVE ==========
+@media (max-width: 1024px) {
+    .hamburger-btn {
+        display: flex;
+    }
+
+    .sidebar-overlay {
+        display: block;
+    }
+
+    .admin-sidebar {
+        position: fixed;
+        transform: translateX(-100%);
+        z-index: 999;
+
+        &.mobile-open {
+            transform: translateX(0);
+        }
+    }
+
+    .admin-main {
+        padding: 5rem 1.5rem 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .admin-sidebar {
+        width: 260px;
+    }
+
+    .sidebar-header {
+        padding: 1.5rem 1rem;
+
+        .brand-icon {
+            font-size: 2rem;
+        }
+
+        .brand-title {
+            font-size: 1.1rem;
+        }
+    }
+
+    .menu-item {
+        padding: 0.85rem 1rem;
+        font-size: 0.95rem;
+
+        .icon {
+            font-size: 1.35rem;
+        }
+    }
+
+    .admin-main {
+        padding: 5rem 1rem 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .admin-sidebar {
+        width: 240px;
+    }
+
+    .sidebar-header {
+        padding: 1.25rem 0.75rem;
+    }
+
+    .sidebar-menu {
+        padding: 1rem 0.75rem;
+    }
+
+    .menu-item {
+        padding: 0.75rem 0.85rem;
+        font-size: 0.9rem;
+    }
+
+    .sidebar-footer {
+        padding: 1rem 0.75rem;
+    }
+
+    .user-avatar {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+
+    .logout-btn {
+        padding: 0.75rem 1rem;
+        font-size: 0.9rem;
+    }
+}

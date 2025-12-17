@@ -1,28 +1,70 @@
-<div class="user-layout">
-    <!-- HEADER más simple para usuarios -->
-    <header class="user-header">
-        <div class="header-left">
-            <h1 class="brand">🏟️ Reserva Canchas</h1>
+<div class="admin-layout">
+    <!-- BOTÓN HAMBURGUESA (Solo móvil) -->
+    <button class="hamburger-btn" (click)="toggleSidebar()" [class.active]="isMobileMenuOpen()">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <!-- OVERLAY para cerrar sidebar en móvil -->
+    <div class="sidebar-overlay" [class.active]="isMobileMenuOpen()" (click)="closeSidebar()">
+    </div>
+
+    <!-- SIDEBAR VERTICAL -->
+    <aside class="admin-sidebar" [class.mobile-open]="isMobileMenuOpen()">
+        <!-- Logo y Título -->
+        <div class="sidebar-header">
+            <span class="brand-icon">🏟️</span>
+            <div class="brand-info">
+                <h1 class="brand-title">Reserva Canchas</h1>
+                <span class="admin-badge">Admin</span>
+            </div>
         </div>
 
-        <nav class="header-nav">
-            <a class="nav-link">
-                <i ></i>
+        <!-- Navegación Principal -->
+        <nav class="sidebar-menu">
+            <a routerLink="/admin/dashboard" routerLinkActive="active" class="menu-item" (click)="closeSidebar()">
+                <i class="icon">📊</i>
+                <span>Dashboard</span>
+            </a>
+            <a routerLink="/admin/canchas" routerLinkActive="active" class="menu-item" (click)="closeSidebar()">
+                <i class="icon">🏟️</i>
+                <span>Canchas</span>
+            </a>
+            <a routerLink="/admin/horarios" routerLinkActive="active" class="menu-item" (click)="closeSidebar()">
+                <i class="icon">🕐</i>
+                <span>Horarios</span>
+            </a>
+            <a routerLink="/admin/reservas" routerLinkActive="active" class="menu-item" (click)="closeSidebar()">
+                <i class="icon">📅</i>
+                <span>Reservas</span>
+            </a>
+            <a routerLink="/admin/usuarios" routerLinkActive="active" class="menu-item" (click)="closeSidebar()">
+                <i class="icon">👥</i>
+                <span>Usuarios</span>
             </a>
         </nav>
 
+        <!-- Usuario y Logout (al final del sidebar) -->
+        <div class="sidebar-footer">
+            <div class="user-info">
+                <span class="user-avatar">{{ adminName.charAt(0).toUpperCase() }}</span>
+                <div class="user-details">
+                    <span class="user-name">{{ adminName }}</span>
+                    <span class="user-role">Administrador</span>
+                </div>
+            </div>
+            <button (click)="logout()" class="logout-btn" title="Cerrar Sesión">
+                <i class="icon">➜</i>
+                <span>Cerrar Sesión</span>
+            </button>
+        </div>
+    </aside>
 
-    </header>
-
-    <!-- CONTENIDO PRINCIPAL (sin sidebar) -->
-    <main class="user-main">
-        <div class="container">
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="admin-main">
+        <div class="content-wrapper">
             <router-outlet></router-outlet>
         </div>
     </main>
-
-    <!-- FOOTER -->
-    <footer class="user-footer">
-        <p>&copy; 2024 Sistema de Reservas - Todos los derechos reservados</p>
-    </footer>
 </div>
