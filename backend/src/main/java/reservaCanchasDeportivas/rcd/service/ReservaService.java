@@ -1,6 +1,7 @@
 package reservaCanchasDeportivas.rcd.service;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -98,6 +99,11 @@ public class ReservaService {
                 .orElseThrow(() -> new RuntimeException("Reserva no encontrada"));
         reserva.setEstado(EstadoReserva.CONFIRMADA);
         return reservaRepository.save(reserva);
+    }
+
+    // Método para el dashboard: contar reservas en un rango de fechas
+    public Long contarReservasPorRango(LocalDateTime inicio, LocalDateTime fin) {
+        return reservaRepository.countByFechaInicioBetween(inicio, fin);
     }
 
     public String generarCodigoUnico() {

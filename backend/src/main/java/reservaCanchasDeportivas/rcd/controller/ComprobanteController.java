@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -106,5 +107,14 @@ public class ComprobanteController {
             logger.error("Error descargando PDF del comprobante ID: " + comprobanteId, e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
+
+    // Calcular ingresos totales en un rango de fechas para el dashboard
+    @GetMapping("/ingresos/rango")
+    public ResponseEntity<Double> calcularIngresosPorRango(
+            @RequestParam @DateTimeFormat(iso = ISO.DATE_TIME) LocalDateTime inicio,
+            @RequestParam @DateTimeFormat(iso = ISO.DATE_TIME) LocalDateTime fin) {
+        Double ingresos = comprobanteService.calcularIngresosPorRango(inicio, fin);
+        return ResponseEntity.ok(ingresos);
     }
 }

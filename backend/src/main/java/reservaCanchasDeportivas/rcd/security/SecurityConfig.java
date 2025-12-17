@@ -49,9 +49,15 @@ public class SecurityConfig {
                         .requestMatchers("/api/reservas/crear",
                                 "/api/reservas/buscar/futuras-confirmadas")
                         .hasAnyRole("ADMIN", "RECEPCIONISTA")
+                        // Endpoints del dashboard - Solo ADMIN y RECEPCIONISTA
+                        .requestMatchers("/api/reservas/contar/rango",
+                                "/api/comprobantes/ingresos/rango",
+                                "/api/usuarios/nuevos/rango")
+                        .hasAnyRole("ADMIN", "RECEPCIONISTA")
                         .requestMatchers("/api/comprobantes/crear", "/api/comprobantes/generar/{reservaId}",
                                 "/api/comprobantes/buscar/reservaId/{reservaId}",
-                                "/api/comprobantes/descargar/{comprobanteId}", "/api/reservas/crear-temporal", "/api/reservas/confirmar/{id}", "/api/reservas/cancelar/{id}")
+                                "/api/comprobantes/descargar/{comprobanteId}", "/api/reservas/crear-temporal",
+                                "/api/reservas/confirmar/{id}", "/api/reservas/cancelar/{id}")
                         .hasAnyRole("ADMIN", "RECEPCIONISTA", "USER")
                         .requestMatchers("/api/usuarios/editar/{id}").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/api/usuarios/existe/documento/{numDocumento}", "/api/usuarios")
@@ -59,7 +65,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/usuarios/buscar/email/{email}")
                         .authenticated()
                         .requestMatchers("/api/auth/login", "/api/usuarios/registrar", "/api/canchas-deportivas",
-                                "/api/canchas-deportivas/activas", "/api/horarios-canchas", "/api/horarios-canchas/disponibles-por-fecha",
+                                "/api/canchas-deportivas/activas", "/api/horarios-canchas",
+                                "/api/horarios-canchas/disponibles-por-fecha",
                                 "/api/canchas-deportivas/buscar/{id}", "/api/horarios-canchas/buscar/**")
                         .permitAll()
                         .anyRequest().authenticated());

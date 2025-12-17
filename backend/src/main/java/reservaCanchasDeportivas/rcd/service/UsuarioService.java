@@ -1,5 +1,6 @@
 package reservaCanchasDeportivas.rcd.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -82,6 +83,11 @@ public class UsuarioService {
 
     public Optional<Usuario> buscarPorId(Long id) {
         return usuarioRepository.findById(id);
+    }
+
+    // Método para el dashboard: contar usuarios nuevos en un rango de fechas
+    public Long contarUsuariosNuevos(LocalDateTime inicio, LocalDateTime fin) {
+        return usuarioRepository.countByFechaCreacionBetween(inicio, fin);
     }
 
     // Logging de eventos

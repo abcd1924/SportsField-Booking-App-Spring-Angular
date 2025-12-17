@@ -74,4 +74,9 @@ public class ComprobanteService {
     public Optional<Comprobante> obtenerComprobantePorId(Long id) {
         return comprobanteRepository.findById(id);
     }
+
+    // Método para el dashboard: calcular ingresos totales en un rango de fechas
+    public Double calcularIngresosPorRango(LocalDateTime inicio, LocalDateTime fin) {
+        return comprobanteRepository.calcularIngresosPorRango(inicio, fin);
+    }
 }
