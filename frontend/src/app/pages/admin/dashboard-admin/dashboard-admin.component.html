@@ -1,23 +1,100 @@
-<div style="padding: 20px;">
-    <h1>🏢 Dashboard de Administrador</h1>
-    <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
-        <h3>¡Bienvenido, Administrador!</h3>
-        <p>Tienes acceso completo al sistema de gestión de canchas deportivas.</p>
+<div class="dashboard-container">
+    <!-- Header del Dashboard -->
+    <div class="dashboard-header">
+        <div class="welcome-section">
+            <h1 class="dashboard-title">Dashboard de Administración</h1>
+            <p class="welcome-text">¡Bienvenido, <strong>{{ adminName }}</strong>! Aquí está el resumen de hoy.</p>
+        </div>
+        <div class="date-info">
+            <span class="current-date">{{ currentDate | date: 'EEEE, d MMMM yyyy' }}</span>
+        </div>
+    </div>
 
-        <div
-            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 20px;">
-            <div style="background: white; padding: 15px; border-radius: 5px; border-left: 4px solid #3498db;">
-                <h4>Gestión de Canchas</h4>
-                <p>Crear, editar y administrar canchas deportivas</p>
+    <!-- KPIs Grid -->
+    <div class="kpi-grid">
+        <!-- Reservas Hoy -->
+        <div class="kpi-card reservas">
+            <div class="kpi-icon">
+                <span>📅</span>
             </div>
-            <div style="background: white; padding: 15px; border-radius: 5px; border-left: 4px solid #e74c3c;">
-                <h4>Gestión de Usuarios</h4>
-                <p>Administrar usuarios del sistema</p>
+            <div class="kpi-content">
+                <p class="kpi-label">Reservas Hoy</p>
+                <h2 class="kpi-value">{{ reservasHoy }}</h2>
             </div>
-            <div style="background: white; padding: 15px; border-radius: 5px; border-left: 4px solid #f39c12;">
-                <h4>Reportes</h4>
-                <p>Ver estadísticas y reportes del sistema</p>
+        </div>
+
+        <!-- Ingresos Hoy -->
+        <div class="kpi-card ingresos">
+            <div class="kpi-icon">
+                <span>💰</span>
             </div>
+            <div class="kpi-content">
+                <p class="kpi-label">Ingresos Hoy</p>
+                <h2 class="kpi-value">S/ {{ ingresosHoy | number: '1.2-2' }}</h2>
+            </div>
+        </div>
+
+        <!-- Nuevos Usuarios -->
+        <div class="kpi-card usuarios">
+            <div class="kpi-icon">
+                <span>👥</span>
+            </div>
+            <div class="kpi-content">
+                <p class="kpi-label">Nuevos Usuarios</p>
+                <h2 class="kpi-value">{{ nuevosUsuarios }}</h2>
+            </div>
+        </div>
+
+        <!-- Canchas Activas -->
+        <div class="kpi-card canchas">
+            <div class="kpi-icon">
+                <span>🏟️</span>
+            </div>
+            <div class="kpi-content">
+                <p class="kpi-label">Canchas Activas</p>
+                <h2 class="kpi-value">{{ canchasActivas }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gráfico de Reservas de la Semana -->
+    <div class="chart-section">
+        <div class="chart-card">
+            <div class="chart-header">
+                <h3 class="chart-title">📊 Reservas de la Semana</h3>
+                <p class="chart-subtitle">Comparativa de reservas por día</p>
+            </div>
+            <div class="chart-container">
+                <div class="bar-chart">
+                    <div class="bar-item" *ngFor="let day of weekData">
+                        <div class="bar-wrapper">
+                            <div class="bar-fill" *ngIf="day.value > 0" [style.height.px]="getBarHeight(day.value)">
+                                <span class="bar-value">{{ day.value }}</span>
+                            </div>
+                        </div>
+                        <span class="bar-label">{{ day.day }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Accesos Rápidos (Opcional - solo las acciones más comunes) -->
+    <div class="quick-actions">
+        <h3 class="section-title">⚡ Accesos Rápidos</h3>
+        <div class="actions-grid">
+            <a routerLink="/admin/reservas" class="action-card">
+                <span class="action-icon">📅</span>
+                <span class="action-text">Ver Reservas de Hoy</span>
+            </a>
+            <a routerLink="/admin/canchas" class="action-card">
+                <span class="action-icon">➕</span>
+                <span class="action-text">Nueva Cancha</span>
+            </a>
+            <a routerLink="/admin/usuarios" class="action-card">
+                <span class="action-icon">👥</span>
+                <span class="action-text">Gestionar Usuarios</span>
+            </a>
         </div>
     </div>
 </div>

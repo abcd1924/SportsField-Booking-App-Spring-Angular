@@ -102,4 +102,11 @@ export class ComprobanteService {
   }
 
   constructor() { }
+
+  calcularIngresosPorRango(inicio: Date, fin: Date): Observable<number> {
+    const params = new HttpParams()
+      .set('inicio', inicio.toISOString())
+      .set('fin', fin.toISOString());
+    return this.http.get<number>(`${this.apiUrl}/ingresos/rango`, { params });
+  }
 }

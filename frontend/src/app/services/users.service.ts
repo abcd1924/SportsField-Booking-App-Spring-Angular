@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { User } from '../models/user';
 import { environment } from '../models/environment';
@@ -34,5 +34,12 @@ export class UsersService {
 
   eliminarUsuario(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/eliminar/${id}`);
+  }
+
+  contarUsuariosNuevos(inicio: Date, fin: Date): Observable<number> {
+    const params = new HttpParams()
+      .set('inicio', inicio.toISOString())
+      .set('fin', fin.toISOString());
+    return this.http.get<number>(`${this.apiUrl}/nuevos/rango`, { params });
   }
 }

@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../models/environment';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { reserva } from '../models/reserva';
 import { ReservaRequest } from '../models/auxiliares/reservaRequest';
 import { AuthService } from './auth.service';
+import { ReservasPorDia } from '../models/auxiliares/reservasPorDia';
 
 @Injectable({
   providedIn: 'root'
@@ -43,7 +44,7 @@ export class ReservaService {
   }
 
   // Métodos de conveniencia
-  
+
   private obtenerUsuarioActual(): { id: number, nombre: string; email: string } | null {
     return this.authService.getCurrentUserForReservations();
   }
@@ -80,5 +81,19 @@ export class ReservaService {
 
   calcularPrecioTotal(horasTotales: number, precioPorHora: number): number {
     return horasTotales * precioPorHora;
+  }
+
+  contarReservasPorRango(inicio: Date, fin: Date): Observable<number> {
+    const params = new HttpParams()
+      .set('inicio', inicio.toISOString())
+      .set('fin', fin.toISOString());
+    return this.http.get<number>(`${this.apiUrl}/contar/rango`, { params });
+  }
+
+  obtenerReservasPorDia(inicio: Date, fin: Date): Observable<ReservasPorDia[]> {
+    const params = new HttpParams()
+      .set('inicio', inicio.toISOString())
+      .set('fin', fin.toISOString());
+    return this.http.get<ReservasPorDia[]>(`${this.apiUrl}/por-dia`, { params });
   }
 }
