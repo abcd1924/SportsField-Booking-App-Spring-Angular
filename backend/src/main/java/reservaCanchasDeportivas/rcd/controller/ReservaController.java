@@ -116,4 +116,14 @@ public class ReservaController {
         Long cantidad = reservaService.contarReservasPorRango(inicio, fin);
         return ResponseEntity.ok(cantidad);
     }
+
+    // Obtener reservas agrupadas por día para el gráfico del dashboard
+    @GetMapping("/por-dia")
+    public ResponseEntity<List<reservaCanchasDeportivas.rcd.DTO.ReservasPorDiaDTO>> obtenerReservasPorDia(
+            @RequestParam @DateTimeFormat(iso = ISO.DATE_TIME) LocalDateTime inicio,
+            @RequestParam @DateTimeFormat(iso = ISO.DATE_TIME) LocalDateTime fin) {
+        List<reservaCanchasDeportivas.rcd.DTO.ReservasPorDiaDTO> datos = reservaService.obtenerReservasPorDia(inicio,
+                fin);
+        return ResponseEntity.ok(datos);
+    }
 }

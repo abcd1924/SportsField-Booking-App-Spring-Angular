@@ -1,6 +1,8 @@
 package reservaCanchasDeportivas.rcd.service;
 
+import java.sql.Date;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -104,6 +106,20 @@ public class ReservaService {
     // Método para el dashboard: contar reservas en un rango de fechas
     public Long contarReservasPorRango(LocalDateTime inicio, LocalDateTime fin) {
         return reservaRepository.countByFechaInicioBetween(inicio, fin);
+    }
+
+    // Método para el gráfico: obtener reservas agrupadas por día
+    public List<reservaCanchasDeportivas.rcd.DTO.ReservasPorDiaDTO> obtenerReservasPorDia(LocalDateTime inicio,
+            LocalDateTime fin) {
+        List<Object[]> resultados = reservaRepository.contarReservasPorDia(inicio, fin);
+
+        return resultados.stream()
+                .map(row -> {
+                    LocalDate fecha = ((Date) row[0]).toLocalDate();
+                    Long cantidad = ((Number) row[1]).longValue();
+                    return new reservaCanchasDeportivas.rcd.DTO.ReservasPorDiaDTO(fecha, cantidad);
+                })
+                .toList();
     }
 
     public String generarCodigoUnico() {

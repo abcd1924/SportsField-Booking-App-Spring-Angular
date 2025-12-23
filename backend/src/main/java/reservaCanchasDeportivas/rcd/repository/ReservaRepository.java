@@ -81,4 +81,11 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
     // Contar reservas en un rango de fechas para el dashboard
     Long countByFechaInicioBetween(LocalDateTime inicio, LocalDateTime fin);
 
+    // Obtener conteo de reservas por día (para el gráfico)
+    @Query(value = "SELECT DATE(fecha_inicio) as fecha, COUNT(*) as cantidad " +
+            "FROM reservas " +
+            "WHERE fecha_inicio BETWEEN :inicio AND :fin " +
+            "GROUP BY DATE(fecha_inicio) " +
+            "ORDER BY DATE(fecha_inicio)", nativeQuery = true)
+    List<Object[]> contarReservasPorDia(@Param("inicio") LocalDateTime inicio, @Param("fin") LocalDateTime fin);
 }
