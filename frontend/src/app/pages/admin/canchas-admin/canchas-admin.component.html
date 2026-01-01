@@ -1,1 +1,180 @@
-<p>canchas-admin works!</p>
+<div class="canchas-container">
+    <!-- Header -->
+    <div class="page-header">
+        <div class="header-content">
+            <h1 class="page-title">🏟️ Gestión de Canchas</h1>
+            <p class="page-subtitle">Administra las canchas deportivas del complejo</p>
+        </div>
+        <button class="btn-create" (click)="openCreateModal()">
+            <span class="btn-icon">➕</span>
+            <span>Nueva Cancha</span>
+        </button>
+    </div>
+
+    <!-- Tabla de Canchas -->
+    <div class="table-card">
+        <div class="table-wrapper">
+            <table class="canchas-table">
+                <thead>
+                    <tr>
+                        <th>N° Cancha</th>
+                        <th>Tipo</th>
+                        <th>Grass</th>
+                        <th>Capacidad</th>
+                        <th>Precio/Hora</th>
+                        <th>Iluminación</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let cancha of canchas">
+                        <td class="numero-cancha">{{ cancha.numeroCancha }}</td>
+                        <td>{{ cancha.tipoCancha }}</td>
+                        <td>{{ cancha.tipoGrass }}</td>
+                        <td class="text-center">{{ cancha.capacidadJugadores }}</td>
+                        <td class="precio">S/ {{ cancha.precioPorHora | number: '1.2-2' }}</td>
+                        <td>{{ cancha.iluminacion }}</td>
+                        <td>
+                            <span class="badge" [ngClass]="getEstadoClass(cancha.estado)">
+                                {{ cancha.estado }}
+                            </span>
+                        </td>
+                        <td class="actions">
+                            <button class="btn-action btn-edit" (click)="openEditModal(cancha)" title="Editar">
+                                ✏️
+                            </button>
+                            <button class="btn-action btn-delete" (click)="deleteCancha(cancha.id)" title="Eliminar">
+                                🗑️
+                            </button>
+                        </td>
+                    </tr>
+                    <tr *ngIf="canchas.length === 0">
+                        <td colspan="8" class="no-data">
+                            No hay canchas registradas. ¡Crea la primera!
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+        <div class="modal-content" (click)="$event.stopPropagation()">
+            <div class="modal-header">
+                <h2 class="modal-title">
+                    {{ isEditMode ? '✏️ Editar Cancha' : '➕ Nueva Cancha' }}
+                </h2>
+                <button class="btn-close" (click)="closeModal()">✕</button>
+            </div>
+
+            <form [formGroup]="canchaForm" (ngSubmit)="saveCancha()">
+                <div class="modal-body">
+                    <div class="form-grid">
+                        <!-- Tipo de Cancha -->
+                        <div class="form-group">
+                            <label>Tipo de Cancha *</label>
+                            <select formControlName="tipoCancha" class="form-control">
+                                <option value="">Seleccionar...</option>
+                                <option value="Fútbol 5">Fútbol 5</option>
+                                <option value="Fútbol 7">Fútbol 7</option>
+                                <option value="Fútbol 11">Fútbol 11</option>
+                            </select>
+                            <span class="error"
+                                *ngIf="canchaForm.get('tipoCancha')?.invalid && canchaForm.get('tipoCancha')?.touched">
+                                Campo requerido
+                            </span>
+                        </div>
+
+                        <!-- Número de Cancha -->
+                        <div class="form-group">
+                            <label>Número de Cancha *</label>
+                            <input type="text" formControlName="numeroCancha" class="form-control"
+                                placeholder="Ej: C-01">
+                            <span class="error"
+                                *ngIf="canchaForm.get('numeroCancha')?.invalid && canchaForm.get('numeroCancha')?.touched">
+                                Campo requerido
+                            </span>
+                        </div>
+
+                        <!-- Tipo de Grass -->
+                        <div class="form-group">
+                            <label>Tipo de Grass *</label>
+                            <select formControlName="tipoGrass" class="form-control">
+                                <option value="">Seleccionar...</option>
+                                <option value="Sintético">Sintético</option>
+                                <option value="Natural">Natural</option>
+                                <option value="Híbrido">Híbrido</option>
+                            </select>
+                            <span class="error"
+                                *ngIf="canchaForm.get('tipoGrass')?.invalid && canchaForm.get('tipoGrass')?.touched">
+                                Campo requerido
+                            </span>
+                        </div>
+
+                        <!-- Capacidad -->
+                        <div class="form-group">
+                            <label>Capacidad de Jugadores *</label>
+                            <input type="number" formControlName="capacidadJugadores" class="form-control" min="1">
+                            <span class="error"
+                                *ngIf="canchaForm.get('capacidadJugadores')?.invalid && canchaForm.get('capacidadJugadores')?.touched">
+                                Mínimo 1 jugador
+                            </span>
+                        </div>
+
+                        <!-- Precio -->
+                        <div class="form-group">
+                            <label>Precio por Hora (S/) *</label>
+                            <input type="number" formControlName="precioPorHora" class="form-control" min="0"
+                                step="0.01">
+                            <span class="error"
+                                *ngIf="canchaForm.get('precioPorHora')?.invalid && canchaForm.get('precioPorHora')?.touched">
+                                Precio inválido
+                            </span>
+                        </div>
+
+                        <!-- Iluminación -->
+                        <div class="form-group">
+                            <label>Iluminación *</label>
+                            <select formControlName="iluminacion" class="form-control">
+                                <option value="">Seleccionar...</option>
+                                <option value="Sí">Sí</option>
+                                <option value="No">No</option>
+                            </select>
+                            <span class="error"
+                                *ngIf="canchaForm.get('iluminacion')?.invalid && canchaForm.get('iluminacion')?.touched">
+                                Campo requerido
+                            </span>
+                        </div>
+
+                        <!-- Estado -->
+                        <div class="form-group">
+                            <label>Estado *</label>
+                            <select formControlName="estado" class="form-control">
+                                <option value="ACTIVA">Activa</option>
+                                <option value="INACTIVA">Inactiva</option>
+                            </select>
+                        </div>
+
+                        <!-- Descripción -->
+                        <div class="form-group full-width">
+                            <label>Descripción</label>
+                            <textarea formControlName="descripcion" class="form-control" rows="3"
+                                placeholder="Descripción opcional..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn-secondary" (click)="closeModal()">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn-primary" [disabled]="canchaForm.invalid">
+                        {{ isEditMode ? 'Actualizar' : 'Crear' }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
