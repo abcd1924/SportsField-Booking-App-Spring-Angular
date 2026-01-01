@@ -10,9 +10,7 @@ import { inject } from '@angular/core';
 import { AuthService } from './services/auth.service';
 import { DashboardAdminComponent } from './pages/admin/dashboard-admin/dashboard-admin.component';
 import { CanchasAdminComponent } from './pages/admin/canchas-admin/canchas-admin.component';
-import { CanchasFormComponent } from './pages/admin/canchas-form/canchas-form.component';
 import { UsuariosAdminComponent } from './pages/admin/usuarios-admin/usuarios-admin.component';
-import { ReportesAdminComponent } from './pages/admin/reportes-admin/reportes-admin.component';
 import { RecepcionistaLayoutComponent } from './pages/layouts/recepcionista-layout/recepcionista-layout.component';
 import { DashboardRecepcionistaComponent } from './pages/recepcionista/dashboard-recepcionista/dashboard-recepcionista.component';
 import { ReservasRecepcionistaComponent } from './pages/recepcionista/reservas-recepcionista/reservas-recepcionista.component';
@@ -109,18 +107,10 @@ export const routes: Routes = [
         children: [
             { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
             { path: 'dashboard', component: DashboardAdminComponent },
-            {
-                path: 'canchas',
-                children: [
-                    { path: '', component: CanchasAdminComponent },
-                    { path: 'nuevo', component: CanchasFormComponent },
-                    { path: 'editar/:id', component: CanchasFormComponent }
-                ]
-            },
+            { path: 'canchas', component: CanchasAdminComponent },
             { path: 'horarios', component: HorariosRecepcionistaComponent },
             { path: 'reservas', component: ReservasRecepcionistaComponent },
             { path: 'usuarios', component: UsuariosAdminComponent },
-            { path: 'reportes', component: ReportesAdminComponent }
         ]
     },
 

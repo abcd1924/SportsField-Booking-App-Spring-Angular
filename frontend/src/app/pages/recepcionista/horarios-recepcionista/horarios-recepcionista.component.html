@@ -1,1 +1,180 @@
-<p>horarios-recepcionista works!</p>
+<div class="horarios-container">
+    <!-- Header -->
+    <div class="page-header">
+        <div class="header-content">
+            <h1 class="page-title">🕐 Gestión de Horarios</h1>
+            <p class="page-subtitle">Administra los horarios disponibles de las canchas</p>
+        </div>
+        <button class="btn-create" (click)="openCreateModal()">
+            <span class="btn-icon">➕</span>
+            <span>Nuevo Horario</span>
+        </button>
+    </div>
+
+    <!-- Filtros -->
+    <div class="filters-card">
+        <div class="filters-grid">
+            <div class="filter-group">
+                <label>Filtrar por Cancha</label>
+                <select [(ngModel)]="selectedCanchaFilter" class="filter-select">
+                    <option [ngValue]="null">Todas las canchas</option>
+                    <option *ngFor="let cancha of canchas" [ngValue]="cancha.id">
+                        {{ cancha.numeroCancha }} - {{ cancha.tipoCancha }}
+                    </option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label>Filtrar por Día</label>
+                <select [(ngModel)]="selectedDiaFilter" class="filter-select">
+                    <option value="">Todos los días</option>
+                    <option *ngFor="let dia of diasSemana" [value]="dia">{{ dia }}</option>
+                </select>
+            </div>
+
+            <div class="filter-actions">
+                <button class="btn-clear" (click)="clearFilters()">
+                    🔄 Limpiar Filtros
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabla de Horarios -->
+    <div class="table-card">
+        <div class="table-wrapper">
+            <table class="horarios-table">
+                <thead>
+                    <tr>
+                        <th>Cancha</th>
+                        <th>Día</th>
+                        <th>Hora Inicio</th>
+                        <th>Hora Fin</th>
+                        <th>Duración</th>
+                        <th>Disponible</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let horario of filteredHorarios">
+                        <td class="cancha-info">
+                            <div class="cancha-numero">{{ horario.canchaDeportiva.numeroCancha }}</div>
+                            <div class="cancha-tipo">{{ horario.canchaDeportiva.tipoCancha }}</div>
+                        </td>
+                        <td class="dia-semana">{{ horario.diaSemana }}</td>
+                        <td>{{ horario.horaInicio }}</td>
+                        <td>{{ horario.horaFin }}</td>
+                        <td class="text-center">
+                            {{ calcularDuracion(horario.horaInicio, horario.horaFin) }}
+                        </td>
+                        <td>
+                            <span class="badge" [ngClass]="getDisponibleClass(horario.disponible)">
+                                {{ horario.disponible ? 'Sí' : 'No' }}
+                            </span>
+                        </td>
+                        <td class="actions">
+                            <button class="btn-action btn-edit" (click)="openEditModal(horario)" title="Editar">
+                                ✏️
+                            </button>
+                            <button class="btn-action btn-delete" (click)="deleteHorario(horario.id)" title="Eliminar">
+                                🗑️
+                            </button>
+                        </td>
+                    </tr>
+                    <tr *ngIf="filteredHorarios.length === 0">
+                        <td colspan="7" class="no-data">
+                            No hay horarios que coincidan con los filtros seleccionados.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+        <div class="modal-content" (click)="$event.stopPropagation()">
+            <div class="modal-header">
+                <h2 class="modal-title">
+                    {{ isEditMode ? '✏️ Editar Horario' : '➕ Nuevo Horario' }}
+                </h2>
+                <button class="btn-close" (click)="closeModal()">✕</button>
+            </div>
+
+            <form [formGroup]="horarioForm" (ngSubmit)="saveHorario()">
+                <div class="modal-body">
+                    <div class="form-grid">
+                        <!-- Cancha -->
+                        <div class="form-group full-width">
+                            <label>Cancha Deportiva *</label>
+                            <select formControlName="canchaDeportivaId" class="form-control">
+                                <option value="">Seleccionar cancha...</option>
+                                <option *ngFor="let cancha of canchas" [value]="cancha.id">
+                                    {{ cancha.numeroCancha }} - {{ cancha.tipoCancha }} ({{ cancha.tipoGrass }})
+                                </option>
+                            </select>
+                            <span class="error"
+                                *ngIf="horarioForm.get('canchaDeportivaId')?.invalid && horarioForm.get('canchaDeportivaId')?.touched">
+                                Selecciona una cancha
+                            </span>
+                        </div>
+
+                        <!-- Día de la Semana -->
+                        <div class="form-group">
+                            <label>Día de la Semana *</label>
+                            <select formControlName="diaSemana" class="form-control">
+                                <option value="">Seleccionar día...</option>
+                                <option *ngFor="let dia of diasSemana" [value]="dia">{{ dia }}</option>
+                            </select>
+                            <span class="error"
+                                *ngIf="horarioForm.get('diaSemana')?.invalid && horarioForm.get('diaSemana')?.touched">
+                                Selecciona un día
+                            </span>
+                        </div>
+
+                        <!-- Disponible -->
+                        <div class="form-group">
+                            <label>Disponible</label>
+                            <div class="checkbox-wrapper">
+                                <input type="checkbox" formControlName="disponible" id="disponible"
+                                    class="form-checkbox">
+                                <label for="disponible" class="checkbox-label">
+                                    Marcar como disponible
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Hora Inicio -->
+                        <div class="form-group">
+                            <label>Hora de Inicio *</label>
+                            <input type="time" formControlName="horaInicio" class="form-control">
+                            <span class="error"
+                                *ngIf="horarioForm.get('horaInicio')?.invalid && horarioForm.get('horaInicio')?.touched">
+                                Campo requerido
+                            </span>
+                        </div>
+
+                        <!-- Hora Fin -->
+                        <div class="form-group">
+                            <label>Hora de Fin *</label>
+                            <input type="time" formControlName="horaFin" class="form-control">
+                            <span class="error"
+                                *ngIf="horarioForm.get('horaFin')?.invalid && horarioForm.get('horaFin')?.touched">
+                                Campo requerido
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn-secondary" (click)="closeModal()">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn-primary" [disabled]="horarioForm.invalid">
+                        {{ isEditMode ? 'Actualizar' : 'Crear' }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
