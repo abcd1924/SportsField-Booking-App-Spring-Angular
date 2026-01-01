@@ -1,1 +1,186 @@
-<p>reservas-recepcionista works!</p>
+<div class="reservas-container">
+    <!-- Header -->
+    <div class="page-header">
+        <div class="header-content">
+            <h1 class="page-title">📅 Gestión de Reservas</h1>
+            <p class="page-subtitle">Visualiza y administra todas las reservas del sistema</p>
+        </div>
+    </div>
+
+    <!-- Filtros y Búsqueda -->
+    <div class="filters-card">
+        <div class="filters-grid">
+            <div class="filter-group">
+                <label>Buscar</label>
+                <input type="text" [(ngModel)]="searchTerm" class="filter-input"
+                    placeholder="Código, usuario o cancha...">
+            </div>
+
+            <div class="filter-group">
+                <label>Filtrar por Estado</label>
+                <select [(ngModel)]="selectedEstadoFilter" class="filter-select">
+                    <option value="">Todos los estados</option>
+                    <option value="TEMPORAL">Temporal</option>
+                    <option value="CONFIRMADA">Confirmada</option>
+                    <option value="CANCELADA">Cancelada</option>
+                </select>
+            </div>
+
+            <div class="filter-actions">
+                <button class="btn-clear" (click)="clearFilters()">
+                    🔄 Limpiar Filtros
+                </button>
+            </div>
+        </div>
+
+        <div class="results-count">
+            Mostrando <strong>{{ filteredReservas.length }}</strong> de <strong>{{ reservas.length }}</strong> reservas
+        </div>
+    </div>
+
+    <!-- Tabla de Reservas -->
+    <div class="table-card">
+        <div class="table-wrapper">
+            <table class="reservas-table">
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Usuario</th>
+                        <th>Cancha</th>
+                        <th>Fecha Inicio</th>
+                        <th>Fecha Fin</th>
+                        <th>Horas</th>
+                        <th>Total</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let reserva of paginatedReservas">
+                        <td class="codigo-reserva">{{ reserva.codUnico }}</td>
+                        <td class="usuario-info">
+                            <div class="usuario-nombre">{{ reserva.usuario.nombre }} {{ reserva.usuario.apellido }}
+                            </div>
+                            <div class="usuario-email">{{ reserva.usuario.email }}</div>
+                        </td>
+                        <td class="cancha-info">
+                            <div class="cancha-numero">{{ reserva.canchaDeportiva.numeroCancha }}</div>
+                            <div class="cancha-tipo">{{ reserva.canchaDeportiva.tipoCancha }}</div>
+                        </td>
+                        <td>{{ formatDateTime(reserva.fechaInicio) }}</td>
+                        <td>{{ formatDateTime(reserva.fechaFin) }}</td>
+                        <td class="text-center">{{ reserva.horasTotales }}h</td>
+                        <td class="precio">S/ {{ calcularTotal(reserva) | number: '1.2-2' }}</td>
+                        <td>
+                            <span class="badge" [ngClass]="getEstadoClass(reserva.estado)">
+                                {{ reserva.estado }}
+                            </span>
+                        </td>
+                        <td class="actions">
+                            <button class="btn-action btn-edit" (click)="openEstadoModal(reserva)"
+                                title="Cambiar Estado" [disabled]="reserva.estado === 'CANCELADA'">
+                                ✏️
+                            </button>
+                        </td>
+                    </tr>
+                    <tr *ngIf="paginatedReservas.length === 0">
+                        <td colspan="9" class="no-data">
+                            No hay reservas que coincidan con los filtros seleccionados.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Paginación -->
+        <div class="pagination" *ngIf="totalPages > 1">
+            <button class="pagination-btn" (click)="previousPage()" [disabled]="currentPage === 1">
+                ‹ Anterior
+            </button>
+
+            <div class="pagination-pages">
+                <button *ngFor="let page of pages" class="pagination-page" [class.active]="page === currentPage"
+                    (click)="goToPage(page)">
+                    {{ page }}
+                </button>
+            </div>
+
+            <button class="pagination-btn" (click)="nextPage()" [disabled]="currentPage === totalPages">
+                Siguiente ›
+            </button>
+        </div>
+
+        <div class="pagination-info">
+            Mostrando {{ (currentPage - 1) * itemsPerPage + 1 }} -
+            {{ Math.min(currentPage * itemsPerPage, filteredReservas.length) }}
+            de {{ filteredReservas.length }} reservas
+        </div>
+    </div>
+
+    <!-- Modal de Cambio de Estado -->
+    <div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+        <div class="modal-content" (click)="$event.stopPropagation()">
+            <div class="modal-header">
+                <h2 class="modal-title">🔄 Cambiar Estado de Reserva</h2>
+                <button class="btn-close" (click)="closeModal()">✕</button>
+            </div>
+
+            <div class="modal-body" *ngIf="selectedReserva">
+                <!-- Información de la Reserva -->
+                <div class="reserva-info-card">
+                    <div class="info-row">
+                        <span class="info-label">Código:</span>
+                        <span class="info-value">{{ selectedReserva.codUnico }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Usuario:</span>
+                        <span class="info-value">
+                            {{ selectedReserva.usuario.nombre }} {{ selectedReserva.usuario.apellido }}
+                        </span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Cancha:</span>
+                        <span class="info-value">
+                            {{ selectedReserva.canchaDeportiva.numeroCancha }} - {{
+                            selectedReserva.canchaDeportiva.tipoCancha }}
+                        </span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Fecha:</span>
+                        <span class="info-value">{{ formatDate(selectedReserva.fechaInicio) }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Estado Actual:</span>
+                        <span class="badge" [ngClass]="getEstadoClass(selectedReserva.estado)">
+                            {{ selectedReserva.estado }}
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Formulario de Cambio de Estado -->
+                <form [formGroup]="estadoForm" (ngSubmit)="updateEstado()">
+                    <div class="form-group">
+                        <label>Nuevo Estado *</label>
+                        <select formControlName="estado" class="form-control">
+                            <option value="">Seleccionar estado...</option>
+                            <option value="CONFIRMADA">Confirmada</option>
+                            <option value="CANCELADA">Cancelada</option>
+                        </select>
+                        <span class="form-hint">
+                            ⚠️ No se puede cambiar a estado TEMPORAL
+                        </span>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn-secondary" (click)="closeModal()">
+                            Cancelar
+                        </button>
+                        <button type="submit" class="btn-primary" [disabled]="estadoForm.invalid">
+                            Actualizar Estado
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
