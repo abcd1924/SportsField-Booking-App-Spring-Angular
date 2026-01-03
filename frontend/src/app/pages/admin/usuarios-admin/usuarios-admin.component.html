@@ -1,1 +1,233 @@
-<p>usuarios-admin works!</p>
+<div class="usuarios-container">
+    <!-- Header -->
+    <div class="page-header">
+        <div class="header-content">
+            <h1 class="page-title">👥 Gestión de Usuarios</h1>
+            <p class="page-subtitle">Visualiza y administra los usuarios del sistema</p>
+        </div>
+    </div>
+
+    <!-- Filtros y Búsqueda -->
+    <div class="filters-card">
+        <div class="filters-grid">
+            <div class="filter-group">
+                <label>Buscar</label>
+                <input type="text" [(ngModel)]="searchTerm" class="filter-input"
+                    placeholder="Nombre, email o documento...">
+            </div>
+
+            <div class="filter-group">
+                <label>Filtrar por Rol</label>
+                <select [(ngModel)]="selectedRolFilter" class="filter-select">
+                    <option value="">Todos los roles</option>
+                    <option value="ADMIN">Admin</option>
+                    <option value="RECEPCIONISTA">Recepcionista</option>
+                    <option value="USER">Usuario</option>
+                </select>
+            </div>
+
+            <div class="filter-actions">
+                <button class="btn-clear" (click)="clearFilters()">
+                    🔄 Limpiar Filtros
+                </button>
+            </div>
+        </div>
+
+        <div class="results-count">
+            Mostrando <strong>{{ filteredUsuarios.length }}</strong> de <strong>{{ usuarios.length }}</strong> usuarios
+        </div>
+    </div>
+
+    <!-- Tabla de Usuarios -->
+    <div class="table-card">
+        <div class="table-wrapper">
+            <table class="usuarios-table">
+                <thead>
+                    <tr>
+                        <th>Nombre Completo</th>
+                        <th>Email</th>
+                        <th>Documento</th>
+                        <th>Teléfono</th>
+                        <th>Edad</th>
+                        <th>Género</th>
+                        <th>Rol</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let usuario of paginatedUsuarios">
+                        <td class="usuario-nombre">
+                            {{ usuario.nombre }} {{ usuario.apellido }}
+                        </td>
+                        <td class="usuario-email">{{ usuario.email }}</td>
+                        <td class="documento-info">
+                            <div class="documento-tipo">{{ usuario.tipoDocumento }}</div>
+                            <div class="documento-num">{{ usuario.numDocumento }}</div>
+                        </td>
+                        <td>{{ usuario.telefono }}</td>
+                        <td class="text-center">{{ calcularEdad(usuario.fechaNacimiento) }} años</td>
+                        <td>{{ usuario.genero }}</td>
+                        <td>
+                            <span class="badge" [ngClass]="getRolClass(usuario.rol)">
+                                {{ usuario.rol }}
+                            </span>
+                        </td>
+                        <td class="actions">
+                            <button class="btn-action btn-edit" (click)="openEditModal(usuario)" title="Editar">
+                                ✏️
+                            </button>
+                        </td>
+                    </tr>
+                    <tr *ngIf="paginatedUsuarios.length === 0">
+                        <td colspan="8" class="no-data">
+                            No hay usuarios que coincidan con los filtros seleccionados.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Paginación -->
+        <div class="pagination" *ngIf="totalPages > 1">
+            <button class="pagination-btn" (click)="previousPage()" [disabled]="currentPage === 1">
+                ‹ Anterior
+            </button>
+
+            <div class="pagination-pages">
+                <button *ngFor="let page of pages" class="pagination-page" [class.active]="page === currentPage"
+                    (click)="goToPage(page)">
+                    {{ page }}
+                </button>
+            </div>
+
+            <button class="pagination-btn" (click)="nextPage()" [disabled]="currentPage === totalPages">
+                Siguiente ›
+            </button>
+        </div>
+
+        <div class="pagination-info">
+            Mostrando {{ (currentPage - 1) * itemsPerPage + 1 }} -
+            {{ Math.min(currentPage * itemsPerPage, filteredUsuarios.length) }}
+            de {{ filteredUsuarios.length }} usuarios
+        </div>
+    </div>
+
+    <!-- Modal de Edición -->
+    <div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+        <div class="modal-content" (click)="$event.stopPropagation()">
+            <div class="modal-header">
+                <h2 class="modal-title">✏️ Editar Usuario</h2>
+                <button class="btn-close" (click)="closeModal()">✕</button>
+            </div>
+
+            <form [formGroup]="usuarioForm" (ngSubmit)="updateUsuario()">
+                <div class="modal-body">
+                    <div class="form-grid">
+                        <!-- Nombre -->
+                        <div class="form-group">
+                            <label>Nombre *</label>
+                            <input type="text" formControlName="nombre" class="form-control">
+                            <span class="error"
+                                *ngIf="usuarioForm.get('nombre')?.invalid && usuarioForm.get('nombre')?.touched">
+                                Campo requerido
+                            </span>
+                        </div>
+
+                        <!-- Apellido -->
+                        <div class="form-group">
+                            <label>Apellido *</label>
+                            <input type="text" formControlName="apellido" class="form-control">
+                            <span class="error"
+                                *ngIf="usuarioForm.get('apellido')?.invalid && usuarioForm.get('apellido')?.touched">
+                                Campo requerido
+                            </span>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="form-group full-width">
+                            <label>Email *</label>
+                            <input type="email" formControlName="email" class="form-control">
+                            <span class="error"
+                                *ngIf="usuarioForm.get('email')?.invalid && usuarioForm.get('email')?.touched">
+                                Email inválido
+                            </span>
+                        </div>
+
+                        <!-- Teléfono -->
+                        <div class="form-group">
+                            <label>Teléfono *</label>
+                            <input type="tel" formControlName="telefono" class="form-control">
+                            <span class="error"
+                                *ngIf="usuarioForm.get('telefono')?.invalid && usuarioForm.get('telefono')?.touched">
+                                Campo requerido
+                            </span>
+                        </div>
+
+                        <!-- Tipo Documento -->
+                        <div class="form-group">
+                            <label>Tipo de Documento *</label>
+                            <select formControlName="tipoDocumento" class="form-control">
+                                <option value="">Seleccionar...</option>
+                                <option *ngFor="let tipo of tiposDocumento" [value]="tipo">{{ tipo }}</option>
+                            </select>
+                            <span class="error"
+                                *ngIf="usuarioForm.get('tipoDocumento')?.invalid && usuarioForm.get('tipoDocumento')?.touched">
+                                Campo requerido
+                            </span>
+                        </div>
+
+                        <!-- Número Documento -->
+                        <div class="form-group">
+                            <label>Número de Documento *</label>
+                            <input type="text" formControlName="numDocumento" class="form-control">
+                            <span class="error"
+                                *ngIf="usuarioForm.get('numDocumento')?.invalid && usuarioForm.get('numDocumento')?.touched">
+                                Campo requerido
+                            </span>
+                        </div>
+
+                        <!-- Fecha Nacimiento -->
+                        <div class="form-group">
+                            <label>Fecha de Nacimiento *</label>
+                            <input type="date" formControlName="fechaNacimiento" class="form-control">
+                            <span class="error"
+                                *ngIf="usuarioForm.get('fechaNacimiento')?.invalid && usuarioForm.get('fechaNacimiento')?.touched">
+                                Campo requerido
+                            </span>
+                        </div>
+
+                        <!-- Género -->
+                        <div class="form-group">
+                            <label>Género *</label>
+                            <select formControlName="genero" class="form-control">
+                                <option value="">Seleccionar...</option>
+                                <option *ngFor="let gen of generos" [value]="gen">{{ gen }}</option>
+                            </select>
+                            <span class="error"
+                                *ngIf="usuarioForm.get('genero')?.invalid && usuarioForm.get('genero')?.touched">
+                                Campo requerido
+                            </span>
+                        </div>
+
+                        <!-- Rol -->
+                        <div class="form-group">
+                            <label>Rol *</label>
+                            <select formControlName="rol" class="form-control">
+                                <option *ngFor="let rol of rolesDisponibles" [value]="rol">{{ rol }}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn-secondary" (click)="closeModal()">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn-primary" [disabled]="usuarioForm.invalid">
+                        Actualizar Usuario
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

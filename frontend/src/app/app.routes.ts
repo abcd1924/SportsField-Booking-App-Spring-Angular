@@ -16,7 +16,6 @@ import { DashboardRecepcionistaComponent } from './pages/recepcionista/dashboard
 import { ReservasRecepcionistaComponent } from './pages/recepcionista/reservas-recepcionista/reservas-recepcionista.component';
 import { HorariosRecepcionistaComponent } from './pages/recepcionista/horarios-recepcionista/horarios-recepcionista.component';
 import { ComprobantesRecepcionistaComponent } from './pages/recepcionista/comprobantes-recepcionista/comprobantes-recepcionista.component';
-import { UsuariosRecepcionistaComponent } from './pages/recepcionista/usuarios-recepcionista/usuarios-recepcionista.component';
 import { UserLayoutComponent } from './pages/layouts/user-layout/user-layout.component';
 import { DashboardUserComponent } from './pages/user/dashboard-user/dashboard-user.component';
 import { MisReservasComponent } from './pages/user/mis-reservas/mis-reservas.component';
@@ -110,6 +109,7 @@ export const routes: Routes = [
             { path: 'canchas', component: CanchasAdminComponent },
             { path: 'horarios', component: HorariosRecepcionistaComponent },
             { path: 'reservas', component: ReservasRecepcionistaComponent },
+            { path: 'comprobantes', component: ComprobantesRecepcionistaComponent },
             { path: 'usuarios', component: UsuariosAdminComponent },
         ]
     },
@@ -125,7 +125,7 @@ export const routes: Routes = [
             { path: 'reservas', component: ReservasRecepcionistaComponent },
             { path: 'horarios', component: HorariosRecepcionistaComponent },
             { path: 'comprobantes', component: ComprobantesRecepcionistaComponent },
-            { path: 'usuarios', component: UsuariosRecepcionistaComponent }
+            { path: 'usuarios', component: UsuariosAdminComponent }
         ]
     },
 
