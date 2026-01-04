@@ -1,91 +1,135 @@
-# Sistema de Reserva de Canchas Deportivas (Proyecto Full Stack)
+# 🏟️ SportsField Booking App
 
-![Estado del Proyecto](https://img.shields.io/badge/estado-en%20desarrollo-yellowgreen)
-![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.5.4-blue?logo=spring-boot)
-![Angular](https://img.shields.io/badge/Angular-18.2-red?logo=angular)
-![Java](https://img.shields.io/badge/Java-17-orange?logo=java)
+A comprehensive system for managing and booking sports facilities. This application streamlines operations for sports complexes, managing schedules, reservations, staff, and billing, while providing tailored interfaces for Administrators, Receptionists, and Customers.
 
-Aplicación web full stack para la gestión y reserva de canchas deportivas. Este proyecto personal fue desarrollado con el objetivo de aplicar y demostrar conocimientos en desarrollo backend con **Spring Boot** y desarrollo frontend con **Angular**.
+Built with a modern architecture using **Spring Boot 3** for the backend and **Angular 18** for the frontend.
 
-> **Nota:** Este proyecto se encuentra actualmente en desarrollo. Algunas funcionalidades pueden estar incompletas o en proceso de mejora.
+---
 
-## Características Principales
+## 🚀 Key Features
 
-El sistema está diseñado para atender a tres tipos de roles: `ADMIN`, `RECEPCIONISTA` y `USER`.
+### 👤 User Module (Customer)
+* **Field Discovery:** Visual catalog of available facilities with filtering and details.
+* **Online Booking:** Intuitive flow to select dates, times, and confirm reservations.
+* **Personal Management:** "My Reservations" dashboard to view history and status.
+* **Profile:** Manage personal information and account security.
 
-### Backend (API REST con Spring Boot)
-* **Seguridad:** Autenticación y autorización basadas en roles utilizando **JWT (JSON Web Tokens)** y Spring Security.
-* **Gestión de Usuarios:** Creación, consulta y actualización de usuarios con roles definidos.
-* **Gestión de Canchas:** CRUD completo para administrar las canchas deportivas, incluyendo detalles como tipo, capacidad y precio.
-* **Sistema de Reservas:**
-    * Creación de **reservas temporales** que expiran si no se confirman.
-    * Lógica para **confirmar y cancelar** reservas.
-    * Validación de disponibilidad para **prevenir colisión de horarios**.
-* **Generación de Comprobantes:** Creación automática de comprobantes en formato PDF para las reservas confirmadas.
-* **Manejo de Errores:** Implementación de un `GlobalExceptionHandler` para gestionar y devolver errores de forma consistente.
+### 🛡️ Admin Module (Owner/Manager)
+* **Analytics Dashboard:** Real-time statistics (Today's bookings, Revenue, New Users, Occupancy rates).
+* **Infrastructure Management:** Full CRUD for sports fields (create, edit, pricing, images).
+* **Staff Management:** Manage users and assign roles (promote to Receptionist).
+* **Full Control:** Global access to all reservations, schedules, and billing.
 
-### Frontend (SPA con Angular)
-* **Diseño Responsivo:** Interfaz moderna desarrollada con **PrimeNG** y **Tailwind CSS**.
-* **Sistema de Ruteo:**
-    * Múltiples `Layouts` para las secciones pública, de usuario y de administrador.
-    * **Guards de Rutas** para proteger el acceso según el rol del usuario.
-* **Formularios Reactivos:** Formularios con validaciones personalizadas y en tiempo real para el registro y login de usuarios.
-* **Comunicación con API:** Interceptores de HTTP para añadir automáticamente el token JWT a las peticiones.
-* **Flujo de Reserva:** Proceso completo desde la selección de cancha y horario hasta la confirmación y visualización del comprobante.
+### 📋 Receptionist Module (Staff)
+* **Daily Operations:** Quick view of availability and today's schedule.
+* **Booking Management:** Create on-site reservations, handle cancellations, and validate attendance.
+* **Receipts:** Issue and download payment receipts (PDF) for customers.
+* **Schedules:** Check availability per field.
 
-## Tecnologías Utilizadas
+---
 
-| Área | Tecnología | Propósito |
-| :--- | :--- | :--- |
-| **Backend** | Spring Boot | Framework principal para la API REST. |
-| | Spring Security | Gestión de autenticación y autorización (JWT). |
-| | Spring Data JPA | Acceso a datos y persistencia. |
-| | MySQL | Base de datos relacional. |
-| | Maven | Gestión de dependencias y construcción del proyecto. |
-| | PDFBox | Generación de documentos PDF. |
-| **Frontend**| Angular v18 | Framework principal para la Single Page Application (SPA). |
-| | TypeScript | Lenguaje de programación principal. |
-| | PrimeNG v18 | Biblioteca de componentes UI. |
-| | Tailwind CSS v4.1 | Framework de CSS para estilos. |
-| | RxJS | Programación reactiva para el manejo de eventos y datos asíncronos. |
+## 🛠️ Tech Stack
 
-## Cómo Empezar
+### Backend (REST API)
+* **Language:** Java 17
+* **Framework:** Spring Boot 3.5.4
+* **Security:** Spring Security 6 + JWT (JSON Web Tokens)
+* **Database:** MySQL (with Spring Data JPA)
+* **Utilities:**
+    * **Apache PDFBox:** For dynamic PDF receipt generation.
+    * **Lombok:** Boilerplate code reduction.
+    * **Maven:** Dependency management.
 
-Para ejecutar este proyecto en tu entorno local, sigue los siguientes pasos.
+### Frontend (Single Page Application)
+* **Framework:** Angular 18 (Standalone Components)
+* **Styling & UI:**
+    * **TailwindCSS 4:** Modern and responsive utility-first styling.
+    * **PrimeNG 18:** Rich UI components (Tables, Charts, Modals).
+* **Architecture:**
+    * **Guards:** Role-based route protection (`roleGuard`).
+    * **Interceptors:** Automatic JWT token handling in HTTP requests.
+    * **Services:** Reactive business logic using RxJS.
 
-### Prerrequisitos
-* Java 17 o superior.
-* Maven 3.9 o superior.
-* Node.js 18 o superior.
-* Una instancia de base de datos MySQL.
+---
 
-### Backend
-1.  Clona el repositorio.
-2.  Navega a la carpeta `backend`.
-3.  Renombra el archivo `application.properties-example` a `application.properties` y configura las credenciales de tu base de datos y el secreto de JWT.
-4.  Ejecuta el proyecto con el comando:
-    ```bash
-    mvn spring-boot:run
+## 📂 Project Structure
+
+The repository is organized as a monorepo with two main directories:
+```text
+/
+├── backend/            # Java/Spring Boot source code
+│   ├── src/main/java/reservaCanchasDeportivas/rcd/
+│   │   ├── controller/ # REST Endpoints
+│   │   ├── model/      # JPA Entities
+│   │   ├── service/    # Business Logic
+│   │   ├── security/   # JWT Configuration
+│   │   └── ...
+│   └── pom.xml         # Maven Dependencies
+│
+└── frontend/           # Angular source code
+    ├── src/app/
+    │   ├── pages/      # Views (Admin, User, Public, Auth)
+    │   ├── services/   # API Communication
+    │   ├── models/     # TypeScript Interfaces
+    │   └── guards/     # Route Protection
+    └── package.json    # NPM Dependencies
+```
+---
+
+## ⚙️ Installation & Setup Guide
+
+### Prerequisites
+* Java JDK 17 or higher.
+* Node.js v18+ and NPM.
+* MySQL Server running.
+* Maven (optional, wrapper included).
+
+### 1. Backend Setup
+1.  Navigate to the `backend` directory.
+2.  Configure your database connection in `src/main/resources/application.properties`. You can use `application.properties-example` as a guide:
+    ```properties
+    spring.application.name=rcd
+    spring.datasource.url=jdbc:mysql://localhost:3306/your_db_name?createDatabaseIfNotExist=true
+    spring.datasource.username=your_username
+    spring.datasource.password=your_password
+    spring.jpa.hibernate.ddl-auto=update
     ```
-5.  La API estará disponible en `http://localhost:8080`.
+3.  Run the application:
+    ```bash
+    ./mvnw spring-boot:run
+    ```
+    *The server will start at `http://localhost:8080`.*
 
-### Frontend
-1.  Abre otra terminal y navega a la carpeta `frontend`.
-2.  Instala las dependencias del proyecto:
+### 2. Frontend Setup
+1.  Navigate to the `frontend` directory.
+2.  Install dependencies:
     ```bash
     npm install
     ```
-3.  Inicia el servidor de desarrollo de Angular:
+3.  Start the development server:
     ```bash
     ng serve
     ```
-4.  La aplicación estará disponible en `http://localhost:4200`.
+4.  Open your browser at `http://localhost:4200`.
 
-## Próximos Pasos (Roadmap)
-- [ ] Implemetar diseño y lógica para el usuario.
-- [ ] Desarrollar paneles de reportes para el administrador y recepcionista.
-- [ ] Escribir tests unitarios (JUnit) y de integración para el backend.
-- [ ] Añadir sistema de notificaciones por correo electrónico.
-- [ ] Escribir tests E2E (Cypress/Playwright) para el frontend.
-- [ ] Implementar pasarela de pagos en línea.
-- [ ] Dockerizar la aplicación para un despliegue más sencillo.
+---
+
+## 🔐 Roles & User Management
+
+The system uses JWT-based authentication. Upon starting, ensure you have users with the following roles in your database to test all modules:
+
+| Role | Description | Access |
+| :--- | :--- | :--- |
+| **ADMIN** | Owner/Administrator | Full access (`/admin/...`) |
+| **RECEPCIONISTA** | Staff | Operational management (`/recepcionista/...`) |
+| **USER** | Customer | Booking and profile (`/user/...`) |
+
+> **Note:** You can create an initial user by registering via the web interface and then manually updating their role in the database to `ADMIN` or `RECEPCIONISTA`.
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+Developed by Valentino Castro Olazábal- 2026.
